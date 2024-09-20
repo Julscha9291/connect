@@ -1,0 +1,180 @@
+/* src/Navbar.css */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+    background-color: #151426;
+  }
+  
+  .navbar-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .navbar-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .navbar-search-form {
+    margin-top:10px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 400px; /* Maximalbreite des Suchfeldes */
+    background-color: #36445e;
+    border-radius: 20px; /* Runde Ecken */
+    overflow: hidden;
+    margin-left: 50px;
+    color:white;
+  }
+  
+  .navbar-search-input {
+    flex: 1;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px; /* Runde Ecken */
+    font-size: 16px;
+    background-color: #36445e;
+    color: white; /* Textfarbe weiß */
+  }
+
+  .navbar-search-button {
+    background-color: #36445e;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px; /* Runde Ecken */
+    cursor: pointer;
+  }
+  
+  .navbar-search-button:hover {
+    background-color: #1a252f;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+  
+  .navbar-link {
+    margin-left: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  
+  .navbar-link:hover {
+    text-decoration: underline;
+  }
+  
+  .navbar-user {
+    margin-left: 10px;
+    display: flex;
+    margin-left: 20px;
+    gap: 10px;
+  }
+  
+  .user-avatar {
+    display: flex;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .user-name{
+    display:flex;
+    align-items: center;
+  }
+  
+
+  .dropdown-icon{
+    display:flex;
+    align-items: center;
+    font-size: 20px;
+
+  }
+
+  .dropdown-menu{
+    position: absolute;
+    padding: 20px;
+    right: 30px;
+    margin-top: 40px;
+    background-color: #cfcbcb;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    height: 100px;
+  }
+
+  .dropdown-item{
+    margin-bottom: 10px;
+  }
+
+  .search-result-item-nav {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;  /* Zeigt den Zeiger beim Hover an */
+    transition: background-color 0.3s;
+    width: 100%;  /* Sicherstellen, dass das gesamte Element klickbar ist */
+    box-sizing: border-box;  /* Stellt sicher, dass Padding und Border in die Breite des Elements einbezogen werden */
+  }
+  
+  .search-result-item-nav:hover {
+    background-color: #f0f0f0;  /* Ändert die Hintergrundfarbe beim Hover */
+  }
+
+
+  .search-results-nav {
+    position: absolute;
+    width: 200px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 0;
+    list-style-type: none;
+    background-color: #fff;
+    z-index: 1000; /* Höherer Z-Index als andere Elemente */
+  }
+
+  .navbar-notification {
+    position: relative;
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  
+  .navbar-notification .notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

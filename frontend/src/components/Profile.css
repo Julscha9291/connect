@@ -1,0 +1,87 @@
+.profile-overlay {
+  position: fixed;
+  top: 60px; /* Höhe der Navbar, falls sie 60px hoch ist */
+  right: 20px; /* Abstand vom rechten Rand des Bildschirms */
+  z-index: 1000;
+}
+
+.profile-card {
+  display: flex;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  position: relative;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.profile-info {
+  margin-top: 10px;
+}
+
+.profile-info h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.status-text {
+  color: green;
+}
+
+.profile-details {
+  margin-top: 20px;
+}
+
+.profile-initials{
+  display: flex;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-section input {
+  margin: 10px 0;
+  padding: 5px;
+  width: 100%;
+}
+
+.edit-section button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-section button:hover {
+  background-color: #0056b3;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}

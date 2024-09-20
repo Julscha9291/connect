@@ -1,0 +1,12 @@
+.app-container {
+  position: relative;
+  background-color: #151426;
+}
+
+.App-content {
+  display: flex;
+  position: relative;
+}
+
+
+
