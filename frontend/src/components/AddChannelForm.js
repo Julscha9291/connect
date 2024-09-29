@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AddChannelForm.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+
 
 const AddChannelForm = ({ onClose }) => {
   const [channelName, setChannelName] = useState('');
@@ -10,7 +9,8 @@ const AddChannelForm = ({ onClose }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectAll, setSelectAll] = useState(false);
+  const [selectAll, setSelectAll] = useState(true); // Standardmäßig alle Nutzer auswählen
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -66,13 +66,18 @@ const AddChannelForm = ({ onClose }) => {
   };
 
   const handleSelectAllChange = () => {
+    console.log('Select All Before:', selectAll);
     if (selectAll) {
-      setSelectedUserIds([]);
+        setSelectedUserIds([]);
+        console.log('Deselecting all users');
     } else {
-      setSelectedUserIds(allUsers.map(user => user.id));
+        const allSelectedIds = allUsers.map(user => user.id);
+        setSelectedUserIds(allSelectedIds);
+        console.log('Selecting all users:', allSelectedIds);
     }
     setSelectAll(!selectAll);
-  };
+    console.log('Select All After:', !selectAll);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,11 +115,12 @@ const AddChannelForm = ({ onClose }) => {
   return (
     <div className="add-channel-form-overlay">
       <div className="add-channel-form">
+      <div className="add-channel-header">
         <button className="close-button" onClick={onClose}>×</button>
         <h3>New Channel</h3>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
-            <FontAwesomeIcon icon={faHashtag} className="hashtag-icon" />
             <input
               type="text"
               value={channelName}
@@ -132,14 +138,7 @@ const AddChannelForm = ({ onClose }) => {
             required
           />
           <div className="user-selection">
-            <label>
-              <input
-                type="radio"
-                checked={!selectAll}
-                onChange={() => setSelectAll(false)}
-              />
-              Select Specific Users
-            </label>
+          <div className="user-selection-all">
             <label>
               <input
                 type="radio"
@@ -148,6 +147,18 @@ const AddChannelForm = ({ onClose }) => {
               />
               Select All Users
             </label>
+            </div>
+            <div className="user-selection-all">
+            <label>
+              <input
+                type="radio"
+                checked={!selectAll}
+                onChange={() => setSelectAll(false)}
+              />
+              Select Specific Users
+            </label>
+            </div>
+
             {!selectAll && (
               <>
                 <input
@@ -160,7 +171,7 @@ const AddChannelForm = ({ onClose }) => {
                   {filteredUsers.map(user => (
                     <li 
                       key={user.id} 
-                      className={`user-item ${selectedUserIds.includes(user.id) ? 'selected' : ''}`}
+                      className={`user-item-channel ${selectedUserIds.includes(user.id) ? 'selected' : ''}`}
                       onClick={() => handleUserSelect(user.id)}
                     >
                       {user.profile_picture ? (
@@ -192,7 +203,10 @@ const AddChannelForm = ({ onClose }) => {
               </>
             )}
           </div>
-          <button type="submit">Add Channel</button>
+     
+          <div className="button-class"> 
+          <button className="leave-channel-button" type="submit">Add Channel</button>
+          </div>
         </form>
       </div>
     </div>

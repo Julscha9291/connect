@@ -1,23 +1,19 @@
 /* src/Chat.css */
 .chat {
-    width: 60%;
-    height: 80vh;
-    margin-top: 50px;
+  display:flex;
+    height: 85vh;
     background-color: #242338;;
     display: flex;
     flex-direction: column;
     border-radius: 8px; /* Runde Ecken der Sidebar */
     overflow: hidden; /* Verhindert das Überlaufen von abgerundeten Ecken */
-    margin-left: 100px;
   }
   
   .chat-header {
-    display: flex;
     flex-direction: row;
     padding: 10px;
-    background-color: #9426B6;
+    background-color: #443494;
     color: white;
-    display: flex;
     align-items: center;
   }
 
@@ -26,10 +22,19 @@
     flex-direction: column;
   }
 
-  .chat-header-channel{
+  .chat-header-channel {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
   }
+
+  .chat-header-private {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
   
 .channel-members-header{
   display: flex;
@@ -42,7 +47,24 @@
 }
 
 .channel-member{
-  margin-left:-10px;
+  margin-left:-30px;
+}
+
+.channel-left {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.channel-right{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-icon{
+  font-size:24px;
+  margin-right: 10px;
 }
 
 
@@ -50,8 +72,6 @@
     width: 50px;
     height: 50px;
     border-radius: 50px;
-    padding: 10px;
-    margin-right: 10px;
   }
 
   .chat-profile-placeholder{
@@ -66,16 +86,34 @@
     align-items: center;
   }
 
-  .chat-header h2 {
-    margin: 0;
-    font-size: 18px;
-    color:#555;
+  .channel-title{
+      color:#fff;
+      font-size: 30px;
+      margin-left: 10px;
+      font-weight: bold;
+      margin-top:5px;
+      margin-right: 10px;
+  }
+
+  .chat-partner-name{
+    color:#fff;
+    font-size: 26px;
+    margin-left: 10px;
+    font-weight: bold;
+    margin-top:5px;
+    margin-right: 10px;
   }
   
+.channel-description{
+  color:#fff;
+  margin-left: 10px;
+  margin-bottom: 5px;;
+}
+
   .chat-header h3 {
     margin: 0;
     font-size: 18px;
-    color:#555;
+    color: #5E3BCD;
   }
 
   .chat-body {
@@ -84,25 +122,44 @@
     overflow-y: auto;
   }
   
-  .messages {
-    display: flex;
-    flex-direction: column;
-  }
-  
+
   .message {
-    background-color: #5E3BCD;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    color:white;
+    color: white;
+    width: 100%; /* Macht die Nachricht breiter */
+    position: relative;
   }
   
   .message.current-user {
     display: flex;
     align-self: flex-end;
     flex-direction: column;
+    position: relative;
   }
+  
+
+
+  .Message-Text {
+    padding: 20px;
+    border-radius: 20px;
+    display: flex;
+    text-align: left; /* Text linksbündig */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color:#443494;
+    position: relative;
+    color: white;
+    max-width: 60%;
+    min-width: 30%;
+    word-wrap: break-word; /* Wortumbruch */
+    overflow-wrap: break-word; /* Für bessere Kompatibilität */
+    white-space: normal; /* Zeilenumbruch aktivieren */
+  }
+  
 
 
   
@@ -110,22 +167,71 @@
     margin-left: 10px; /* Abstand zwischen Nachricht und Icon */
   }
   
-  .message.other-user .messages-wrapper {
-    flex-direction: row; /* Standardrichtung für andere Benutzer */
+  .message.other-user .chat-wrapper {
+    flex-direction: row;
+    display: flex;
+    align-items: flex-end;
+    margin-left: -30px;
+    margin-right: 30px;
+    margin-top: -10px;
+    position: relative;
   }
 
-  .Message-Text{
-    display: flex;
-    text-align: right;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-  }
+
+
+.message.current-user .Message-Text::after {
+  content: '';
+  position: absolute;
+  bottom: -15px; /* Verändere die Position entsprechend der Dreieckgröße */
+  right: -10px; /* Anpassung für die größere Dreieckbreite */
+  width: 0;
+  height: 0;
+  border: 25px solid transparent; /* Erhöht die Größe des Dreiecks */
+  border-top-color: #443494; /* Gleiche Farbe wie der Hintergrund */
+  transform: rotate(45deg);
+}
+
+.message.other-user .Message-Text {
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  text-align: right;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: #151426; 
+  position: relative;
+  color: white;
+  max-width: 60%;
+}
+
+
+/* Dreieck für andere Benutzer (links) */
+.message.other-user .Message-Text::after {
+  content: '';
+  position: absolute;
+  bottom: -15px; /* Verändere die Position entsprechend der Dreieckgröße */
+  left: -10px; /* Anpassung für die größere Dreieckbreite */
+  width: 0;
+  height: 0;
+  border: 25px solid transparent; /* Erhöht die Größe des Dreiecks */
+  border-top-color:  #151426; /* Gleiche Farbe wie der Hintergrund */
+  transform: rotate(-45deg); /* Dreht das Dreieck nach links */
+}
 
   .messages-wrapper  {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-content: space-between;
+    align-items: center;
+    margin-right: 20px;
+    padding-right: 10px;
+}
+
+.chat-wrapper{
+  display: flex;
+    flex-direction: row-reverse;
 }
 
   .message-icon{
@@ -133,11 +239,12 @@
   }
   
   .message.other-user {
-    background-color: #d0cddb; /* Beispiel-Farbe für Nachrichten anderer User */
     align-self: flex-start;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
   }
-  
+
+
   .chat-container {
     display: flex;
     flex-direction: column;
@@ -146,38 +253,424 @@
 
   .chat-footer {
     padding: 10px;
-    background-color: #e2e3e5;
+    border: 1px solid #ccc;
+    border-radius: 10px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
   }
   
-  .chat-footer input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  .footer-left {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
   }
   
-  .chat-footer button {
-    margin-left: 10px;
+  .message-input {
+    flex-grow: 1;
     padding: 10px;
-    background-color: #C9139E;
-    color: white;
+    font-size: 16px;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .chat-footer button:hover {
-    background-color: #2980b9;
+    outline: none;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
   }
 
-  .file-preview {
-    margin-top: 10px;
-  }
-  
-  .file-preview img {
-    border: 1px solid #ccc;
-    padding: 5px;
-  }
-  
+
+.attachment-btn, .emoji-btn, .send-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #666;
+}
+
+.attachment-btn {
+  padding-right: 10px;
+}
+
+.emoji-btn {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.send-btn {
+  color: #9426B6;
+  font-size: 24px;
+}
+
+.send-btn:hover {
+  color: #5a176f
+}
+
+.message-input::placeholder {
+  color: #888;
+  font-size: 16px;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+/* Neue Klasse für die Dateivorschau */
+.file-preview {
+  display: flex;
+  margin-top: 10px;
+  width: 100%;
+  background-color: #fff;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+
+.file-preview img {
+  max-width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.file-preview p {
+  font-size: 14px;
+  color: #555;
+}
+
+.remove-file-btn {
+    background: none;
+    border: none;
+    color: #ff0000;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.remove-file-btn:hover {
+  color: #d9534f;
+}
+
+.emoji-picker-container {
+  position: absolute; /* Über dem Chat positionieren */
+  bottom: 60px; /* Abstand zum unteren Rand des Bildschirms oder des Chatfensters */
+  z-index: 1000; /* Sicherstellen, dass der Emoji-Picker über anderen Elementen liegt */
+  background-color: white; /* Hintergrundfarbe für den Emoji-Picker */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.emoji-picker-container > div {
+  max-height: 300px; /* Maximalhöhe des Emoji-Pickers */
+  overflow-y: scroll; /* Scrollbar anzeigen, wenn die Höhe überschritten wird */
+}
+
+
+  .user-profile-placeholder2 {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Dunkler Hintergrund */
+  z-index: 999; /* Z-index für die Überlagerung */
+}
+
+.add-user-modal {
+  z-index: 1000; /* Höherer Z-index für das Modal */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
+
+.date-separator {
+  text-align: center; /* Datum mittig ausrichten */
+  margin: 20px 0; /* Abstände zum Text */
+  position: relative; /* Position für die Pseudo-Elemente setzen */
+  margin-right: 20px;
+}
+
+.date-separator::before,
+.date-separator::after {
+  content: ''; /* Inhalt für das Pseudo-Element */
+  position: absolute; /* Absolut positionieren */
+  top: 50%; /* Vertikal mittig */
+  width: 45%; /* Breite der Linien */
+  height: 1px; /* Dicke der Linie */
+  background-color: #ccc; /* Farbe der Linie */
+}
+
+.date-separator::before {
+  left: 0; /* Linie ganz links ansetzen */
+  margin-right: 10px; /* Abstand zwischen Linie und Separator */
+}
+
+.date-separator::after {
+  right: 0; /* Linie ganz rechts ansetzen */
+  margin-left: 30px; /* Abstand zwischen Linie und Separator */
+}
+
+.date-separator span {
+  background-color: #f0f0f0; /* Hintergrundfarbe des Datums */
+  padding: 5px 10px; /* Innenabstände */
+  border-radius: 10px; /* Abgerundete Ecken */
+  color: #666; /* Textfarbe */
+  font-size: 14px; /* Schriftgröße anpassen */
+  position: relative;
+  z-index: 1000;
+}
+
+.message-container {
+  position: relative; /* Stellt sicher, dass absolute Positionierung innerhalb des Containers funktioniert */
+  margin-bottom: 10px; /* Abstand zwischen Nachrichten */
+}
+
+.message-hover-actions {
+  display: none; /* Standardmäßig ausgeblendet */
+  position: absolute; /* Absolute Positionierung, um über der Nachricht zu erscheinen */
+  background-color: rgba(94, 60, 189, 0.7);
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 1001;
+  max-width: 90%;
+  min-width: 20%;
+
+}
+
+.message-hover-actions.visible {
+  display: flex; /* Sichtbar, wenn die Klasse 'visible' hinzugefügt wird */
+  flex-direction: row;
+  padding: 10px;
+}
+
+/* Positionierung der Hover-Aktionen */
+.message.current-user .message-hover-actions {
+  right: 0; /* Hover-Aktionen erscheinen rechts neben der Nachricht des aktuellen Benutzers */
+  top: -30px; /* Über der Nachricht positionieren */
+}
+
+.message.other-user .message-hover-actions {
+  right: 0;/* Hover-Aktionen erscheinen links neben der Nachricht des anderen Benutzers */
+  top: -30px; /* Über der Nachricht positionieren */
+}
+
+/* Optional: Style für die Hover-Icons */
+.message-icon {
+  margin-left: 5px; /* Abstand zwischen Icons */
+}
+
+.message-icon button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color:#fff;
+}
+
+.message-icon button:hover {
+  color: #6b1b83; /* Optional: Hover-Farbe für Buttons */
+}
+
+.Message-Image{
+  width: 150px;
+  height: 200px;
+  height: auto;
+  border-radius: 10px;
+}
+
+
+.close-button-message {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color:#fff;
+}
+
+.emoji-picker-dropdown{
+  display: flex;
+  margin-right: 20px;
+  flex-direction: row;
+}
+
+.emoji-button{
+  display: flex;
+  flex-direction: row;
+  margin-right: 5px;
+  background-color: transparent;
+  border: none;
+}
+
+.button-edit-delete {
+  border-radius: 10px; /* Runde Ecken */
+  background-color: transparent; /* Transparenter Hintergrund */
+  color: #fff; /* Weiße Schriftfarbe */
+  padding: 5px; /* Innenabstand */
+  margin-right: 15px; /* Abstand zwischen den Buttons */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Leicht weißer Rahmen */
+  transition: background-color 0.3s; /* Für einen sanften Übergang */
+}
+
+.message-edit {
+  background-color: #5e3bcd;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.message-edit input {
+  width: 100%;
+  padding: 5px;
+  border-radius: 10px;
+  border: none;
+}
+
+.message-edit button {
+  padding: 5px 10px;
+  background-color: white;
+  border: none;
+  color: #5e3bcd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.attachment-link {
+  display: flex;
+  align-items: center;
+  cursor: pointer; /* Zeigt, dass es klickbar ist */
+}
+
+.attachment-link:hover {
+  text-decoration: underline; /* Hover-Effekt */
+}
+
+.message-bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.message-right {
+  justify-content: flex-end;
+  text-align: right;
+  margin-right: 100px;
+  font-size: 14px;
+}
+
+.message-left {
+  justify-content: flex-start;
+  text-align: left;
+  margin-left: 100px;
+  font-size: 14px;
+}
+
+.thread-count {
+  display: flex;
+  align-content: center;
+  justify-content: flex-start; /* Standardmäßig für andere Benutzer */ /* Abstand zwischen Nachricht und Thread-Zähler */
+  font-size: 0.9em; /* Kleinere Schriftgröße */
+  color: #868dfa; /* Farbe des Thread-Zählers */
+}
+
+/* Für den Thread-Zähler des aktuellen Benutzers */
+.message.current-user .thread-count {
+  justify-content: flex-end; /* Ausrichtung für den aktuellen Benutzer */
+
+}
+
+.message.current-user .thread-count {
+    justify-content: flex-start;
+}
+
+.message-reactions {
+  padding-right: 20px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.no-reactions {
+  padding-right: 0; /* Entfernt das padding-right, wenn keine Reaktionen vorhanden sind */
+  margin-bottom: 0px;
+}
+
+.emoji-display {
+  margin-right: 10px;
+  border: 1px dashed; /* Das macht den Rahmen gestrichelt */
+  border-radius: 10px; /* Hier kannst du den Radius anpassen, um die Ecken abzurunden */
+  padding: 5px; /* Optional: fügt etwas Innenabstand hinzu */
+}
+
+.emoji{
+  margin-right:5px;
+}
+
+.Message-Sender{
+  display: flex;
+  margin-bottom: 5px;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.message-time {
+  font-size: 0.8em; /* Kleinere Schriftgröße für die Uhrzeit */
+  color: gray; /* Graue Farbe für die Uhrzeit */
+  margin-left: 5px; /* Abstand zwischen Sender und Uhrzeit */
+}
+
+/* Tooltip-Styling */
+.reaction-tooltip {
+  position: absolute;
+  background-color: #9426B6;
+  color: white;
+  padding: 10px 15px; /* Mehr Padding für einen gut lesbaren Text */
+  border-radius: 20px; /* Abgerundete Ecken */
+  font-size: 14px; /* Größe des Textes */
+  text-align: center;
+  z-index: 1000;
+  width: auto; /* Breite an den Inhalt anpassen */
+  height: auto; /* Höhe an den Inhalt anpassen */
+  top: -50px; /* Tooltip über dem Emoji positionieren */
+  left: 50%; /* Zentriert das Tooltip horizontal über dem Emoji */
+  transform: translateX(-50%); /* Korrektur der horizontalen Zentrierung */
+  display: none; /* Standardmäßig ausgeblendet */
+}
+
+/* Emoji-Styling, damit der Tooltip genau über dem Emoji erscheint */
+.reaction-wrapper {
+  position: relative; /* Notwendig, um das Tooltip relativ zum Emoji zu positionieren */
+  display: inline-block;
+}
+
+/* Zeigt den Tooltip beim Hover an */
+.reaction-wrapper:hover .reaction-tooltip {
+  display: block; /* Tooltip anzeigen, wenn das Emoji gehovt wird */
+}
+
+/* Textgröße und Layout für den Benutzertext */
+.reaction-tooltip .reaction-text {
+  font-size: 24px; /* Größere Schrift für den Reaktionstext */
+  margin-bottom: 5px; /* Platz zwischen Reaktion und Text */
+}
+
+.reaction-tooltip .user-text {
+  font-size: 14px; /* Größe für den Text, der "Du" anzeigt */
+  font-weight: bold; /* Fettdruck für "Du" */
+}

@@ -12,21 +12,35 @@
 }
 
 .add-channel-form {
+  height: 80vh; /* Behalte die Höhe bei */
   padding: 20px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1001;
+  min-width:300px ;
+  overflow: auto; /* Ändere von hidden auf auto, damit Scrollbars angezeigt werden, wenn nötig */
 }
 
 .add-channel-form h3 {
   margin: 0 0 10px;
+  color:#5E3BCD;
+}
+
+label{
+  color:#555;
+}
+
+.add-channel-header{
+  display: flex;
+  margin-top: 10px;
 }
 
 .input-wrapper {
   position: relative;
   margin-bottom: 10px;
+  margin-top:10px;
 }
 
 .hashtag-icon {
@@ -52,38 +66,39 @@
 }
 
 .add-channel-form input {
-  width: 100%;
+  width: calc(100% - 20px);
   padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  margin: 5px 0;
+  font-size: 1rem;
+  border: none;
+  background-color: #edeaea;
+  border-radius: 10px;
+  width: 95%;
 }
 
-.add-channel-form button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+
 
 .add-channel-form button:hover {
   background-color: #0056b3;
 }
 
 .close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
   background: transparent;
   border: none;
+  font-size: 28px;
   cursor: pointer;
+  color:#555;
 }
 
 .user-selection {
   margin-top: 10px;
+}
+.user-selection-all {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
 .selection-mode {
@@ -168,8 +183,54 @@
 
 .selected-users ul li {
   padding: 5px 0;
+  color:#555;
 }
 
 .user-name{
   color:#555;
+  font-size:20px;
+  margin-left:10px;
+}
+
+.leave-channel{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.leave-channel-button{
+  width: calc(100% - 20px);
+  padding: 5px 20px;
+  margin: 15px 0;
+  background-color:#9426B6;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 1rem;
+  width: 50%;
+}
+
+
+.user-item-channel{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+.user-item-channel.selected {
+  background-color: rgba(94, 59, 205, 0.4); /* 50% Transparenz */
+  font-weight: bold; /* Fettgedruckter Text für ausgewählte Elemente */
+  border-radius: 10px;
+  padding:5px;
+  color:#fff;
+}
+
+h4{
+  color:#555;
+}
+
+.button-class{
+  display: flex;
+  justify-content: center;
 }

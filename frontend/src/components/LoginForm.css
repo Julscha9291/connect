@@ -28,7 +28,7 @@
   .header-login {
     display: flex;
     height: 60px;
-    background-color: #08223d;
+    background-color: #9426B6;
     color: white;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -112,7 +112,7 @@
     width: calc(100% - 20px);
     padding: 5px 20px;
     margin: 15px 0;
-    background-color:#3498db;
+    background-color:#5E3BCD;
     border: none;
     cursor: pointer;
     border-radius: 3px;
@@ -124,7 +124,7 @@
   .sign-button{
     padding: 5px;
     margin: 15px 10px;
-    background-color: #3498db;
+    background-color: #5E3BCD;
     border: none;
     cursor: pointer;
     border-radius: 3px;
@@ -135,11 +135,11 @@
   .guest-button {
     padding: 10px;
     margin: 10px 10px;
-    background-color: rgba(248, 12, 99, 0.8);
-    border:none;
+    background-color: transparent;
+    border-color:#5E3BCD;
     cursor: pointer;
     border-radius: 3px;
-    color: #fff;
+    color: #555;
   
     
   }

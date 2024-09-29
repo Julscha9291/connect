@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faComment, faUsers, faPeopleArrows } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
   const [channels, setChannels] = useState([]);
@@ -9,6 +9,8 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
   const [userChats, setUserChats] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [isMessagesDropdownOpen, setIsMessagesDropdownOpen] = useState(true);
+  
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -99,6 +101,10 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleMessagesDropdownToggle = () => {
+    setIsMessagesDropdownOpen(!isMessagesDropdownOpen); // Toggle für Messages
+  };
+
   const handleChannelClick = (channel) => {
     setSelectedChat({ type: 'channel', data: channel });
     onSelectChat({ type: 'channel', data: channel });
@@ -149,18 +155,57 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
   const nonPrivateChannels = channels.filter(channel => channel.is_private === false);
   const privateChannels = channels.filter(channel => channel.is_private === true);
 
+  const getRandomStatusColor = () => {
+    return Math.random() < 0.5 ? 'online' : 'offline'; // 50% Chance für jede Farbe
+  };
+
   return (
     <div className="sidebar">
-      <div className="sidebar-header">
+      <div className="sidebar-header-top">
+
+      <FontAwesomeIcon 
+            icon={faComment} 
+            style={{ 
+              marginRight: '10px', 
+              fontSize: '30px',   // Größe auf 30px setzen
+              color: '#5E3BCD'    // Farbe auf Weiß ändern
+            }} 
+          />
         <h2 className='sidebar-h2'>TeamSpace</h2>
-      </div>
+        </div>
+        <hr style={{ 
+          width: '90%',        // 90% Breite
+          border: '1px solid #fff',  // Weiße Linie
+          marginTop: '10px'  // Zentrieren und Abstand oben/unten
+        }} />
+
       <div className="sidebar-header">
-      <h2 className='sidebar-h2'>Channels</h2>
-        <button className="dropdown-toggle" onClick={handleDropdownToggle}>
-          <FontAwesomeIcon icon={faCaretDown} />
-        </button>
+      <div className="sidebar-left">
+        
+    <div className="dropdown-icon">
+      <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={handleDropdownToggle} />
+    </div>
+
+      <FontAwesomeIcon 
+            icon={faUsers} 
+            style={{ 
+              marginRight: '10px', 
+              marginLeft: '10px', 
+              fontSize: '20px',   // Größe auf 30px setzen
+              color: '#fff'    // Farbe auf Weiß ändern
+            }} 
+          />
+
+
+
+      <h3 className='sidebar-h3'>Channels</h3>
+      </div>
+
+      <div className="sidebar-right">
         <button className="add-channel-button" onClick={onAddChannelClick}>+</button>
       </div>
+      </div>
+
       {isDropdownOpen && (
         <ul className="sidebar-menu">
           {nonPrivateChannels.map((channel) => (
@@ -180,7 +225,6 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
       )}
 
       <div className="contacts">
-      <h2 className='sidebar-h2'>Messages</h2>
         <ul className="user-list">
           {userChats.map(chat => {
             const partner = getChatPartner(chat);
@@ -212,7 +256,29 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
             );
           })}
         </ul>
-        <h2 className='sidebar-h2'>Private Chats</h2>
+
+
+
+
+        <div className="sidebar-message-top">
+        <div className="dropdown-icon">
+            <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={handleMessagesDropdownToggle} />
+          </div>
+
+
+        <FontAwesomeIcon 
+            icon={faPeopleArrows} 
+            style={{ 
+              marginRight: '10px', 
+              marginLeft: '10px', 
+              fontSize: '20px',   // Größe auf 30px setzen
+              color: '#fff'    // Farbe auf Weiß ändern
+            }} 
+          />
+        <h3 className='sidebar-h3'>Messages</h3>
+        </div>
+
+        {isMessagesDropdownOpen && (
         <ul className="sidebar-menu">
           {privateChannels.map((channel) => {
             const partner = getChatPartner(channel);
@@ -225,32 +291,44 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
                   onClick={() => handleChannelClick(channel)} 
                   className="channel-button"
                 >
-                  {partner ? (
-                    <div className="channel-user-info">
-                    {partner.profile_picture ? (
-                      <img
-                        src={partner.profile_picture}
-                        alt={`${partner.first_name} ${partner.last_name}`}
-                        className="user-profile-image"
-                      />
-                    ) : (
-                      <div
-                        className="user-profile-placeholder"
-                        style={{ backgroundColor: partner.color }}
-                      >
-                        {partner.first_name.charAt(0)}{partner.last_name.charAt(0)}
-                      </div>
-                    )}
-                  <span className="partner-name">{partner.first_name} {partner.last_name}</span>
-                    </div>
-                  ) : (
-                    <span>Loading...</span>
-                  )}
+                  
+{partner ? (
+  <div className="channel-user-info">
+    {partner.profile_picture ? (
+      <div className="user-profile-container">
+        <img
+          src={partner.profile_picture}
+          alt={`${partner.first_name} ${partner.last_name}`}
+          className="user-profile-image"
+        />
+        <div
+          className={`status-dot ${getRandomStatusColor()}`}
+        ></div>
+      </div>
+    ) : (
+      <div className="user-profile-container">
+        <div
+          className="user-profile-placeholder"
+          style={{ backgroundColor: partner.color }}
+        >
+          {partner.first_name.charAt(0)}{partner.last_name.charAt(0)}
+        </div>
+        <div
+          className={`status-dot ${getRandomStatusColor()}`}
+        ></div>
+      </div>
+    )}
+    <span className="partner-name">{partner.first_name} {partner.last_name}</span>
+  </div>
+) : (
+  <span>Loading...</span>
+)}
                 </button>
               </li>
             );
           })}
         </ul>
+        )}
       </div>
     </div>
   );

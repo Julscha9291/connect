@@ -12,7 +12,8 @@ const Threads = ({
   color, 
   onClose, 
   messageId, 
-  currentUserId 
+  currentUserId,
+  updateThreadCount
 }) => {
   const [localThreadMessages, setLocalThreadMessages] = useState([]);
   const [editingThreadId, setEditingThreadId] = useState(null);
@@ -23,7 +24,7 @@ const Threads = ({
   const [attachedFile, setAttachedFile] = useState(null); 
   const [filePreview, setFilePreview] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  
+  const [currentUserDetails, setCurrentUserDetails] = useState(null);
 
   useEffect(() => {
     // Hole die Thread-Nachrichten
@@ -37,6 +38,23 @@ const Threads = ({
       .catch(error => {
         console.error("Error fetching thread messages:", error);
       });
+
+
+      fetch('http://localhost:8000/api/users/')
+      .then(response => response.json())
+      .then(data => {
+        // Suche nach dem Benutzer, der der aktuellen User-ID entspricht
+        const currentUser = data.find(user => user.id === currentUserId);
+        if (currentUser) {
+          setCurrentUserDetails(currentUser);
+        } else {
+          console.error('Benutzer mit dieser ID nicht gefunden');
+        }
+      })
+      .catch(error => {
+        console.error('Fehler beim Abrufen der Benutzerinformationen:', error);
+      });
+
 
     // Hole Benutzerinformationen basierend auf dem sender_id der initialMessage
     fetch('http://localhost:8000/api/users/')
@@ -76,7 +94,7 @@ const Threads = ({
       
     // Reaktionen für die ursprüngliche Nachricht laden
     fetchReactions(messageId);
-  }, [messageId, initialMessage.sender_id]);
+  }, [messageId, initialMessage.sender_id, currentUserId]);
 
   const handleSendThread = async () => {
     console.log("handleSendThread aufgerufen"); // Debugging
@@ -128,6 +146,8 @@ const Threads = ({
         setThreadMessage('');
         setAttachedFile(null);
         console.log("Nach dem Leeren:", threadMessage, attachedFile); 
+
+        updateThreadCount(messageId);
       } catch (error) {
         console.error('Fehler beim Senden des Threads:', error);
       }
@@ -351,24 +371,30 @@ const Threads = ({
               </div>
             ) : (
               <>
-                <div className="sender-details">
-                  {profile_picture ? (
-                    <img
-                      src={profile_picture}
-                      alt={`${first_name} ${last_name}`}
-                      className="member-profile-image"
-                    />
-                  ) : (
-                    <div
-                      className="user-profile-placeholder"
-                      style={{ backgroundColor: color || '#ccc' }}
-                    >
-                      {first_name[0]}
-                      {last_name[0]}
-                    </div>
-                  )}
-                  <strong>{sender}</strong>
-                </div>
+           <div className="sender-details">
+              {currentUserDetails ? (
+                currentUserDetails.profile_picture ? (
+                  <img
+                    src={currentUserDetails.profile_picture}
+                    alt={`${currentUserDetails.first_name} ${currentUserDetails.last_name}`}
+                    className="member-profile-image"
+                  />
+                ) : (
+                  <div
+                    className="user-profile-placeholder"
+                    style={{ backgroundColor: currentUserDetails.color || '#ccc' }}
+                  >
+                    {currentUserDetails.first_name[0]}{currentUserDetails.last_name[0]}
+                  </div>
+                )
+              ) : (
+                <p>Lädt Benutzerinformationen...</p>
+              )}
+              <strong>{currentUserDetails?.first_name} {currentUserDetails?.last_name}</strong>
+            </div>
+
+
+
                 <p>{thread.content}</p>
                 <div className="file-preview">
                         {thread.file_url ? (

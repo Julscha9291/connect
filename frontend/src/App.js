@@ -6,6 +6,7 @@ import Chat from './components/Chat';
 import LoginForm from './components/LoginForm'; 
 import Profile from './components/Profile';
 import AddChannelForm from './components/AddChannelForm'; 
+
 import './App.css';
 
 const App = () => {
@@ -13,6 +14,9 @@ const App = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [showAddChannelForm, setShowAddChannelForm] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0); // Hier hinzufügen
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -20,6 +24,7 @@ const App = () => {
       setLoggedIn(true);
     }
   }, []);
+  
 
   const handleLogin = (token) => {
     localStorage.setItem('access_token', token);
@@ -59,13 +64,35 @@ const App = () => {
           <LoginForm onLogin={handleLogin} />
         ) : (
           <>
-            <Navbar onLogout={handleLogout} onProfileToggle={handleProfileToggle} />
+            <Navbar
+              onLogout={handleLogout}
+              onProfileToggle={handleProfileToggle}
+              unreadCount={unreadCount} // Hier übergeben
+              setUnreadCount={setUnreadCount} // Hier übergeben
+            />
             <div className="App-content">
-              <Sidebar onAddChannelClick={handleAddChannelClick} onSelectChat={handleSelectChat} />
-              {selectedChat && <Chat selectedChat={selectedChat} />}
+              <button 
+                className="toggle-sidebar-button" 
+                onClick={() => setIsSidebarVisible(!isSidebarVisible)}
+              >
+                {isSidebarVisible ? 'Close menu' : 'open menu'}
+              </button>
+              {isSidebarVisible && (
+                  <Sidebar onAddChannelClick={handleAddChannelClick} onSelectChat={handleSelectChat} />
+                )}
+                <div className={`chat ${isSidebarVisible ? 'chat-narrow' : 'chat-full-width'}`}>
+              {selectedChat && <Chat selectedChat={selectedChat} setUnreadCount={setUnreadCount} onProfileToggle={handleProfileToggle}/>} {/* Hier übergeben */}
               {showAddChannelForm && <AddChannelForm onClose={handleAddChannelClose} />}
+              </div>
             </div>
-            {showProfile && <Profile onClose={handleProfileClose} />}
+            {showProfile && (
+                <>
+                  <div className="modal-overlay" onClick={handleProfileClose}></div> {/* Hintergrund abdunkeln */}
+                  <div className="modal-content">
+                    <Profile onClose={handleProfileClose} />
+                  </div>
+                </>
+              )}
           </>
         )}
       </div>

@@ -1,5 +1,7 @@
 import React, { forwardRef, useState, useEffect } from 'react';
 import './SelectedUserProfile.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope,faCircle } from '@fortawesome/free-solid-svg-icons';
 
 const SelectedUserProfile = forwardRef(({ user, onClose, onMessageClick }, ref) => {
   const [selectedUserIds, setSelectedUserIds] = useState([]);
@@ -46,6 +48,7 @@ const SelectedUserProfile = forwardRef(({ user, onClose, onMessageClick }, ref) 
         // Form zurücksetzen
         setSelectedUserIds([]);
         onClose(); // Schließt das Modal oder das Eingabeformular
+        window.location.reload();
       } else {
         const errorData = await existingChannelResponse.json();
         console.error('Error checking/creating private chat:', errorData);
@@ -60,23 +63,42 @@ const SelectedUserProfile = forwardRef(({ user, onClose, onMessageClick }, ref) 
     <div className="selected-user-profile-overlay">
       <div className="selected-user-profile" ref={ref}>
         <div className="profile-card">
+        <h2 className="h2-profile">Profile</h2>
           <button className="close-button" onClick={onClose}>×</button>
-          <h2>{user.first_name} {user.last_name}</h2>
+      
           {user.profile_picture ? (
             <img 
               src={user.profile_picture} 
               alt="Profile" 
-              className="profile-image" 
+              className="profile-nav" 
             />
           ) : (
             <div 
-              className="profile-initials" 
+              className="profile-nav" 
               style={{ backgroundColor: user.color }}
             >
               {user.first_name.charAt(0)}{user.last_name.charAt(0)}
             </div>
           )}
-          <button onClick={handleSubmit}>Message</button>
+              <h2>{user.first_name} {user.last_name}</h2>
+
+              <div style={{ display: 'flex', alignItems: 'center', color: 'green' }}>
+          <FontAwesomeIcon icon={faCircle} style={{ fontSize: '12px', marginRight: '5px' }} />
+          <span style={{ color: 'green', fontWeight: 'bold', fontSize:'20px' }}>Online</span>
+         </div>
+
+
+          <div className="profile-details">
+
+          <FontAwesomeIcon icon={faEnvelope} style={{ marginRight: '8px' }} className="email-icon" /><p>
+            <strong>E-Mail Adress:</strong> <br></br>
+
+            {user.email}</p>
+          </div>
+
+
+
+          <button className = "edit-button" onClick={handleSubmit}>Message</button>
         </div>
       </div>
     </div>

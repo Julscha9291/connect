@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Navbar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faSearch, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faMagnifyingGlass, faBell,faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import SelectedUserProfile from './SelectedUserProfile';
+import { Link } from 'react-router-dom';
 
-const Navbar = ({ onLogout, onProfileToggle }) => {
+const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
@@ -17,13 +18,17 @@ const Navbar = ({ onLogout, onProfileToggle }) => {
 
   const searchResultsRef = useRef(null);
   const selectedUserProfileRef = useRef(null);
+  const dropdownRef = useRef(null); // Referenz für das Dropdown-Menü
 
   const handleNotificationClick = () => {
-    // Hier kannst du den Code einfügen, um Benachrichtigungen anzuzeigen oder zu verarbeiten
+    console.log(unreadCount);
     console.log('Benachrichtigungsglocke geklickt');
+    setUnreadCount(0); // Setzt den Zähler zurück
   };
 
-  
+  useEffect(() => {
+    console.log('Aktueller ungelesener Zähler:', unreadCount);
+  }, [unreadCount]);
 
   useEffect(() => {
     const storedFirstName = localStorage.getItem('first_name') || '';
@@ -101,17 +106,17 @@ const Navbar = ({ onLogout, onProfileToggle }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        searchResultsRef.current && !searchResultsRef.current.contains(event.target)
-      ) {
+      if (searchResultsRef.current && !searchResultsRef.current.contains(event.target)) {
         setSearchTerm(''); // Suchfeld zurücksetzen
         setSearchResults([]); // Suchergebnisse zurücksetzen
       }
 
-      if (
-        selectedUserProfileRef.current && !selectedUserProfileRef.current.contains(event.target)
-      ) {
+      if (selectedUserProfileRef.current && !selectedUserProfileRef.current.contains(event.target)) {
         setSelectedUser(null); // Profil schließen
+      }
+
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false); // Dropdown schließen, wenn außerhalb geklickt wird
       }
     };
 
@@ -152,8 +157,12 @@ const Navbar = ({ onLogout, onProfileToggle }) => {
     <>
       <nav className="navbar">
         <div className="navbar-left">
-          <a href="/" className="navbar-logo">MyApp</a>
+          <Link to="/" className="media-logo">
+            <img src="/images/connect_logo.png" alt="connect-Logo" className="connect-logo" />
+          </Link>
+          <h2 className="connect-title">.connect</h2>
         </div>
+
         <div className="navbar-center">
           <div className="search-container">
             <input
@@ -163,7 +172,11 @@ const Navbar = ({ onLogout, onProfileToggle }) => {
               onChange={handleSearchChange}
               className="search-input"
             />
-            <FontAwesomeIcon icon={faSearch} className="search-icon" />
+            <FontAwesomeIcon 
+              icon={faMagnifyingGlass} 
+              style={{ color: '#fff', marginLeft: '10px' }} 
+            />
+
             {searchTerm && searchResults.length > 0 && (
               <div className="search-results-nav" ref={searchResultsRef}>
                 {searchResults.map((user) => (
@@ -193,12 +206,17 @@ const Navbar = ({ onLogout, onProfileToggle }) => {
             )}
           </div>
         </div>
+
         <div className="navbar-right">
-        <div className="navbar-notification">
-          <FontAwesomeIcon icon={faBell} className="navbar-icon" onClick={handleNotificationClick} />
- 
-        </div>
-          <div className="navbar-user">
+          <div className="notification-bell" onClick={handleNotificationClick}>
+            <FontAwesomeIcon 
+              icon={faBell} 
+              style={{ fontSize: '24px' }} // Ändere '24px' auf die gewünschte Größe
+            />
+            {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+          </div>
+          
+          <div className="navbar-user" ref={dropdownRef}> {/* Hier wird die Dropdown-Referenz hinzugefügt */}
             {profilePicture ? (
               <img src={profilePicture} alt="User" className="user-avatar" />
             ) : (
@@ -207,28 +225,45 @@ const Navbar = ({ onLogout, onProfileToggle }) => {
               </div>
             )}
 
-            <span className="user-name">{`${firstName} ${lastName}`}</span>
+            <span className="user-name" style={{ color: 'white' }}>
+              {`${firstName} ${lastName}`}
+            </span>
+
             <div className="dropdown-icon">
-              <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={handleDropdownToggle} />
-            </div>
-            {dropdownOpen && (
-              <div className="dropdown-menu">
-                <div className="dropdown-item" onClick={handleProfileClick}>Profile</div>
-                <div className="dropdown-item" onClick={onLogout}>Logout</div>
-              </div>
-            )}
+                  <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={handleDropdownToggle} />
+                </div>
+
+              {dropdownOpen && (
+                <div className="dropdown-menu">
+                  <div className="dropdown-item" onClick={handleProfileClick}>
+                    <FontAwesomeIcon icon={faUser} style={{ marginRight: '10px' }} />
+                    Profile
+                  </div>
+                  <div className="dropdown-item" onClick={onLogout}>
+                    <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '10px' }} />
+                    Logout
+                  </div>
+                </div>
+    
+              )}
+
+
           </div>
         </div>
       </nav>
 
       {selectedUser && (
-        <SelectedUserProfile 
-          user={selectedUser} 
-          onClose={handleCloseProfile} 
-          onMessageClick={handleMessageClick} // Pass the function here
-          ref={selectedUserProfileRef} 
-        />
-      )}
+  <div className="modal-overlay" onClick={handleCloseProfile}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <SelectedUserProfile 
+        user={selectedUser} 
+        onClose={handleCloseProfile} 
+        onMessageClick={handleMessageClick} 
+        ref={selectedUserProfileRef} 
+      />
+    </div>
+  </div>
+)}
     </>
   );
 };

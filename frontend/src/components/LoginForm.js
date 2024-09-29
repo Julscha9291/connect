@@ -54,6 +54,7 @@ function LoginForm({ onLogin }) {
                     localStorage.setItem('last_name', data.user.last_name);
                     localStorage.setItem('color', data.user.color);
                     localStorage.setItem('profile_picture', data.user.profile_picture);
+                    
             
                     // Überprüfen der Speicherung
                     console.log('LocalStorage after login:', {
@@ -175,16 +176,13 @@ function LoginForm({ onLogin }) {
             ) : (
                 <>
                     <div className={`logo-container ${logoShrink ? 'shrink' : ''}`}>
-                        <img src="/images/logo2.png" alt="Task Logo" />
+                        <img src="/images/connect.png" alt="Task Logo" />
                     </div>
                     <div className={`login-container ${showLoginForm ? 'show' : ''}`}>
                         <div className="header-login">
                         <div className="title-task-container">
-                        <h3 className='title-task'>Task</h3>
-                        <div className="vertical-line"></div>
+                        <h3 className='title-task'>Connect</h3>
                         <div className="text-container">
-                        <div className="subtitle">Better</div>
-                        <div className="subtitle">Together</div>
                         </div>
                         </div>
                         </div>

@@ -17,18 +17,19 @@
   }
   
   .header {
-    background-color: #08223d;
+    display: flex;
+    background-color: #9426B6;
     color: white;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     text-align: center;
-    width: 100%; 
+    width: 100%;
+    justify-content: center;
   }
   
   .form-container-reg {
     padding: 30px;
     width: 80%;
-    margin-left: 20px;
   }
 
   .form-container {
@@ -49,13 +50,15 @@
     background-color: #edeaea;
     border-radius: 10px;
     font-family: 'Helvetica';
+    padding: 10px;
+    margin-bottom: 10px;
   }
   
   .registration-button {
     width: calc(100% - 20px); 
     padding: 5px 20px;
     margin: 15px 0;
-    background-color:   #3498db;;
+    background-color:   #5E3BCD;
     border: none;
     cursor: pointer;
     border-radius: 3px;
@@ -94,6 +97,7 @@
   .popup-content {
     text-align: center;
   }
+
 
   .wrapper{
     display: flex;

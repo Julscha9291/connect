@@ -78,7 +78,7 @@ class CustomUser(AbstractUser):
 
 class Channel(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)  
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_channels')
     created_at = models.DateTimeField(auto_now_add=True)
     is_private = models.BooleanField(default=False)  # Neues Feld

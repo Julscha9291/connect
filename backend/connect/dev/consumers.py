@@ -191,7 +191,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'type': 'chat_message',
                         'message_id': message_id,
                         'reaction_type': reaction_type,
-                        'action': 'react'
+                        'action': 'react', 
+                        'sender_id': self.user.id  # Füge die user_id hinzu
                     }
                 )
 

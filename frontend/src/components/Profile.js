@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faEnvelope,faCircle } from '@fortawesome/free-solid-svg-icons';
 
 const Profile = ({ onClose }) => {
   const [userData, setUserData] = useState({
@@ -108,7 +108,7 @@ const Profile = ({ onClose }) => {
     <div className="profile-overlay">
       <div className="profile-card">
         <div className="profile-header">
-          <h2>Profil</h2>
+          <h2 className="h2-profile">Profile</h2>
           <button className="close-button" onClick={onClose}>
             <FontAwesomeIcon icon={faTimes} />
           </button>
@@ -118,21 +118,38 @@ const Profile = ({ onClose }) => {
           <img 
             src={`${baseUrl}${userData.profile_picture}`} 
             alt="Profile" 
-            className="profile-image" 
+            className="profile-nav" 
           />
         ) : (
           <div 
-            className="profile-initials" 
+            className="profile-nav" 
             style={{ backgroundColor: userData.color }} // Hintergrundfarbe für Initialen
           >
             {getInitials(userData.first_name, userData.last_name)}
           </div>
         )}
 
-        <div className="profile-info">
+
+
+<div className="profile-infos">
+
+        <div className="profile-info-nav">
           <h2>{userData.first_name} {userData.last_name}</h2>
+
+          <div style={{ display: 'flex', alignItems: 'center', color: 'green' }}>
+          <FontAwesomeIcon icon={faCircle} style={{ fontSize: '12px', marginRight: '5px' }} />
+          <span style={{ color: 'green', fontWeight: 'bold', fontSize:'20px' }}>Online</span>
+         </div>
+
+
           <div className="profile-details">
-            <p><strong>E-Mail-Adresse:</strong> {userData.email}</p>
+
+          <FontAwesomeIcon icon={faEnvelope} style={{ marginRight: '8px' }} className="email-icon" /><p>
+            <strong>E-Mail Adress:</strong> <br></br>
+
+            {userData.email}</p>
+          </div>
+          </div> 
           </div>
           <span className="status-text">{userData.status}</span>
           {isEditing ? (
@@ -158,12 +175,12 @@ const Profile = ({ onClose }) => {
                 onChange={handleChange}
                 placeholder="E-Mail"
               />
-              <button onClick={handleSaveClick}>Speichern</button>
+              <button className="edit-button"  onClick={handleSaveClick}>Speichern</button>
             </div>
           ) : (
-            <button onClick={handleEditClick}>Bearbeiten</button>
+            <button className="edit-button" onClick={handleEditClick}>Bearbeiten</button>
           )}
-        </div>
+   
       </div>
     </div>
   );

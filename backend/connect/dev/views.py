@@ -128,6 +128,38 @@ class ChannelViewSet(viewsets.ModelViewSet):
                 except User.DoesNotExist:
                     return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
             return Response({'error': 'User ID required'}, status=status.HTTP_400_BAD_REQUEST)    
+        
+        
+         # Überschreibe die Update-Methode, um nur bestimmte Felder zu erlauben
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        
+        # Erlauben, dass nur der Name und die Beschreibung geändert werden
+        data = request.data.copy()
+        allowed_fields = ['name', 'description']
+        for field in data:
+            if field not in allowed_fields:
+                data.pop(field)
+
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)  
+    
+    
+    @action(detail=True, methods=['delete'])
+    def delete_user(self, request, pk=None):
+        channel = self.get_object()
+        user = request.user
+
+        try:
+            membership = ChannelMembership.objects.get(channel=channel, user=user)
+            membership.delete()
+            return Response({'status': 'user removed from channel'}, status=status.HTTP_204_NO_CONTENT)
+        except ChannelMembership.DoesNotExist:
+            return Response({'error': 'User not a member of this channel'}, status=status.HTTP_404_NOT_FOUND) 
 
 class ChannelMembershipViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ChannelMembership.objects.all()

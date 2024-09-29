@@ -21,11 +21,12 @@ urlpatterns = [
     path('messages/<int:channel_id>/', get_messages, name='get_messages'),
     path('message/<int:message_id>/edit/', edit_message, name='edit_message'),
     path('message/<int:message_id>/delete/', delete_message, name='delete_message'),
-       path('api/channels/<int:channel_id>/members/', ChannelMembershipViewSet.as_view({'get': 'list'}), name='channel-members'),
-     path('create-private-channel/', create_private_channel, name='create_private_channel'),
-      path('channels/private/', create_private_channel, name='check_private_channel'),
+    path('api/channels/<int:channel_id>/members/', ChannelMembershipViewSet.as_view({'get': 'list'}), name='channel-members'),
+    path('create-private-channel/', create_private_channel, name='create_private_channel'),
+    path('channels/private/', create_private_channel, name='check_private_channel'),
     path('reactions/message/<int:message_id>/', ReactionViewSet.as_view({'get': 'reactions_for_message'}), name='reactions-for-message'),
-  path('upload/', upload_file, name='file-upload'),
-   path('threads/', get_threads, name='get-threads'),
+    path('upload/', upload_file, name='file-upload'),
+    path('threads/', get_threads, name='get-threads'),
+    path('channels/<int:channel_id>/delete_user/', ChannelViewSet.as_view({'delete': 'delete_user'}), name='delete_user'),
 
 ]
