@@ -1,18 +1,26 @@
 /* styles.css */
 .threads-container {
   display: flex;
-  position: absolute;
   right: 0;
   top: 0;
-  width: 300px;
-  background-color: #fff;
-  border-left: 1px solid #ddd;
-  padding: 16px;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
   flex-direction: column;
   justify-content: space-between;
-      z-index: 1000;
+  z-index: 1000;
+  /* margin-right: 30px; */
+  height: 85vh;
+ 
   }
+
+
+  .container-scroll{
+    height: 100%;
+    overflow-y: overlay;
+    overflow-x: hidden;
+  }
+  
 
 .sender-details{
   padding-left: 20px;
@@ -25,7 +33,7 @@
     flex-direction: row;
     justify-content: space-between;
     margin-top: 10px;
-    color: #555;
+    color: #fff;
   }
 
   .initial-message{
@@ -33,23 +41,28 @@
     padding:10px;
   }
   
-  .close-button {
-    position: absolute;
+  .close-threads-button {
     top: 8px;
     right: 8px;
     font-size: 18px;
     border: none;
     background: none;
     cursor: pointer;
+    color:#fff;
   }
   
   .thread-header {
-    margin-bottom: 16px;
-    color:#555;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* margin-bottom: 16px; */
+    color: #fff;
+    align-items: flex-start;
+    padding: 15px;
+    background-color: rgba(29, 37, 82);
   }
 
-  
-  
+
   .thread-messages {
     max-height: calc(100% - 90px);
     overflow-y: auto;
@@ -69,4 +82,147 @@
   .thread-input button {
     padding: 8px;
   }
+
+  .Message-thread-currentuser {
+    padding: 20px;
+    border-radius: 20px;
+    display: flex;
+    text-align: left; /* Text linksbündig */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color:#4742eb;
+    position: relative;
+    color: white;
+    max-width: 60%;
+    min-width: 40%;
+    word-wrap: break-word; /* Wortumbruch */
+    overflow-wrap: break-word; /* Für bessere Kompatibilität */
+    white-space: normal; /* Zeilenumbruch aktivieren */
+  }
+
+  .Message-thread-currentuser::after {
+    content: '';
+    position: absolute;
+    bottom: -15px; /* Verändere die Position entsprechend der Dreieckgröße */
+    right: -10px; /* Anpassung für die größere Dreieckbreite */
+    width: 0;
+    height: 0;
+    border: 25px solid transparent; /* Erhöht die Größe des Dreiecks */
+    border-top-color: #4742eb ; /* Gleiche Farbe wie der Hintergrund */
+    transform: rotate(45deg);
+  }
   
+  .Message-thread-otheruser{
+    padding: 20px;
+    border-radius: 20px;
+    display: flex;
+    text-align: right;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: #151426; 
+    position: relative;
+    color: white;
+    max-width: 60%;
+  }
+  
+  .p-class{
+    color:#fff;
+    margin: 0px;
+  }
+  /* Dreieck für andere Benutzer (links) */
+  .Message-thread-otheruser::after {
+    content: '';
+    position: absolute;
+    bottom: -15px; /* Verändere die Position entsprechend der Dreieckgröße */
+    left: -10px; /* Anpassung für die größere Dreieckbreite */
+    width: 0;
+    height: 0;
+    border: 25px solid transparent; /* Erhöht die Größe des Dreiecks */
+    border-top-color:  #151426; /* Gleiche Farbe wie der Hintergrund */
+    transform: rotate(-45deg); 
+  }
+
+  .strong-class{
+  color:#fff;
+  padding:10px;
+ }
+
+
+ .thread-hover-actions{
+  display: none; /* Standardmäßig ausgeblendet */
+  position: absolute; /* Absolute Positionierung, um über der Nachricht zu erscheinen */
+  background-color: rgba(94, 60, 189, 0.7);
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 1001;
+  max-width: 90%;
+  min-width: 20%;
+
+}
+
+.thread-hover-actions.visible {
+  display: flex; /* Sichtbar, wenn die Klasse 'visible' hinzugefügt wird */
+  flex-direction: row;
+  padding: 10px;
+  margin-top: -40px;
+  max-width: 150%;
+}
+
+.thread-edit{
+  background-color: #5e3bcd;
+  padding: 10px;
+  border-radius: 15px;
+  display: flex;
+  gap: 10px;
+  margin-left:1000px;
+  height: 40px;
+  height: 100px;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.thread-edit button {
+  padding: 5px 10px;
+  background-color: white;
+  border: none;
+  color: #5e3bcd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.thread-text{
+display: flex;
+}
+
+.thread-button{
+  display: flex;
+  gap:5px;
+  }
+
+  .input-edit{
+width: 100%;
+height: 100%;
+  }
+
+  .thread-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+  
+  .thread-right {
+    justify-content: flex-end;
+    text-align: right;
+    margin-right: 10px;
+    font-size: 14px;
+  }
+  
+  .thread-left {
+    justify-content: flex-start;
+    text-align: left;
+    margin-left: 10px;
+    font-size: 14px;
+  }

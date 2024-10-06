@@ -89,6 +89,7 @@ function LoginForm({ onLogin }) {
                                 localStorage.setItem('profile_picture', profileData.user.profile_picture);
                             }
                             navigate('/');
+                            window.location.reload();
                             // Überprüfen der Speicherung nach Profil-Update
                             localStorage.setItem('access_token', data.access);
                             console.log('LocalStorage after profile fetch:', {
@@ -181,7 +182,7 @@ function LoginForm({ onLogin }) {
                     <div className={`login-container ${showLoginForm ? 'show' : ''}`}>
                         <div className="header-login">
                         <div className="title-task-container">
-                        <h3 className='title-task'>Connect</h3>
+                        <h3 className='title-task'>.connect</h3>
                         <div className="text-container">
                         </div>
                         </div>

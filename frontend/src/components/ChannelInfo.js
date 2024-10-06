@@ -84,13 +84,13 @@ const handleNameEdit = () => {
             style={{ 
               marginRight: '10px', 
               fontSize: '30px',   // Größe auf 30px setzen
-              color: '#5E3BCD'    // Farbe auf Weiß ändern
+              color: '#4742eb'    // Farbe auf Weiß ändern
             }} 
           />
 
         <h3 className="channel-info">Channel Information</h3>
         </div>
-        <button className="close-button" onClick={onClose}>x</button>
+        <button className="close-button" onClick={onClose}>&times;</button>
         </div>
 
         <div className="channel-detail-row">

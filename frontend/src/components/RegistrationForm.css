@@ -18,8 +18,7 @@
   
   .header {
     display: flex;
-    background-color: #9426B6;
-    color: white;
+    background-color: #2d345f;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     text-align: center;
@@ -37,7 +36,7 @@
   }
   
   .registration-heading {
-    color:#fff;
+    color: #19dae5;
     display: ruby-text;
   }
   
@@ -58,7 +57,7 @@
     width: calc(100% - 20px); 
     padding: 5px 20px;
     margin: 15px 0;
-    background-color:   #5E3BCD;
+    background-color:    #4742eb;
     border: none;
     cursor: pointer;
     border-radius: 3px;
@@ -105,3 +104,6 @@
     width: 95%;
     gap: 20px;
   }
+.upload-icon{
+  margin-left:10px;
+}

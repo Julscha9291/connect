@@ -29,6 +29,10 @@ class LoginView(APIView):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             refresh = RefreshToken.for_user(user)
+                        # Setze den Benutzer auf 'online'
+            user.is_online = True
+            user.save()
+            
             user.is_active = True  
             profile_picture_url = user.profile_picture.url if user.profile_picture else None
             return Response({
@@ -49,6 +53,24 @@ class LoginView(APIView):
 
 logger = logging.getLogger(__name__)
 
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            # Setze den Benutzer offline
+            user = request.user
+            user.is_online = False
+            user.save()
+
+            # Token-Invalidierung (Optional, wenn du JWT verwendest)
+            refresh_token = request.data.get("refresh")
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ContactViewSet(viewsets.ModelViewSet):
@@ -351,6 +373,8 @@ class ThreadReactionViewSet(viewsets.ModelViewSet):
         except ThreadReaction.DoesNotExist:
             return Response({'detail': 'Reaktion nicht gefunden.'}, status=status.HTTP_404_NOT_FOUND)
        
+       
+       
 class ThreadViewSet(viewsets.ModelViewSet):
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
@@ -377,3 +401,48 @@ def get_threads(request, message_id):
         'file_url'  # Datei-URL, falls vorhanden
     )
     return JsonResponse(list(threads), safe=False)    
+
+
+
+@api_view(['DELETE'])
+def delete_thread(request, message_id):
+    try:
+        # Hole das Thread-Objekt anhand der ID
+        thread = Thread.objects.get(id=message_id)
+        print(f"Deleting thread with ID: {message_id} by user: {request.user}")
+
+        # Überprüfe, ob der Benutzer der Sender des Threads ist
+        if thread.sender != request.user:
+            return Response({"error": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
+
+        # Thread löschen
+        thread.delete()
+        return Response({"message": "Thread deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+    except Thread.DoesNotExist:
+        return Response({"error": "Thread not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['PUT'])
+def edit_thread(request, message_id):
+    print(f'Edit request received for thread ID: {message_id}')  # Debugging-Ausgabe
+
+    try:
+        # Suche nach dem Thread mit der übergebenen thread_id, nicht message_id
+        thread = Thread.objects.get(id=message_id)
+        
+        # Überprüfen, ob der aktuelle Benutzer der Absender des Threads ist
+        if thread.sender != request.user:
+            return Response({"error": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Neue Inhalte aus dem Request abrufen
+        new_content = request.data.get('content')
+        if new_content:
+            thread.content = new_content
+            thread.save()  # Speichern der Änderungen
+            return Response(ThreadSerializer(thread).data)  # Verwende den korrekten Serializer für Threads
+        else:
+            return Response({"error": "No content provided"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Behandle den Fall, in dem der Thread nicht gefunden wird
+    except Thread.DoesNotExist:
+        return Response({"error": "Thread not found"}, status=status.HTTP_404_NOT_FOUND)

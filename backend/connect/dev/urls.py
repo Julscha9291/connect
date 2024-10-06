@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserRegistrationView, LoginView, UserProfileView, UserListView, UserContactView, ChannelViewSet, ChannelMembershipViewSet, get_messages, edit_message, delete_message, create_private_channel, ReactionViewSet, ThreadViewSet, ThreadReactionViewSet, upload_file, get_threads
+from .views import UserRegistrationView, LoginView, UserProfileView, UserListView, UserContactView, ChannelViewSet, ChannelMembershipViewSet, get_messages, edit_message, delete_message, create_private_channel, ReactionViewSet, ThreadViewSet, ThreadReactionViewSet, upload_file, get_threads, delete_thread, edit_thread
+
 
 router = DefaultRouter()
 router.register(r'channels', ChannelViewSet)
@@ -25,8 +26,12 @@ urlpatterns = [
     path('create-private-channel/', create_private_channel, name='create_private_channel'),
     path('channels/private/', create_private_channel, name='check_private_channel'),
     path('reactions/message/<int:message_id>/', ReactionViewSet.as_view({'get': 'reactions_for_message'}), name='reactions-for-message'),
+    path('thread-reactions/threads/<int:thread_id>/', ThreadReactionViewSet.as_view({'get': 'reactions_for_threads'}), name='reactions_for_threads'),
     path('upload/', upload_file, name='file-upload'),
     path('threads/', get_threads, name='get-threads'),
+    path('threads/<int:thread_id>/', ThreadViewSet.as_view({'get': 'retrieve'}), name='thread-detail'),  # Detail-Endpunkt für Threads
+    path('threads/<int:thread_id>/delete/', delete_thread, name='delete_thread'),
+      path('threads/<int:thread_id>/edit/', edit_thread, name='edit_thread'),
     path('channels/<int:channel_id>/delete_user/', ChannelViewSet.as_view({'delete': 'delete_user'}), name='delete_user'),
 
 ]

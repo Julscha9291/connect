@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './RegistrationForm.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 function RegistrationForm({ onSuccess, onSwitchToLogin }) {
@@ -52,7 +54,18 @@ function RegistrationForm({ onSuccess, onSwitchToLogin }) {
                         <input className="registration-input" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Lastname" required /><br />
                         <input className="registration-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-Mail" required /><br />
                         <input className="registration-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required /><br />                      
-                        <input type="file" onChange={handlePictureChange} /><br />
+                        <div className="upload-container">
+                        <label>Upload profile picture:</label>
+                        <input
+                            type="file"
+                            id="profilePictureInput"
+                            style={{ display: 'none' }}
+                            onChange={handlePictureChange}
+                        />
+                        <label htmlFor="profilePictureInput" className="upload-icon">
+                        <FontAwesomeIcon icon={faUpload} style={{ color: '#555' }} /> 
+                        </label>
+                        </div>
                         <div className='wrapper'>
                             <button type="submit" className="registration-button">Sign up</button>
                             <button type="button" onClick={onSwitchToLogin} className="login-button">Login</button>

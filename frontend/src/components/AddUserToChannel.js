@@ -1,8 +1,10 @@
 import React, { useCallback, useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import './AddUserToChannel.css';
 import axios from 'axios';
 
-const AddUserToChannel = ({ channelId, closeModal, addUserToChannel, channelName }) => {
+const AddUserToChannel = ({ channelId, closeModal, addUserToChannel, channelName, channelDescription }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -52,13 +54,17 @@ const AddUserToChannel = ({ channelId, closeModal, addUserToChannel, channelName
   const handleSearch = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-
+  
     // Filter users based on search term
     const filtered = users.filter(user =>
       user.first_name.toLowerCase().includes(term.toLowerCase()) ||
       user.last_name.toLowerCase().includes(term.toLowerCase()) ||
       user.email.toLowerCase().includes(term.toLowerCase())
     );
+  
+    console.log('Suchbegriff:', term);
+    console.log('Gefilterte Benutzer:', filtered);
+    
     setFilteredUsers(filtered);
   };
 
@@ -75,14 +81,15 @@ const AddUserToChannel = ({ channelId, closeModal, addUserToChannel, channelName
   return (
     <div className="add-user-modal">
       <div className="modal-header">
-        <h3>Leute hinzufügen</h3>
-        <button onClick={closeModal}>&times;</button>
+
+        <h3>       <FontAwesomeIcon icon={faUserPlus} className="user-icon" /> Leute hinzufügen</h3>
+        <button className="close-button" onClick={closeModal}>&times;</button>
       </div>
       <div className="modal-body">
-        <h4>#{channelId}</h4>
-        <h4>{channelName}</h4>
-        channelName
+        <h4>Channel name: {channelName}</h4>
+        <h4>Channel description: {channelDescription}</h4>
         <input
+        className="input-add-user" 
           type="text"
           placeholder="Benutzer durchsuchen"
           value={searchTerm}

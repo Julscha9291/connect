@@ -1,12 +1,13 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
-import AddUserToChannel from './AddUserToChannel'; 
 import './Chat.css';
-import Threads from './Threads';
-import ChannelInfo from './ChannelInfo';  // ChannelInfo-Komponente importieren
+import Threads from './Threads'; // ChannelInfo-Komponente importieren
 import EmojiPicker from 'emoji-picker-react';
-import SelectedUserProfile from './SelectedUserProfile';
+import ChatHeader from './ChatHeader';
+import ChatFooter from './ChatFooter';
+import MessageBottom from './MessageBottom';
+import MessageHoverActions from './MessageHoverActions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus, faCaretDown, faSmile, faEllipsisVertical,faEdit, faTrash, faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -18,7 +19,6 @@ const Chat = ({ selectedChat, setUnreadCount }) => {
   const [partner, setPartner] = useState(null);
   const socket = useRef(null);
   const [members, setMembers] = useState([]);
-  const currentUserId = parseInt(localStorage.getItem('user_id'), 10);
   const [messageReactions, setMessageReactions] = useState({});
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [channelId, setChannelId] = useState(null);
@@ -36,30 +36,28 @@ const Chat = ({ selectedChat, setUnreadCount }) => {
   const [hideHoverIcons, setHideHoverIcons] = useState(false);
   const [hideHoverActions, setHideHoverActions] = useState(false);
   const chatEndRef = useRef(null);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState({});
   const [reactionUserNames, setReactionUserNames] = useState({});
+  const currentUserId = parseInt(localStorage.getItem('user_id'), 10);
+  const [selectedThread, setSelectedThread] = useState(null);
 
 
 
-  useEffect(() => {
+// Hier rufst du die Funktion auf
+useEffect(() => {
     const savedChatId = localStorage.getItem('selectedChatId');
-    scrollToBottom(); // Hier rufst du die Funktion auf
+    scrollToBottom(); 
     if (savedChatId) {
-      // Hier solltest du eine Funktion aufrufen, um den Chat mit der ID `savedChatId` zu laden
-      // setSelectedChat({ ... }) mit den Daten für den Chat
     }
   }, []);
 
     // Funktion, um den Chat automatisch ans Ende zu scrollen
-    const scrollToBottom = () => {
+  const scrollToBottom = () => {
       if (chatEndRef.current) {
           chatEndRef.current.scrollIntoView({ behavior: 'auto' });
       }
   };
-
   
-
   const fetchUsers = useCallback(async (token) => {
     try {
       const response = await fetch('http://localhost:8000/api/users/', {
@@ -130,22 +128,13 @@ const Chat = ({ selectedChat, setUnreadCount }) => {
 
   useEffect(() => {
     if (selectedChat) {
-
-
-
-      console.log('selectedChat:', selectedChat); // Debugging-Ausgabe
       if (selectedChat.data.is_private) {
-        // Private Chat-Logik hier
-        console.log('Privater Chat erkannt.');
-        // ...
       } else {
         console.log('Nicht privater Chat erkannt.');
         const token = localStorage.getItem('access_token');
         fetchChannelMembers(selectedChat.data.id, token, setMembers);
       }
-
       localStorage.setItem('selectedChatId', selectedChat.data.id);
-
       if (selectedChat.data.is_private) {
         const partnerMember = selectedChat.data.members.find(
           (member) => member.user !== currentUserId
@@ -197,7 +186,6 @@ const Chat = ({ selectedChat, setUnreadCount }) => {
   
     fetchReactionUsers();
   }, [messageReactions]); // Abhängig von den Reaktionen neu laden
-  
   
   
   
@@ -282,19 +270,15 @@ const Chat = ({ selectedChat, setUnreadCount }) => {
                 console.log("Anderer Nutzer", data.sender_id);
                 // Hol den aktuellen Benutzer
                 const currentUserId = parseInt(localStorage.getItem('user_id'), 10); // Aktueller Benutzer als Zahl
-                console.log("Aktueller Benutzer (ID):", currentUserId);
-              
+                console.log("Aktueller Benutzer (ID):", currentUserId);             
                 // Aktualisiere die Reaktionen direkt im Frontend
                 setMessageReactions(prevReactions => {
                   const updatedReactions = { ...prevReactions };
                   const messageReactions = updatedReactions[data.message_id] || {};
                   const reactionUsers = messageReactions[data.reaction_type] || new Set();
-            
-
+          
                     // Wenn eine Reaktion hinzugefügt wurde
                     reactionUsers.add(data.sender_id);
-
-             
             
                   // Aktualisiere die Reaktionen
                   messageReactions[data.reaction_type] = reactionUsers;
@@ -314,18 +298,14 @@ const Chat = ({ selectedChat, setUnreadCount }) => {
                     notificationIncreased = true;
                 }
          
-
               } else {
                 console.error('Ungültige Daten für Reaktion:', data);
               }
-              break;
-
-                  
+              break;                  
           default:
             console.error('Unknown action type:', data.action);
         }
       };
-
 
 
       const refreshMessages = () => {
@@ -578,6 +558,17 @@ const removeReaction = (messageId, reactionType, user) => {
 };
   
 
+
+
+
+
+
+
+
+
+
+
+
   const handleDeleteMessage = (messageId) => {
     if (isConnected) {
       const message = {
@@ -667,8 +658,6 @@ const removeReaction = (messageId, reactionType, user) => {
     }
 };
 
-
-
   if (!selectedChat) {
     return <div>Bitte wähle einen Chat</div>;
   }
@@ -691,28 +680,7 @@ const removeReaction = (messageId, reactionType, user) => {
     setIsBackgroundDark(false); // Hintergrund zurücksetzen
   };
   
-  const handleAddUserToChannel = (user, refreshMessages) => {
-    const userId = user.id;
 
-    fetch(`http://localhost:8000/api/channels/${channelId}/add_user/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-        body: JSON.stringify({ user_id: userId }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('User added:', data);
-        // Hier kannst du weitere Logik hinzufügen, z.B. den Modal schließen
-        closeAddUserModal();
-        refreshMessages();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-};
 
 const getMessageClass = (senderId) => {
   return senderId === currentUserId ? 'message current-user' : 'message other-user';
@@ -733,12 +701,11 @@ const handleOpenThreads = (message) => {
     } else {
       // Öffnen des Threads für die spezifische Nachricht
       setSelectedMessage(message);
-      setSelectedMessageId(message.id); // Hier sicherstellen, dass die ID korrekt übergeben wird
-      console.log(message.id); // Ausgabe der ID zur Überprüfung
-      setSenderId(message.sender_id); // Hier sicherstellen, dass die ID korrekt übergeben wird
+      setSelectedMessageId(message.id); 
+      setSenderId(message.sender_id); 
       setShowThreads(true);
-      console.log(message.id); // Ausgabe der ID zur Überprüfung
-      console.log(message.sender_id); // Ausgabe der ID zur Überprüfung
+      console.log('Selected Thread ID:', message.id); // Ausgabe der ID zur Überprüfung
+      setSelectedThread(message); // Setze den ausgewählten Thread hier
     }
   } else {
     console.error('Message or Message ID is undefined');
@@ -831,14 +798,9 @@ const toggleActions = () => {
     setFilePreview(null);  // Entfernt die Vorschau
   };
 
-    const handleToggleProfile = () => {
-    setIsProfileOpen((prevState) => !prevState);
-  };
 
-  // Funktion zum Schließen des Profils (z.B. wenn das Modal geschlossen wird)
-  const handleCloseProfile = () => {
-    setIsProfileOpen(false);
-  };
+
+ 
 
   const getTotalReactions = (messageId) => {
     const emojiTypes = ['like', 'love', 'haha', 'wow', 'sad', 'angry'];
@@ -894,8 +856,6 @@ const getReactionUsersWithNames = async (reactions, messageId, reactionType, cur
 
     if (currentUserIndex !== -1) {
       const currentUser = reactingUsers.splice(currentUserIndex, 1)[0]; // Aktuellen Benutzer entfernen
-
-      // Erstelle den Reaktionstext abhängig von der Anzahl der anderen Benutzer
       if (reactingUsers.length === 0) {
         reactionText = 'You reacted';
       } else if (reactingUsers.length === 1) {
@@ -923,186 +883,67 @@ const getReactionUsersWithNames = async (reactions, messageId, reactionType, cur
 };
 
 
+
+
+
   return (
-    <div className={`chat ${isBackgroundDark ? 'dark-background' : ''}`}>   
-    <div className="chat">
-      <div className="chat-header">
-        {selectedChat.data.is_private ? (
-          partner ? (
-            <div className="chat-header-private">
-              {partner.profile_picture ? (
-                <img
-                  src={partner.profile_picture}
-                  alt={`${partner.first_name} ${partner.last_name}`}
-                  className="chat-profile-image"
-                />
-              ) : (
-                <div
-                  className="user-profile-placeholder"
-                  style={{ backgroundColor: partner.color }}
-                >
-                  {partner.first_name[0]}
-                  {partner.last_name[0]}
-                </div>
-              )}
-              <span className="chat-partner-name">
-                {partner.first_name} {partner.last_name}
-              </span>
 
-
-              <div className="dropdown-icon" onClick={handleToggleProfile}>
-              <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" />
-            </div>
-            {isProfileOpen && (
-        <SelectedUserProfile
-          user={partner}
-          onClose={handleCloseProfile}
-          onMessageClick={() => {
-            /* Logik zum Senden einer Nachricht an den User */
-          }}
+<div className={`chat-window${isBackgroundDark ? 'dark-background' : ''}`}>    
+<div className={`chat ${isBackgroundDark ? 'dark-background' : ''} ${showThreads ? 'hide' : ''}`}>
+          <ChatHeader
+          selectedChat={selectedChat}
+          partner={partner}
+          members={members}
+          handleDropdownProfileToggle={handleDropdownProfileToggle}
+          isDropdownProfileOpen={isDropdownProfileOpen}
+          openAddUserModal={openAddUserModal}
+          closeAddUserModal={closeAddUserModal}
+          isAddUserModalOpen={isAddUserModalOpen}
+          closeModal={closeModal}
+          channelId = {channelId}
         />
-      )}
-            </div>
-            
+
+  <div className="chat-body">
+      {messages.length === 0 ? (
+        <div className="no-messages">Keine Nachrichten</div>
           ) : (
-            <div>Partnerdaten werden geladen...</div>
-          )
-   
-        ) 
-        : (
-          
-
-  <div className="chat-header-channel">
-    <div className="channel-left">   
-
-  <div className="channel-title" >{selectedChat.data.name}</div>
-
-
-  <div className="dropdown-icon">
-        <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={handleDropdownProfileToggle} />
-      </div>
-
-      {isDropdownProfileOpen && (
-  <div className="modal-wrapper">
-    <div className="modal-overlay" onClick={closeModal}></div>
-    <div className="modal-content">
-      <ChannelInfo
-        channelName={selectedChat.data.name}  // Name des Channels
-        description={selectedChat.data.description}  // Beschreibung des Channels
-        channelId={selectedChat.data.id}  // Channel ID
-        creator={selectedChat.data.creator}  // Beispielwert für den Ersteller
-        onClose={closeModal}  // Zum Schließen des Modals
-      />
-      <button className="close-modal-button" onClick={closeModal}>X</button>
-    </div>
-  </div>
-)}
-  
-  </div>
-
-  <div className="channel-right">  
-  <div className="channel-members-header">
-  {members.length > 0 ? (
-    members.map((member) => (
-      <div key={member.id} className="channel-member">
-        {member.profile_picture ? (
-          <img
-            src={member.profile_picture}
-            alt={`${member.first_name} ${member.last_name}`}
-            className="user-profile-placeholder2"
-          />
-        ) : (
-          <div
-            className="user-profile-placeholder2"
-            style={{ backgroundColor: member.color || '#ccc' }} // Falls keine Farbe definiert ist, setze eine Standardfarbe
-          >
-            {member.first_name[0]}
-            {member.last_name[0]}
-          </div>
-        )}
-  
-      </div>
-      
-    ))
-  ) : (
-    <div>Keine Mitglieder gefunden.</div>
-  )}
-</div>
-
-
-<FontAwesomeIcon icon={faUserPlus} className="user-icon" onClick={openAddUserModal} />
-
-
-{isAddUserModalOpen && (
-        <>
-          <div className="overlay" onClick={closeAddUserModal}></div>
-          <AddUserToChannel
-            channelId={selectedChat.data.id}
-            channelName={selectedChat.data.name}
-            closeModal={closeAddUserModal}
-            addUserToChannel={handleAddUserToChannel}
-          />
-        </>
-      )}
-</div>
-</div>
-        )}
-      </div>
-   
-
-
-
-      <div className="chat-body">
-  {messages.length === 0 ? (
-    <div className="no-messages">Keine Nachrichten</div>
-  ) : (
-    <div className="chat-container">
-
-
-      <div className="messages">
-        {messages.map((message, index) => {
-          // Sende-Details abrufen
-          const senderDetails = members.find((member) => member.id === message.sender_id);
-
-            // Datum formatieren
-            const messageDate = new Date(message.timestamp); // assuming message.timestamp is in ISO format
-            const today = new Date();
-            const yesterday = new Date();
-            yesterday.setDate(today.getDate() - 1);
-
-            // Funktion zur Überprüfung, ob es sich um heute oder gestern handelt
-            const formatDate = (date) => {
-              if (
-                date.getDate() === today.getDate() &&
-                date.getMonth() === today.getMonth() &&
-                date.getFullYear() === today.getFullYear()
-              ) {
-                return "Today";
-              } else if (
-                date.getDate() === yesterday.getDate() &&
-                date.getMonth() === yesterday.getMonth() &&
-                date.getFullYear() === yesterday.getFullYear()
-              ) {
-                return "Yesterday";
-              } else {
-                return date.toLocaleDateString(); // Format DD.MM.YYYY
-              }
-            };
-
-          
+           <div className="chat-container">
+              <div className="messages">
+                  {messages.map((message, index) => {
+                    const senderDetails = members.find((member) => member.id === message.sender_id);
+                     // Datum formatieren
+                    const messageDate = new Date(message.timestamp); // assuming message.timestamp is in ISO format
+                    const today = new Date();
+                    const yesterday = new Date();
+                    yesterday.setDate(today.getDate() - 1);
+                    const formatDate = (date) => {
+                    if (
+                        date.getDate() === today.getDate() &&
+                        date.getMonth() === today.getMonth() &&
+                        date.getFullYear() === today.getFullYear()
+                      ) {
+                        return "Today";
+                      } else if (
+                        date.getDate() === yesterday.getDate() &&
+                        date.getMonth() === yesterday.getMonth() &&
+                        date.getFullYear() === yesterday.getFullYear()
+                      ) {
+                        return "Yesterday";
+                      } else {
+                        return date.toLocaleDateString(); // Format DD.MM.YYYY
+                      }
+                    };        
           return (
             <div key={message.id} className={getMessageClass(message.sender_id)}>
-
+        
             {index === 0 || new Date(messages[index - 1].timestamp).toLocaleDateString() !== messageDate.toLocaleDateString() ? (
                 <div className="date-separator">
                   <span>{formatDate(messageDate)}</span>
                 </div>
-              ) : null}             {/* Datum nur anzeigen, wenn es sich um eine neue Gruppe von Nachrichten handelt */}
+          ) : null}             
 
-        <div className="chat-wrapper" onMouseEnter={() => handleMouseEnter(message.id)} onMouseLeave={handleMouseLeave} >
-              <div className="messages-wrapper">
-
-   
+    <div className="chat-wrapper" onMouseEnter={() => handleMouseEnter(message.id)} onMouseLeave={handleMouseLeave} >
+          <div className="messages-wrapper">
                 {senderDetails ? (
                   <div className="sender-details">
                     {senderDetails.profile_picture ? (
@@ -1111,51 +952,18 @@ const getReactionUsersWithNames = async (reactions, messageId, reactionType, cur
                         alt={`${senderDetails.first_name} ${senderDetails.last_name}`}
                         className="member-profile-image"
                       />
-                    ) : (
-                      <div
-                        className="user-profile-placeholder"
-                        style={{ backgroundColor: senderDetails.color || '#ccc' }} // Standardfarbe falls keine Farbe vorhanden
-                      >
+                      ) : (
+                  <div className="user-profile-placeholder"
+                        style={{ backgroundColor: senderDetails.color || '#ccc' }}>
                         {senderDetails.first_name[0]}
                         {senderDetails.last_name[0]}
-                      </div>
+                  </div>
                     )}
                   </div>
-                ) : (
+                    ) : (
                   <div className="user-profile-placeholder">NN</div> // Fallback für unbekannte Nutzer
                 )}
-
-                {/* Name des Senders anzeigen */}
-               
-
-                {selectedMessageId === message.id && showThreads && (
-
-              
-                  <Threads
-                  initialMessage={selectedMessage}
-                  sender={message.sender}
-                  Initial_first_name={message.first_name}
-                  profile_picture={senderDetails?.profile_picture}
-                  first_name={senderDetails?.first_name}
-                  last_name={senderDetails?.last_name}
-                  color={senderDetails?.color}
-                  onClose={handleCloseThreads}
-                  messageId={selectedMessageId}
-                  SenderId={SenderId}
-                  currentUserId={currentUserId}
-                  file_url={message.file_url}
-                  updateThreadCount={updateThreadCount} 
-                  />
-                
-                )}
-
-
-
-      
               </div>
-
-
-              
 
               {editingMessageId === message.id ? (
                  <div className="message-edit">
@@ -1164,17 +972,12 @@ const getReactionUsersWithNames = async (reactions, messageId, reactionType, cur
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                   />
-                  <button onClick={handleSaveMessage}>Speichern</button>
-                  <button onClick={handleCancelEdit}>Abbrechen</button>
+                  <button onClick={handleSaveMessage}>Save</button>
+                  <button onClick={handleCancelEdit}>Cancel</button>
                 </div>
-              ) : (
-
-
-
+                ) : (
 
                 <div className="Message-Text" >
-
-
                 <div className="Message-Sender">
                   <strong>{message.sender}:</strong>
                   <span className="message-time">{formatTimestamp(message.timestamp)}</span>
@@ -1203,246 +1006,43 @@ const getReactionUsersWithNames = async (reactions, messageId, reactionType, cur
                           </div>
                         )}
                       </div>
-
                       )}
 
-<div className={`message-hover-actions ${hoveredMessageId === message.id && !hideHoverActions ? 'visible' : ''}`}>
-{hideHoverIcons && (
-          <button className="close-button-message" onClick={closeAll}>
-            <span>x</span>
-          </button>
-        )}
-{!hideHoverIcons && (
+    <div>
+          <MessageHoverActions
+            hoveredMessageId={hoveredMessageId}
+            hideHoverActions={hideHoverActions}
+            hideHoverIcons={hideHoverIcons}
+            message={message}
+            currentUserId={currentUserId}
+            activeIcon={activeIcon}
+            toggleEmojiPicker={toggleEmojiPicker}
+            handleOpenThreads={handleOpenThreads}
+            toggleActions={toggleActions}
+            handleEditMessage={handleEditMessage}
+            handleDeleteMessage={handleDeleteMessage}
+            handleReactionClick={handleReactionClick}
+            closeAll={closeAll}
+            messageId={message.id} 
+          />
+          </div>
 
-  
-    <div className="message-icon">
-                  <button
-                    className="speech-bubble-icon"
-                    onClick={() => handleOpenThreads(message)}
-                  >
-                    <i className="fas fa-comment-dots"></i>
-                  </button>
-                </div>
-)}
-    {/* Smiley-Icon */}
-    {!hideHoverIcons && (
-    <div className="message-icon">
-      <button onClick={toggleEmojiPicker}>
-        <FontAwesomeIcon icon={faSmile} />
-      </button>
-    </div>
-  )}
-
-{activeIcon === 'emoji' && (
-  <div className="emoji-picker-dropdown">
-    <button className="emoji-button" onClick={() => handleReactionClick(message.id, 'like')}>
-      <span role="img" aria-label="like" style={{ marginRight: '2px' }}>👍</span>
-    </button>
-    <button className="emoji-button" onClick={() => handleReactionClick(message.id, 'love')}>
-      <span role="img" aria-label="love" style={{ marginRight: '2px' }}>❤️</span>
-    </button>
-    <button className="emoji-button" onClick={() => handleReactionClick(message.id, 'haha')}>
-      <span role="img" aria-label="haha" style={{ marginRight: '2px' }}>😂</span>
-    </button>
-    <button className="emoji-button" onClick={() => handleReactionClick(message.id, 'wow')}>
-      <span role="img" aria-label="wow" style={{ marginRight: '2px' }}>😮</span>
-    </button>
-    <button className="emoji-button" onClick={() => handleReactionClick(message.id, 'sad')}>
-      <span role="img" aria-label="sad" style={{ marginRight: '2px' }}>😢</span>
-    </button>
-    <button className="emoji-button" onClick={() => handleReactionClick(message.id, 'angry')}>
-      <span role="img" aria-label="angry" style={{ marginRight: '2px' }}>😡</span>
-    </button>
-  </div>
-)}
-
-
-
-    {/* Drei-Punkte-Icon */}
-    {!hideHoverIcons && message.sender_id === currentUserId && (
-  <div className="message-icon">
-    <button onClick={toggleActions}>
-      <FontAwesomeIcon icon={faEllipsisVertical} />
-    </button>
-  </div>
-)}
-  
-      {/* Aktionen Dropdown */}
-      {activeIcon === 'actions' && message.sender_id === currentUserId && (
-  <div className="message-actions-dropdown">
-    <button className="button-edit-delete" onClick={() => handleEditMessage(message.id, message.message)}>
-      <FontAwesomeIcon icon={faEdit} /> {/* Bearbeiten-Icon */}
-    </button>
-    <button className="button-edit-delete" onClick={() => handleDeleteMessage(message.id)}>
-      <FontAwesomeIcon icon={faTrash} /> {/* Löschen-Icon */}
-    </button>
-  </div>
-)}
-  </div>
-
-
-                  
-             
-
-
-                </div>
-              )}
-                  </div>
-
-
-
-                  <div
-  className={`message-bottom ${
-    message.sender_id === currentUserId ? 'message-right' : 'message-left'
-  }`}
->
-  <div className={`message-reactions ${getTotalReactions(message.id) === 0 ? 'no-reactions' : ''}`}>
-  <div class="reaction-wrapper">
-    {getEmojiCount(message.id, 'like') > 0 && (
-      <span
-        className="emoji-display"
-        onClick={() =>
-          handleReactionClick(message.id, 'like', getEmojiCount(message.id, 'like'))
-        }     
-        onMouseEnter={() => showReactionTooltip(message.id, 'like')}
-        onMouseLeave={() => hideReactionTooltip(message.id, 'like')}
-      >
-        <span className="emoji" role="img" aria-label="like">👍</span>
-        <span class="reaction-count">{getEmojiCount(message.id, 'like')}</span>
-
-        {/* Tooltip */}
-        {isTooltipVisible(message.id, 'like') && (
-        <div className="reaction-tooltip">
-          <span className="reaction-text" role="img" aria-label="like">👍</span>
-           <div class="user-text">
-         {reactionUserNames[`${message.id}_like`] || 'Laden...'} {/* Benutzer für "like" */}
-         </div> 
-        </div>
+          </div>
           )}
-      </span>
-    )}
-    {getEmojiCount(message.id, 'love') > 0 && (
-        <span
-          className="emoji-display"
-          onClick={() =>
-            handleReactionClick(message.id, 'love', getEmojiCount(message.id, 'love'))
-          }
-          onMouseEnter={() => showReactionTooltip(message.id, 'love')}
-          onMouseLeave={() => hideReactionTooltip(message.id, 'love')}
-        >
-          <span className="emoji" role="img" aria-label="love">❤️</span>
-          <span class="reaction-count">{getEmojiCount(message.id, 'love')}</span>
+         </div>
 
-              {isTooltipVisible(message.id, 'love') && (
-            <div className="reaction-tooltip">
-             <span className="reaction-text" role="img" aria-label="like">❤️</span>
-              <div class="user-text">
-              {reactionUserNames[`${message.id}_love`] || 'Laden...'} {/* Benutzer für "love" */}
-            </div>
-            </div>
-          )}
-        </span>
-    )}
-    {getEmojiCount(message.id, 'haha') > 0 && (
-        <span
-          className="emoji-display"
-          onClick={() =>
-            handleReactionClick(message.id, 'haha', getEmojiCount(message.id, 'haha'))
-          }
-          onMouseEnter={() => showReactionTooltip(message.id, 'haha')}
-          onMouseLeave={() => hideReactionTooltip(message.id, 'haha')}
-        >
-          <span className="emoji" role="img" aria-label="haha">😂</span>
-          <span class="reaction-count">{getEmojiCount(message.id, 'haha')}</span>
-
-            {isTooltipVisible(message.id, 'haha') && (
-              <div className="reaction-tooltip">
-                     <span className="reaction-text" role="img" aria-label="like">😂</span>
-                     <div class="user-text">
-                {reactionUserNames[`${message.id}_haha`] || 'Laden...'} {/* Benutzer für "love" */}
-              </div>
-              </div>
-            )}
-        </span>
-    )}
-    {getEmojiCount(message.id, 'wow') > 0 && (
-        <span
-          className="emoji-display"
-          onClick={() =>
-            handleReactionClick(message.id, 'wow', getEmojiCount(message.id, 'wow'))
-          }
-          onMouseEnter={() => showReactionTooltip(message.id, 'wow')}
-          onMouseLeave={() => hideReactionTooltip(message.id, 'wow')}
-        >
-          <span className="emoji" role="img" aria-label="wow">😮</span>
-          <span class="reaction-count">{getEmojiCount(message.id, 'wow')}</span>
-
-          {isTooltipVisible(message.id, 'wow') && (
-            <div className="reaction-tooltip">
-                   <span className="reaction-text" role="img" aria-label="like">😮</span>
-                   <div class="user-text">
-              {reactionUserNames[`${message.id}_wow`] || 'Laden...'} {/* Benutzer für "love" */}
-            </div>
-            </div>
-          )}
-        </span>
-    )}
-    {getEmojiCount(message.id, 'sad') > 0 && (
-        <span
-          className="emoji-display"
-          onClick={() =>
-            handleReactionClick(message.id, 'sad', getEmojiCount(message.id, 'sad'))
-          }
-          onMouseEnter={() => showReactionTooltip(message.id, 'sad')}
-          onMouseLeave={() => hideReactionTooltip(message.id, 'sad')}
-        >
-          <span className="emoji" role="img" aria-label="sad">😢</span>
-          <span class="reaction-count">{getEmojiCount(message.id, 'sad')}</span>
-
-          {isTooltipVisible(message.id, 'sad') && (
-            <div className="reaction-tooltip">
-                   <span className="reaction-text" role="img" aria-label="like">😢</span>
-                   <div class="user-text">
-              {reactionUserNames[`${message.id}_sad`] || 'Laden...'} {/* Benutzer für "love" */}
-            </div>
-            </div>
-          )}
-        </span>
-    )}
-    {getEmojiCount(message.id, 'angry') > 0 && (
-        <span
-          className="emoji-display"
-          onClick={() =>
-            handleReactionClick(message.id, 'angry', getEmojiCount(message.id, 'angry'))
-          }
-          onMouseEnter={() => showReactionTooltip(message.id, 'angry')}
-          onMouseLeave={() => hideReactionTooltip(message.id, 'angry')}
-        >
-          <span className="emoji" role="img" aria-label="angry">😡</span>
-          <span class="reaction-count">{getEmojiCount(message.id, 'angry')}</span>
-
-          {isTooltipVisible(message.id, 'angry') && (
-            <div className="reaction-tooltip">
-                        <span className="reaction-text" role="img" aria-label="like">😡</span>
-                        <div class="user-text">
-              {reactionUserNames[`${message.id}_angry`] || 'Laden...'} {/* Benutzer für "love" */}
-            </div>
-            </div>
-          )}
-        </span>
-    )}
-  </div>
-
-
-
-  <div className="thread-count" onClick={() => handleOpenThreads(message)}>
-    {message.thread_count > 0 
-      ? `${message.thread_count} ${message.thread_count === 1 ? 'response' : 'responses'}` 
-      : ''}
-  </div>
-</div>
-</div>
-
+           <MessageBottom
+            message={message}
+            currentUserId={currentUserId}
+            getTotalReactions={getTotalReactions}
+            getEmojiCount={getEmojiCount}
+            handleReactionClick={handleReactionClick}
+            showReactionTooltip={showReactionTooltip}
+            hideReactionTooltip={hideReactionTooltip}
+            isTooltipVisible={isTooltipVisible}
+            reactionUserNames={reactionUserNames}
+            handleOpenThreads={handleOpenThreads}
+          />          
                 <div ref={chatEndRef} />
             </div>
           );
@@ -1452,81 +1052,77 @@ const getReactionUsersWithNames = async (reactions, messageId, reactionType, cur
   )}
 </div>
 
-{showEmojiPicker && (
-        <EmojiPicker onEmojiClick={handleEmojiClick} />
-      )}
-
-<div className="chat-text">
-
-<div className="chat-footer">
-
-<button className="attachment-btn" onClick={() => document.getElementById('file-upload').click()}>
-      <FontAwesomeIcon icon={faPaperclip} />
-    </button>
-  
-    <input
-      id="file-upload"
-      type="file"
-      style={{ display: 'none' }}  // Versteckt das Dateiupload-Feld
-      onChange={handleFileChange}  // Datei in den State setzen
-    />
-
-
-  <div className="footer-left">
-      <input
-        type="text"
-        className="message-input"
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-        placeholder="Write a message..."
+<ChatFooter
+        newMessage={newMessage}
+        setNewMessage={setNewMessage}
+        handleSendMessage={handleSendMessage}
+        toggleEmojiPicker={toggleEmojiPicker}
+        activeIcon={activeIcon}
+        handleReactionClick={handleReactionClick}
+        messageId={selectedMessageId }
+        showEmojiPicker={showEmojiPicker }
+        EmojiPicker={EmojiPicker }
+        handleEmojiClick={handleEmojiClick }
+        setShowEmojiPicker={setShowEmojiPicker }
+        filePreview={filePreview }
+        attachedFile={attachedFile }
+        handleRemoveFile={handleRemoveFile }
+        handleFileChange={handleFileChange }
+        selectedChat={selectedChat}
       />
+  </div>
 
 
-<button className="send-btn" onClick={() => setShowEmojiPicker((prev) => !prev)}>
-      <FontAwesomeIcon icon={faSmile} /> 
-      </button>
+
+
+  <div className={`thread-class ${showThreads ? 'show' : ''}`}>
+  {messages.map((message) => {
+  const senderDetails = members.find((member) => member.id === message.sender_id);
+  
+  // Rückgabewert für die map-Funktion
+  return (
+    selectedMessageId === message.id && showThreads ? (
+      <Threads
+        key={message.id} // Key hinzufügen, um den Fehler zu vermeiden
+        initialMessage={selectedMessage}
+        sender={message.sender}
+        Initial_first_name={message.first_name}
+        profile_picture={senderDetails?.profile_picture}
+        first_name={senderDetails?.first_name}
+        last_name={senderDetails?.last_name}
+        color={senderDetails?.color}
+        onClose={handleCloseThreads}
+        messageId={selectedMessageId}
+        SenderId={SenderId}
+        currentUserId={currentUserId}
+        file_url={message.file_url}
+        updateThreadCount={updateThreadCount}
+        getMessageClass={getMessageClass}
+        hoveredMessageId={hoveredMessageId}
+        hideHoverActions={hideHoverActions}
+        hideHoverIcons={hideHoverIcons}
+        message={message}
+        activeIcon={activeIcon}
+        toggleEmojiPicker={toggleEmojiPicker}
+        handleOpenThreads={handleOpenThreads}
+        toggleActions={toggleActions}
+        handleEditMessage={handleEditMessage}
+        handleDeleteMessage={handleDeleteMessage}
+        handleReactionClick={handleReactionClick}
+        closeAll={closeAll}
+        MessageHoverActions={MessageHoverActions}
+        handleRemoveFile={handleRemoveFile}
+        selectedThread={message} 
+        setUnreadCount={setUnreadCount}
+      />
+    ) : null // Rückgabe von null, wenn die Bedingung nicht erfüllt ist
+  );
+})}
 
   </div>
 
 
-  <div className="footer-right">
-  <button className="send-btn" onClick={handleSendMessage}>
-  <FontAwesomeIcon icon={faPaperPlane} /> 
-  </button>
-      </div>      
-    </div>
-
-
-
-    <div className="chat-attach">
-  {filePreview && (
-    <div className="file-preview">
-
-
-      {attachedFile && attachedFile.type.startsWith('image/') ? (
-        <img
-          src={filePreview}
-          alt="Preview"
-          style={{ width: '200px', height: 'auto' }} // Bild-Vorschau
-        />
-      ) : (
-        <p>{attachedFile?.name}</p> // Dateiname anzeigen, wenn es kein Bild ist
-      )}
-            <button className="remove-file-btn" onClick={handleRemoveFile}>
-        &times;
-      </button>
-    </div>
-  )}
-
-
-
 </div>
-
-</div>
-</div>
-</div>  
-  );
-  
+  ); 
 };
-
 export default Chat;

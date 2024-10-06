@@ -14,17 +14,30 @@ const App = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [showAddChannelForm, setShowAddChannelForm] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
-  const [unreadCount, setUnreadCount] = useState(0); // Hier hinzufügen
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-  
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false); // Standardmäßig verborgen
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (token) {
       setLoggedIn(true);
     }
+
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsSidebarVisible(false); // Sidebar standardmäßig schließen bei kleinen Bildschirmen
+      } else {
+        setIsSidebarVisible(true); // Sidebar öffnen bei größeren Bildschirmen
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initiale Überprüfung der Fenstergröße
+
+    return () => {
+      window.removeEventListener('resize', handleResize); // Aufräumen des Event Listeners
+    };
   }, []);
-  
 
   const handleLogin = (token) => {
     localStorage.setItem('access_token', token);
@@ -55,6 +68,13 @@ const App = () => {
 
   const handleSelectChat = (chat) => {
     setSelectedChat(chat);
+    if (window.innerWidth < 768) {
+      setIsSidebarVisible(false); // Sidebar schließen, wenn auf kleinem Bildschirm
+    }
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarVisible((prev) => !prev);
   };
 
   return (
@@ -67,32 +87,50 @@ const App = () => {
             <Navbar
               onLogout={handleLogout}
               onProfileToggle={handleProfileToggle}
-              unreadCount={unreadCount} // Hier übergeben
-              setUnreadCount={setUnreadCount} // Hier übergeben
+              unreadCount={unreadCount}
+              setUnreadCount={setUnreadCount}
             />
             <div className="App-content">
               <button 
                 className="toggle-sidebar-button" 
-                onClick={() => setIsSidebarVisible(!isSidebarVisible)}
+                onClick={toggleSidebar}
               >
-                {isSidebarVisible ? 'Close menu' : 'open menu'}
+                {isSidebarVisible ? 'Close menu' : 'Open menu'}
               </button>
-              {isSidebarVisible && (
-                  <Sidebar onAddChannelClick={handleAddChannelClick} onSelectChat={handleSelectChat} />
+  
+              <Sidebar 
+                className={isSidebarVisible ? '' : 'hidden'} 
+                onAddChannelClick={handleAddChannelClick} 
+                onSelectChat={handleSelectChat} 
+              />
+  
+              {/* Dunkle Überlagerung */}
+              <div className={`modal-overlay ${isSidebarVisible ? 'active' : ''}`} onClick={toggleSidebar}></div>
+  
+              <div className={`chat-window ${isSidebarVisible ? 'chat-narrow' : 'chat-full-width'}`}>
+                {selectedChat ? (
+                  <Chat
+                    key={selectedChat.id}
+                    selectedChat={selectedChat}
+                    setUnreadCount={setUnreadCount}
+                    onProfileToggle={handleProfileToggle}
+                  />
+                ) : (
+                  <div className="no-chat-message">Bitte wähle einen Chat aus.</div>
                 )}
-                <div className={`chat ${isSidebarVisible ? 'chat-narrow' : 'chat-full-width'}`}>
-              {selectedChat && <Chat selectedChat={selectedChat} setUnreadCount={setUnreadCount} onProfileToggle={handleProfileToggle}/>} {/* Hier übergeben */}
-              {showAddChannelForm && <AddChannelForm onClose={handleAddChannelClose} />}
               </div>
+  
+              {showAddChannelForm && <AddChannelForm onClose={handleAddChannelClose} />}
             </div>
+  
             {showProfile && (
-                <>
-                  <div className="modal-overlay" onClick={handleProfileClose}></div> {/* Hintergrund abdunkeln */}
-                  <div className="modal-content">
-                    <Profile onClose={handleProfileClose} />
-                  </div>
-                </>
-              )}
+              <>
+                <div className="modal-overlay" onClick={handleProfileClose}></div>
+                <div className="modal-content">
+                  <Profile onClose={handleProfileClose} />
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

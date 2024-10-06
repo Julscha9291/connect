@@ -1,21 +1,40 @@
 /* src/Chat.css */
+.chat-window {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  width: 100%; /* Hier stellst du sicher, dass die Breite des Chat-Fensters immer die volle Breite einnimmt */
+}
+
+
 .chat {
   display:flex;
     height: 85vh;
-    background-color: #242338;;
+    background-color: rgba(29, 37, 82, 0.3);
+  box-shadow: #444;
     display: flex;
     flex-direction: column;
     border-radius: 8px; /* Runde Ecken der Sidebar */
     overflow: hidden; /* Verhindert das Überlaufen von abgerundeten Ecken */
+    margin-right:60px;
+    width: 100%;
+  }
+
+  .thread-class{
+    margin-right: 30px;
+    background-color: rgba(29, 37, 82, 0.3);
+    border-radius: 8px;
+    max-width: 350px;
   }
   
   .chat-header {
     flex-direction: row;
     padding: 10px;
-    background-color: #443494;
-    color: white;
+    background-color: rgba(29, 37, 82);
+    color: #19dae5;
     align-items: center;
   }
+  
 
   .chat-wrapper{
     display: flex;
@@ -113,13 +132,14 @@
   .chat-header h3 {
     margin: 0;
     font-size: 18px;
-    color: #5E3BCD;
+    color: #4742eb;
   }
 
-  .chat-body {
+ .chat-body {
     flex: 1;
     padding: 10px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
   
 
@@ -150,11 +170,11 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    background-color:#443494;
+    background-color:#4742eb;
     position: relative;
     color: white;
     max-width: 60%;
-    min-width: 30%;
+    min-width: 20%;
     word-wrap: break-word; /* Wortumbruch */
     overflow-wrap: break-word; /* Für bessere Kompatibilität */
     white-space: normal; /* Zeilenumbruch aktivieren */
@@ -187,11 +207,11 @@
   width: 0;
   height: 0;
   border: 25px solid transparent; /* Erhöht die Größe des Dreiecks */
-  border-top-color: #443494; /* Gleiche Farbe wie der Hintergrund */
+  border-top-color: #4742eb; /* Gleiche Farbe wie der Hintergrund */
   transform: rotate(45deg);
 }
 
-.message.other-user .Message-Text {
+.message.other-user .Message-Text{
   padding: 20px;
   border-radius: 20px;
   display: flex;
@@ -199,7 +219,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  background-color: #151426; 
+  background-color: #333; 
   position: relative;
   color: white;
   max-width: 60%;
@@ -215,7 +235,7 @@
   width: 0;
   height: 0;
   border: 25px solid transparent; /* Erhöht die Größe des Dreiecks */
-  border-top-color:  #151426; /* Gleiche Farbe wie der Hintergrund */
+  border-top-color:  #333; /* Gleiche Farbe wie der Hintergrund */
   transform: rotate(-45deg); /* Dreht das Dreieck nach links */
 }
 
@@ -232,6 +252,7 @@
 .chat-wrapper{
   display: flex;
     flex-direction: row-reverse;
+    min-height: 80px;
 }
 
   .message-icon{
@@ -283,7 +304,7 @@
   border: none;
   cursor: pointer;
   font-size: 20px;
-  color: #666;
+  color: #4742eb;
 }
 
 .attachment-btn {
@@ -296,12 +317,12 @@
 }
 
 .send-btn {
-  color: #9426B6;
+  color: #4742eb;
   font-size: 24px;
 }
 
 .send-btn:hover {
-  color: #5a176f
+  color: #2f2b96;
 }
 
 .message-input::placeholder {
@@ -531,6 +552,7 @@
   border-radius: 15px;
   display: flex;
   gap: 10px;
+  height: 40px;
 }
 
 .message-edit input {
@@ -582,11 +604,12 @@
 }
 
 .thread-count {
+  margin-top: 10px;
   display: flex;
   align-content: center;
   justify-content: flex-start; /* Standardmäßig für andere Benutzer */ /* Abstand zwischen Nachricht und Thread-Zähler */
   font-size: 0.9em; /* Kleinere Schriftgröße */
-  color: #868dfa; /* Farbe des Thread-Zählers */
+  color: #19dae5; /* Farbe des Thread-Zählers */
 }
 
 /* Für den Thread-Zähler des aktuellen Benutzers */
@@ -595,9 +618,6 @@
 
 }
 
-.message.current-user .thread-count {
-    justify-content: flex-start;
-}
 
 .message-reactions {
   padding-right: 20px;
@@ -631,7 +651,7 @@
 
 .message-time {
   font-size: 0.8em; /* Kleinere Schriftgröße für die Uhrzeit */
-  color: gray; /* Graue Farbe für die Uhrzeit */
+  color: #fff; /* Graue Farbe für die Uhrzeit */
   margin-left: 5px; /* Abstand zwischen Sender und Uhrzeit */
 }
 
@@ -673,4 +693,134 @@
 .reaction-tooltip .user-text {
   font-size: 14px; /* Größe für den Text, der "Du" anzeigt */
   font-weight: bold; /* Fettdruck für "Du" */
+}
+
+.search-sidebar{
+  display: none;
+}
+
+.sidebar.hidden {
+  display: none; /* Sidebar ausblenden */
+}
+
+.modal-overlay {
+  display: none; /* Immer ausblenden auf großen Bildschirmen */
+}
+
+
+@media (min-width: 768px) and (max-width: 1304px) {
+  .chat-window {
+    flex-direction: column; /* Die Threads werden unter dem Chat angezeigt */
+  }
+
+  .thread-class {
+    display: none; /* Chat wird versteckt, wenn Threads geöffnet sind */
+  }
+
+
+  /* Wenn showThreads true ist, wird die thread-class sichtbar */
+  .thread-class.show {
+    display: flex; /* Oder flex, je nach gewünschtem Layout */
+    max-width: 90%;
+  }
+
+  .chat{
+    display: flex; /* Threads werden angezeigt */
+    max-width: 90%;
+  }
+
+  .chat.hide{
+    display: none; /* Chat wird versteckt, wenn Threads geöffnet sind */
+  }
+
+  .sidebar.hidden {
+    display: none; /* Sidebar ausblenden */
+  }
+  .modal-overlay {
+    display: none; /* Immer ausblenden auf großen Bildschirmen */
+  }
+  
+}
+@media (max-width: 768px) {
+  .chat-window {
+    flex-direction: column; /* Die Threads werden unter dem Chat angezeigt */
+    flex-grow: 0;
+  }
+
+
+  .thread-class {
+    display: none; /* Chat wird versteckt, wenn Threads geöffnet sind */
+  }
+
+
+  /* Wenn showThreads true ist, wird die thread-class sichtbar */
+  .thread-class.show {
+    display: flex; /* Oder flex, je nach gewünschtem Layout */
+    max-width: 90%;
+  }
+
+
+  .chat.hide{
+    display: none; /* Chat wird versteckt, wenn Threads geöffnet sind */
+  }
+
+
+
+  .search-container {
+    display: none;
+  }
+
+  .search-sidebar {
+    position: relative;
+    width: 95%;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .chat-full-width {
+    width: 100%;
+    margin-left: 100px;
+    margin-right: 50px;
+  }
+
+  .chat {
+    display: flex;
+    z-index: 1;
+  }
+
+  .sidebar {
+    position: absolute; /* Über dem Chat */
+    top: 0; /* Startposition oben */
+    left: 0; /* Startposition links */
+    width: 80%;
+    height: 100%; /* Vollständige Höhe */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Optional: Schatten für visuelle Trennung */
+    transition: transform 0.3s ease;
+    z-index: 2000; /* Höherer z-index, um über dem Chat zu liegen */
+  }
+
+
+
+  .sidebar.hidden {
+    display: none; /* Sidebar ausblenden */
+  }
+  .modal-overlay {
+    position: fixed; /* Fixiert die Overlay-Position */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dunkel mit Transparenz */
+    z-index: 1000; /* Unter der Sidebar, über dem Chat */
+    display: none; /* Standardmäßig ausblenden */
+  }
+  
+  .modal-overlay.active {
+    display: block; /* Bei Aktivierung anzeigen */
+  }
+
+
+
 }

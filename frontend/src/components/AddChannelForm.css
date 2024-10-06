@@ -25,7 +25,7 @@
 
 .add-channel-form h3 {
   margin: 0 0 10px;
-  color:#5E3BCD;
+  color:#4742eb;
 }
 
 label{
@@ -79,7 +79,7 @@ label{
 
 
 .add-channel-form button:hover {
-  background-color: #0056b3;
+  background-color: #2e2a9a
 }
 
 .close-button {
@@ -202,7 +202,7 @@ label{
   width: calc(100% - 20px);
   padding: 5px 20px;
   margin: 15px 0;
-  background-color:#9426B6;
+  background-color:#4742eb;
   border: none;
   cursor: pointer;
   border-radius: 3px;

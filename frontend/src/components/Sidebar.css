@@ -1,11 +1,11 @@
 .sidebar {
   width: 250px;
-  margin-left:80px;
-  background-color: #242338;
-  padding: 20px;
+  margin-left:50px;
+  background-color: #1d2552;
+  padding: 0 20px 0 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  max-height: 80vh;
+  max-height: 85vh;
   overflow: overlay;
 }
 
@@ -81,12 +81,12 @@
   border: none;
   font-size: 30px;
   cursor: pointer;
-  color: #C9139E;
+  color: #19dae5;
 }
 
 .sidebar-item.selected,
 .user-item.selected {
-  background-color: #5E3BCD; /* Hintergrundfarbe für ausgewählte Elemente */
+  background-color: #4742eb; /* Hintergrundfarbe für ausgewählte Elemente */
   font-weight: bold; /* Fettgedruckter Text für ausgewählte Elemente */
   border-radius: 10px;
   padding:5px;
@@ -138,27 +138,26 @@
 }
 
 .status-indicator {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   display: inline-block;
 }
 
 .status-indicator.online {
   position: absolute;
-  margin-top: 30px;
-  background-color: gray;
-  margin-left: 30px;
-  width: 10px;
+  margin-top: 35px;
+  background-color: green; /* Farbe für Online */
+  margin-left: 40px;
 }
 
 .status-indicator.offline {
   position: absolute;
-  margin-top: 30px;
+  margin-top: 35px;
   background-color: gray;
-  margin-left: 30px;
-  width: 10px;
+  margin-left: 40px;
 }
+
 
 
 .user-list{

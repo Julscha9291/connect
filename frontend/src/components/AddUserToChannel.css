@@ -8,6 +8,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    z-index:2000;
   }
   
   .modal-header {
@@ -26,7 +27,7 @@
   
   .modal-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: 20px;
   }
   
@@ -48,15 +49,30 @@
   }
   
   .add-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+      width: calc(100% - 20px);
+      padding: 5px 20px;
+      margin: 15px 0;
+      background-color: #4742eb;
+      border: none;
+      cursor: pointer;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 1rem;
+      width: 50%;
   }
+  
   
   .add-button:hover {
-    background-color: #0056b3;
+    background-color: #8f0fb6;
   }
   
+.input-add-user{
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 1rem;
+  border: none;
+  background-color: #edeaea;
+  border-radius: 10px;
+  width: 95%;
+}

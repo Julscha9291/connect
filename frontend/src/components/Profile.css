@@ -90,22 +90,22 @@ p{
   background-color: #edeaea;
   border-radius: 10px;
   width: 80%;
+
 }
 
 .edit-section button {
   padding: 10px 20px;
   margin: 15px 0;
-  background-color: #5E3BCD;
+  background-color: #4742eb;
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  color: #fff;
   font-size: 1rem;
   width: 50%;
 }
 
 .edit-section button:hover {
-  background-color: #422993;;
+  background-color:#2b288b;
 }
 
 .close-button {
@@ -123,7 +123,7 @@ p{
 .edit-button {
   padding: 10px 20px;
   margin: 15px 0;
-  background-color: #5E3BCD;
+  background-color: #4742eb;
   border: none;
   cursor: pointer;
   border-radius: 5px;
@@ -133,5 +133,5 @@ p{
 }
 
 .edit-button:hover {
-  background-color: #422993;;
+  background-color: #2b288b;
 }

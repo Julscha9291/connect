@@ -5,6 +5,7 @@ import { faCaretDown, faMagnifyingGlass, faBell,faUser, faSignOutAlt } from '@fo
 import SelectedUserProfile from './SelectedUserProfile';
 import { Link } from 'react-router-dom';
 
+
 const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -15,16 +16,32 @@ const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
+  const notificationDropdownRef = useRef(null);
+  const [notifications, setNotifications] = useState([]);
 
   const searchResultsRef = useRef(null);
   const selectedUserProfileRef = useRef(null);
   const dropdownRef = useRef(null); // Referenz für das Dropdown-Menü
 
   const handleNotificationClick = () => {
+    setNotificationDropdownOpen(prevState => !prevState);
     console.log(unreadCount);
     console.log('Benachrichtigungsglocke geklickt');
     setUnreadCount(0); // Setzt den Zähler zurück
   };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+        if (notificationDropdownRef.current && !notificationDropdownRef.current.contains(event.target)) {
+            setNotificationDropdownOpen(false);
+        }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+}, []);
 
   useEffect(() => {
     console.log('Aktueller ungelesener Zähler:', unreadCount);
@@ -207,6 +224,8 @@ const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount }) => {
           </div>
         </div>
 
+
+
         <div className="navbar-right">
           <div className="notification-bell" onClick={handleNotificationClick}>
             <FontAwesomeIcon 
@@ -214,7 +233,47 @@ const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount }) => {
               style={{ fontSize: '24px' }} // Ändere '24px' auf die gewünschte Größe
             />
             {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+            {notificationDropdownOpen && (
+                            <div ref={notificationDropdownRef} className="notification-dropdown">
+                                <div className="dropdown-arrow"></div>
+                   
+                                               <div className="notification-item">
+                                                <div className="notification-content">
+
+                                                    {/* Initialen des Kontakts links */}
+                                                    <div className="contact-initials-board">
+                                         
+                                                    </div>
+                                                    {/* Task-Details rechts */}
+                                                    <div>
+                                                        
+                                                    </div>
+                                                </div>
+                                      
+                                            </div>
+                  
+                                
+
+                                
+
+                                <div className="button">
+                                    <button type="submit" className="create-button">View tasks</button>
+                                </div>
+                            </div>
+                        )}
           </div>
+
+
+
+
+
+
+
+
+
+
+
+
           
           <div className="navbar-user" ref={dropdownRef}> {/* Hier wird die Dropdown-Referenz hinzugefügt */}
             {profilePicture ? (

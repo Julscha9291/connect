@@ -1,22 +1,76 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './Sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faComment, faUsers, faPeopleArrows } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faComment, faUsers, faPeopleArrows, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
-const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
+const Sidebar = ({ onAddChannelClick, onSelectChat, className }) => {
   const [channels, setChannels] = useState([]);
   const [users, setUsers] = useState([]);
   const [userChats, setUserChats] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [selectedChat, setSelectedChat] = useState(null);
   const [isMessagesDropdownOpen, setIsMessagesDropdownOpen] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const searchResultsRef = useRef(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userStatus, setUserStatus] = useState(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchResultsRef.current && !searchResultsRef.current.contains(event.target)) {
+        setSearchTerm(''); // Suchfeld zurücksetzen
+        setSearchResults([]); // Suchergebnisse zurücksetzen
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      setSearchResults(prevResults =>
+        prevResults.filter(user =>
+          user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.last_name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    } else {
+      const fetchUsers = async () => {
+        try {
+          const token = localStorage.getItem('access_token');
+          const response = await fetch('http://localhost:8000/api/users/', {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
   
+          if (response.ok) {
+            const data = await response.json();
+            
+            // Die Daten enthalten jetzt auch den Online-Status der Benutzer
+            setSearchResults(data.map(user => ({
+              ...user, 
+              is_online: user.is_online // Online-Status speichern
+            })));
+          } else {
+            console.error('Fehler beim Abrufen der Benutzer:', response.status);
+          }
+        } catch (error) {
+          console.error('Fehler beim Abrufen der Benutzer:', error);
+        }
+      };
+  
+      fetchUsers();
+    }
+  }, [searchTerm]);
+  
+
 
   useEffect(() => {
     const fetchChannels = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        console.log('Fetching channels with token:', token);
         const channelsResponse = await fetch('http://localhost:8000/api/channels/', {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
@@ -34,10 +88,11 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
       }
     };
 
+
+
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        console.log('Fetching users with token:', token);
         const response = await fetch('http://localhost:8000/api/users/', {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
@@ -70,6 +125,9 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
       console.error('Current user ID is not set');
       return null;
     }
+
+
+  
     
     // Find the member who is not the current user
     const partnerMember = chat.members.find(member => member.user !== parseInt(currentUserId, 10));
@@ -84,8 +142,7 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
       console.error('Partner details not found:', partnerMember);
       return null;
     }
-    
-    console.log('Chat partner found:', partnerDetails);
+  
     return partnerDetails;
   }, [users]);
   
@@ -159,8 +216,18 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
     return Math.random() < 0.5 ? 'online' : 'offline'; // 50% Chance für jede Farbe
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleUserSidebarClick = (user) => {
+    setSelectedUser(user);
+    setSearchTerm(''); // Suchfeld zurücksetzen
+    setSearchResults([]); // Suchergebnisse zurücksetzen
+  };
+
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${className}`}>
       <div className="sidebar-header-top">
 
       <FontAwesomeIcon 
@@ -168,7 +235,7 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
             style={{ 
               marginRight: '10px', 
               fontSize: '30px',   // Größe auf 30px setzen
-              color: '#5E3BCD'    // Farbe auf Weiß ändern
+              color: '#19dae5'    // Farbe auf Weiß ändern
             }} 
           />
         <h2 className='sidebar-h2'>TeamSpace</h2>
@@ -178,6 +245,48 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
           border: '1px solid #fff',  // Weiße Linie
           marginTop: '10px'  // Zentrieren und Abstand oben/unten
         }} />
+
+<div className="search-sidebar">
+            <input
+              type="text"
+              placeholder="Suche nach Benutzern..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="search-input"
+            />
+            <FontAwesomeIcon 
+              icon={faMagnifyingGlass} 
+              style={{ color: '#fff', marginLeft: '10px' }} 
+            />
+
+            {searchTerm && searchResults.length > 0 && (
+              <div className="search-results-nav" ref={searchResultsRef}>
+                {searchResults.map((user) => (
+                  <div
+                    key={user.id}
+                    className="search-result-item"
+                    onClick={() => handleUserSidebarClick(user)}
+                  >
+                    {user.profile_picture ? (
+                      <img
+                        src={user.profile_picture}
+                        alt={`${user.first_name} ${user.last_name}`}
+                        className="user-profile-image"
+                      />
+                    ) : (
+                      <div
+                        className="user-profile-placeholder"
+                        style={{ backgroundColor: user.color }}
+                      >
+                        {user.first_name.charAt(0)}{user.last_name.charAt(0)}
+                      </div>
+                    )}
+                    <span className="user-name">{user.first_name} {user.last_name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
       <div className="sidebar-header">
       <div className="sidebar-left">
@@ -301,9 +410,11 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
           alt={`${partner.first_name} ${partner.last_name}`}
           className="user-profile-image"
         />
-        <div
-          className={`status-dot ${getRandomStatusColor()}`}
-        ></div>
+{partner.is_online ? (
+  <span className="status-indicator online"></span>
+) : (
+  <span className="status-indicator offline"></span>
+)}
       </div>
     ) : (
       <div className="user-profile-container">
@@ -313,9 +424,11 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, user }) => {
         >
           {partner.first_name.charAt(0)}{partner.last_name.charAt(0)}
         </div>
-        <div
-          className={`status-dot ${getRandomStatusColor()}`}
-        ></div>
+        {partner.is_online ? (
+  <span className="status-indicator online"></span>
+) : (
+  <span className="status-indicator offline"></span>
+)}
       </div>
     )}
     <span className="partner-name">{partner.first_name} {partner.last_name}</span>
