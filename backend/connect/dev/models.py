@@ -119,17 +119,23 @@ class Reaction(models.Model):
     class Meta:
         unique_together = ('user', 'message', 'reaction_type')
         
-    
         
 class Thread(models.Model):
     message = models.ForeignKey('Message', on_delete=models.CASCADE, related_name='threads')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    channel = models.ForeignKey('Channel', on_delete=models.CASCADE, related_name='threads', null=True, blank=True)  # Channel optional machen
     content = models.TextField(blank=True, null=True)  # Erlaube leeres Feld
     timestamp = models.DateTimeField(auto_now_add=True)
     file_url = models.CharField(max_length=255, null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if not self.channel:
+            # Hole den Channel von der zugehörigen Message
+            self.channel = self.message.channel
+        super().save(*args, **kwargs)
+    
     def __str__(self):
-        return self.content        
+        return self.content      
     
     
 class ThreadReaction(models.Model):
@@ -140,3 +146,4 @@ class ThreadReaction(models.Model):
     class Meta:
         unique_together = ('user', 'thread_message', 'reaction_type')        
             
+                   

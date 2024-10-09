@@ -75,7 +75,7 @@ const MessageBottom = ({
 
                 {isTooltipVisible(message.id, 'haha') && (
                     <div className="reaction-tooltip">
-                        <span className="reaction-text" role="img" aria-label="like">😂</span>
+                        <span className="reaction-text" role="img" aria-label="haha">😂</span>
                          <div class="user-text">
                                 {reactionUserNames[`${message.id}_haha`] || 'Laden...'} {/* Benutzer für "love" */}
                         </div>
@@ -97,7 +97,7 @@ const MessageBottom = ({
 
                 {isTooltipVisible(message.id, 'wow') && (
                     <div className="reaction-tooltip">
-                    <span className="reaction-text" role="img" aria-label="like">😮</span>
+                    <span className="reaction-text" role="img" aria-label="wow">😮</span>
                     <div class="user-text">
                         {reactionUserNames[`${message.id}_wow`] || 'Laden...'} {/* Benutzer für "love" */}
                     </div>
@@ -119,7 +119,7 @@ const MessageBottom = ({
 
                     {isTooltipVisible(message.id, 'sad') && (
                         <div className="reaction-tooltip">
-                            <span className="reaction-text" role="img" aria-label="like">😢</span>
+                            <span className="reaction-text" role="img" aria-label="sad">😢</span>
                             <div class="user-text">
                         {reactionUserNames[`${message.id}_sad`] || 'Laden...'} {/* Benutzer für "love" */}
                             </div>

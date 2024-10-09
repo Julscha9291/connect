@@ -12,6 +12,7 @@ router.register(r'thread-reactions', ThreadReactionViewSet, basename='thread-rea
 
 
 
+
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', UserRegistrationView.as_view(), name='user-register'),

@@ -2,16 +2,16 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from django.db.models import ObjectDoesNotExist
 from asgiref.sync import sync_to_async
-from .models import Message, Thread, ThreadReaction
+from .models import Message, Thread, ThreadReaction, ChannelMembership
 
 
 class ThreadConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
         self.message_id = self.scope['url_route']['kwargs'].get('message_id')
-        self.thread_group_name = f'message_{self.message_id}'  # Ändere den Gruppennamen
+        self.thread_group_name = f'message_{self.message_id}'  # Gruppennamen basierend auf der message_id
 
-        # Überprüfen, ob die message_id vorhanden ist
+        # Überprüfen, ob die message_id vorhanden ist und der Benutzer nicht anonym ist
         if not self.message_id or self.user.is_anonymous:
             print("Abgelehnt: Ungültige message_id oder anonymer Benutzer.")
             await self.close()
@@ -21,13 +21,27 @@ class ThreadConsumer(AsyncWebsocketConsumer):
             # Hole die Nachricht anhand der message_id
             message = await sync_to_async(Message.objects.get)(id=self.message_id)
 
+            # Hole den Channel, zu dem die Nachricht gehört
+            channel = await sync_to_async(lambda: message.channel)()
+
+            # Hole alle Benutzer, die Mitglieder des Channels sind
+            members = await sync_to_async(list)(
+                ChannelMembership.objects.filter(channel=channel).values_list('user', flat=True)
+            )
+
+            # Prüfen, ob der Benutzer Mitglied des Channels ist
+            if self.user.id not in members:
+                print(f"Benutzer {self.user.email} ist kein Mitglied des Channels {channel.id}.")
+                await self.close()
+                return
+
             # Benutzer zur Gruppen-Thread-Gruppe hinzufügen
             await self.channel_layer.group_add(
                 self.thread_group_name,
                 self.channel_name
             )
             await self.accept()
-            print(f"Benutzer {self.user.email} erfolgreich mit Nachricht {self.message_id} verbunden.")
+            print(f"Benutzer {self.user.email} erfolgreich mit Thread der Nachricht {self.message_id} verbunden (Channel {channel.id}).")
 
         except ObjectDoesNotExist:
             print(f"Abgelehnt: Nachricht mit ID {self.message_id} existiert nicht.")

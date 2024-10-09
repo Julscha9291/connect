@@ -219,3 +219,9 @@
 .offline {
   background-color: gray; /* Farbe für offline */
 }
+
+
+.sidebar-item.active {
+  background-color: #f0f0f0; /* Beispielhafte Farbe für ausgewählte Chats */
+  font-weight: bold;
+}

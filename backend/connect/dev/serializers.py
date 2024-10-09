@@ -98,3 +98,5 @@ class ThreadReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThreadReaction
         fields = ['id', 'user', 'thread_message', 'reaction_type']        
+        
+        

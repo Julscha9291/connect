@@ -10,52 +10,62 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.channel_id = self.scope['url_route']['kwargs'].get('channel_id')
         self.channel_group_name = f'chat_{self.channel_id}'
 
-        if not self.channel_id:
-            await self.close()
-            return
-
         if self.user.is_anonymous:
             await self.close()
             return
 
-        # Überprüfen, ob der Benutzer Mitglied des Kanals ist
-        try:
-            channel = await sync_to_async(Channel.objects.get)(id=self.channel_id)
-            is_member = await sync_to_async(lambda: ChannelMembership.objects.filter(
-                channel=channel,
-                user=self.user
-            ).exists())()
+         # Abrufen aller Channels, in denen der Nutzer Mitglied ist (async-fähig machen)
+        member_channels = await sync_to_async(list)(
+            ChannelMembership.objects.filter(user=self.user)
+        )
 
-            if not is_member:
-                await self.close()
-                return
-
-            # Benutzer zur Kanalgruppe hinzufügen
-            await self.channel_layer.group_add(
-                self.channel_group_name,
-                self.channel_name
-            )
-            await self.accept()
-
-        except ObjectDoesNotExist:
+        if not member_channels:
             await self.close()
             return
 
+        # Den Nutzer zu allen Channel-Gruppen hinzufügen, in denen er Mitglied ist
+        for membership in member_channels:
+            # Asynchron auf das Channel-Objekt zugreifen
+            channel_id = await sync_to_async(lambda: membership.channel.id)()
+
+            group_name = f'chat_{channel_id}'
+
+            # Nutzer zur Gruppe hinzufügen
+            await self.channel_layer.group_add(
+                group_name,
+                self.channel_name
+            )
+
+        # Verbindung akzeptieren
+        await self.accept()
+
     async def disconnect(self, close_code):
-        # Benutzer aus der Kanalgruppe entfernen
-        await self.channel_layer.group_discard(
-            self.channel_group_name,
-            self.channel_name
+        # Abrufen aller Channels, in denen der Nutzer Mitglied ist (async-fähig machen)
+        member_channels = await sync_to_async(list)(
+            ChannelMembership.objects.filter(user=self.user)
         )
+
+        # Entfernen des Nutzers aus allen Channel-Gruppen
+        for membership in member_channels:
+            # Asynchron auf das Channel-Objekt zugreifen
+            channel_id = await sync_to_async(lambda: membership.channel.id)()
+
+            group_name = f'chat_{channel_id}'
+
+            # Nutzer von der Gruppe entfernen
+            await self.channel_layer.group_discard(
+                group_name,
+                self.channel_name
+            )
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        action = text_data_json.get('type')  # 'type' statt 'action'
+        action = text_data_json.get('type')
         message_id = text_data_json.get('message_id')
-        reaction_type = text_data_json.get('reaction_type')  # Typ der Reaktion
+        reaction_type = text_data_json.get('reaction_type')
         file_url = text_data_json.get('fileUrl')
+        channel_id = text_data_json.get('channel_id')
 
-        # Debugging-Ausgabe
         print(f'Empfangene Aktion: {action}')
         print(f'Nachricht ID: {message_id}')
         print(f'Reaktions Typ: {reaction_type}')
@@ -87,11 +97,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'error': 'No message content found'
                 }))
                 return
-            
 
             try:
                 message = await sync_to_async(Message.objects.get)(id=message_id)
-                message_sender = await sync_to_async(lambda: message.sender)()  # Hier asynchron den Sender abfragen
+                message_sender = await sync_to_async(lambda: message.sender)()
                 if message_sender != self.user:
                     await self.send(text_data=json.dumps({
                         'error': 'Unauthorized to edit this message'
@@ -101,7 +110,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 message.content = new_content
                 await sync_to_async(message.save)()
 
-                # Broadcast der aktualisierten Nachricht
                 await self.channel_layer.group_send(
                     self.channel_group_name,
                     {
@@ -126,21 +134,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 return
 
             try:
-                # Überprüfe, ob die Nachricht existiert und im richtigen Kanal ist
                 message = await sync_to_async(Message.objects.get)(id=message_id)
-
-                # Überprüfe, ob der Benutzer die Nachricht löschen darf
-                message_sender = await sync_to_async(lambda: message.sender)()  # Hier asynchron den Sender abfragen
+                message_sender = await sync_to_async(lambda: message.sender)()
                 if message_sender != self.user:
                     await self.send(text_data=json.dumps({
                         'error': 'Unauthorized to delete this message'
                     }))
                     return
 
-                # Nachricht löschen
                 await sync_to_async(message.delete)()
 
-                # Sende ein Lösch-Ereignis an die Kanalgruppe
                 await self.channel_layer.group_send(
                     self.channel_group_name,
                     {
@@ -163,8 +166,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             try:
                 message = await sync_to_async(Message.objects.get)(id=message_id)
-
-                # Überprüfe, ob die Reaktion bereits existiert
                 existing_reaction = await sync_to_async(lambda: Reaction.objects.filter(
                     user=self.user,
                     message=message,
@@ -177,22 +178,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     }))
                     return
 
-                # Füge die Reaktion hinzu
                 await sync_to_async(Reaction.objects.create)(
                     user=self.user,
                     message=message,
                     reaction_type=reaction_type
                 )
 
-                # Sende die Reaktionsaktualisierung an die Kanalgruppe
                 await self.channel_layer.group_send(
                     self.channel_group_name,
                     {
                         'type': 'chat_message',
                         'message_id': message_id,
                         'reaction_type': reaction_type,
-                        'action': 'react', 
-                        'sender_id': self.user.id  # Füge die user_id hinzu
+                        'action': 'react',
+                        'sender_id': self.user.id
                     }
                 )
 
@@ -201,10 +200,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'error': 'Message not found'
                 }))
 
-        else:  # Aktion 'new'
+        else:
             message_content = text_data_json.get('message')
             file_url = text_data_json.get('fileUrl')
-            
+
             if not message_content and not file_url:
                 await self.send(text_data=json.dumps({
                     'error': 'No message content found'
@@ -218,16 +217,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 file_url=file_url
             )
 
-            # Nachricht an die Kanalgruppe senden
             await self.channel_layer.group_send(
                 self.channel_group_name,
                 {
                     'type': 'chat_message',
-                    'message': message_content ,
+                    'message': message_content,
                     'sender_id': self.user.id,
                     'sender': self.user.username,
                     'message_id': message.id,
                     'fileUrl': file_url,
+                    'channel_id': message.channel_id,
                     'action': 'new'
                 }
             )
@@ -238,10 +237,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_id = event.get('sender_id')
         action = event.get('action')
         message_id = event.get('message_id')
-        reaction_type = event.get('reaction_type')  # Reaktionstyp
-        file_url = event.get('fileUrl')  # Reaktionstyp
+        reaction_type = event.get('reaction_type')  
+        file_url = event.get('fileUrl')  
+        channel_id = event.get('channel_id')  
 
-        # Nachricht an WebSocket senden
         await self.send(text_data=json.dumps({
             'message': message,
             'sender': sender,
@@ -249,5 +248,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'action': action,
             'message_id': message_id,
             'reaction_type': reaction_type,
-            'fileUrl': file_url
+            'fileUrl': file_url,
+            'channel_id': channel_id
         }))

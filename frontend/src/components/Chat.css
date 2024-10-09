@@ -707,6 +707,13 @@
   display: none; /* Immer ausblenden auf großen Bildschirmen */
 }
 
+.member-profile-image{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+}
+
 
 @media (min-width: 768px) and (max-width: 1304px) {
   .chat-window {
@@ -806,6 +813,7 @@
   .sidebar.hidden {
     display: none; /* Sidebar ausblenden */
   }
+  
   .modal-overlay {
     position: fixed; /* Fixiert die Overlay-Position */
     top: 0;

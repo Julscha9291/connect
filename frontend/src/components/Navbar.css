@@ -242,3 +242,102 @@
     padding:5px;
   }
 
+
+
+
+/* Sichtbar machen, wenn Benachrichtigungen vorhanden sind */
+.notification-dropdown.show {
+  display: block; /* Sichtbar machen */
+}
+
+/* Einzelne Benachrichtigung */
+.notification-item {
+  padding: 10px; /* Innenabstand */
+  border-bottom: 1px solid #f1f1f1; /* Untere Grenze für Trennung */
+  color: #333; /* Textfarbe */
+}
+
+/* Hover-Effekt für Benachrichtigungen */
+.notification-item:hover {
+  background-color: #f9f9f9; /* Hintergrundfarbe beim Hover */
+}
+
+/* Letztes Element ohne untere Grenze */
+.notification-item:last-child {
+  border-bottom: none; /* Entferne die untere Grenze vom letzten Element */
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 70px;
+  right: 232px;
+  width: 300px;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #fff;
+}
+
+.notification-item {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.contact-initials-board {
+  background-color: #eee;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #555;
+}
+
+.notification-details {
+  flex-grow: 1;
+  margin-left: 10px;
+}
+
+.create-button {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.no-notifications {
+  text-align: center;
+  color: #777;
+}
+
+button{
+  background-color: #4742eb;
+}
+
+.modal-overlay-nav {
+  position: fixed; /* Fixiert die Overlay-Position */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Dunkel mit Transparenz */
+  z-index: 1000; /* Unter der Sidebar, über dem Chat */
+}

@@ -446,3 +446,5 @@ def edit_thread(request, message_id):
     # Behandle den Fall, in dem der Thread nicht gefunden wird
     except Thread.DoesNotExist:
         return Response({"error": "Thread not found"}, status=status.HTTP_404_NOT_FOUND)
+
+

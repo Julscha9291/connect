@@ -11,7 +11,7 @@ import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
 
 
 
-const Chat = ({ selectedChat, setUnreadCount }) => {
+const Chat = ({ selectedChat, setUnreadCount, notifications, setNotifications  }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isConnected, setIsConnected] = useState(false);
@@ -40,7 +40,6 @@ const Chat = ({ selectedChat, setUnreadCount }) => {
   const [reactionUserNames, setReactionUserNames] = useState({});
   const currentUserId = parseInt(localStorage.getItem('user_id'), 10);
   const [selectedThread, setSelectedThread] = useState(null);
-
 
 
 // Hier rufst du die Funktion auf
@@ -244,6 +243,20 @@ useEffect(() => {
               if (data.sender && typeof data.sender_id === 'number' && data.sender_id !== currentUserId) {
                 console.log("Der Sender ist ein anderer Benutzer. UnreadCount wird erhöht.");
                 setUnreadCount(prevCount => prevCount + 1);
+
+                setNotifications(prevNotifications => [
+                  ...prevNotifications, 
+                  { 
+                    sender: data.sender, 
+                    messageID: data.message_id, 
+                    message: data.message,
+                    channel_id: data.channel_id
+                  }
+                ]);
+
+              // An dieser Stelle könnte der State noch nicht aktualisiert sein
+                console.log("Nach dem Setzen: ", notifications);
+
               } else {
                 console.log("Der Sender ist der aktuelle Benutzer. UnreadCount wird nicht erhöht.");
               }
@@ -276,16 +289,16 @@ useEffect(() => {
                   const updatedReactions = { ...prevReactions };
                   const messageReactions = updatedReactions[data.message_id] || {};
                   const reactionUsers = messageReactions[data.reaction_type] || new Set();
-          
-                    // Wenn eine Reaktion hinzugefügt wurde
-                    reactionUsers.add(data.sender_id);
-            
+                  
+                  // Wenn eine Reaktion hinzugefügt wurde
+                  reactionUsers.add(data.sender_id);
+                  
                   // Aktualisiere die Reaktionen
                   messageReactions[data.reaction_type] = reactionUsers;
                   updatedReactions[data.message_id] = messageReactions;
-            
+                  
                   return updatedReactions;
-                });
+                });  
             
                 // Optionale Aktion, um die Nachrichten neu zu laden
                 refreshMessages();
@@ -296,6 +309,17 @@ useEffect(() => {
                     console.log("Eine Reaktion von einem anderen Benutzer wurde hinzugefügt. UnreadCount wird erhöht.");
                     setUnreadCount(prevCount => prevCount + 1);
                     notificationIncreased = true;
+
+                    setNotifications(prevNotifications => [
+                      ...prevNotifications, 
+                      { 
+                        sender: data.sender_id, 
+                        messageID: data.message_id, 
+                        reactionType: data.reaction_type, // Hier die reaction_type hinzufügen
+                        channel_id: data.channel_id,
+                        message: data.message // Optional: die ursprüngliche Nachricht hinzufügen
+                      }
+                    ]);
                 }
          
               } else {
@@ -376,6 +400,9 @@ useEffect(() => {
  }, [selectedChat]);
 
 
+ useEffect(() => {
+  console.log("Aktualisierte Benachrichtigungen: ", notifications);
+}, [notifications]);  
 
   useEffect(() => {
     if (selectedChat) {
