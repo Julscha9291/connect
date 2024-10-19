@@ -19,8 +19,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.db.models import Count
+from django.shortcuts import redirect
 
 User = get_user_model()
+
+def custom_404_view(request, exception):
+    return redirect('https://connect.julianschaepermeier.com/')
+
 
 class LoginView(APIView):
     def post(self, request):

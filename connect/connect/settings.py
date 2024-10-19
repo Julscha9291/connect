@@ -12,20 +12,26 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+from decouple import config
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4p7ageb$mf1q1!i_^28k59)x%-87e==k^06+zq4c7=sg-*z=fa'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:62484', '127.0.0.1:54139']
+ALLOWED_HOSTS = ['127.0.0.1', 
+                 'localhost', 
+                 '127.0.0.1:62484', 
+                 '127.0.0.1:54139',
+                 'connect.julianschaepermeier.com',
+                'julianschaepermeier.com',]
 
 
 # Application definition
@@ -58,6 +64,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True 
+CSRF_COOKIE_SECURE = True
 
 # Channels Settings
 ASGI_APPLICATION = 'connect.asgi.application'
@@ -74,7 +81,8 @@ CHANNEL_LAYERS = {
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://connect.julianschaepermeier.com",
 ]
 
 # For CSRF protection
@@ -117,7 +125,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Standard: Datenbank-basiert
 
 # Sitzungslaufzeit (in Sekunden), standardmäßig wird die Sitzung geschlossen, wenn der Browser geschlossen wird
-SESSION_COOKIE_AGE = 1209600  # Zwei Wochen
+SESSION_COOKIE_AGE = 7200  
+
+SESSION_SAVE_EVERY_REQUEST = True
 
 # Festlegen, dass die Sitzungscookies auch bei einem erneuten Browserstart bestehen bleiben
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -129,7 +139,7 @@ SESSION_COOKIE_SECURE = True  # Setze dies auf True, wenn HTTPS verwendet wird
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, '../frontend/build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -195,10 +205,20 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATIC_URL = '/static/'
 
-STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / '../frontend/build/static',
+]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SECURE_HSTS_SECONDS = 31536000  
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_SSL_REDIRECT = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
