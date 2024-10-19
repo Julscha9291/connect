@@ -80,9 +80,10 @@ useEffect(() => {
     }
   }, []);
 
-  const fetchChannelMembers = useCallback(async (channelId, token) => {
+  const fetchChannelMembers = useCallback(async (channelId) => {
     setChannelId(channelId);
     try {
+      const token = localStorage.getItem('access_token');
       const response = await fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/`, {
         method: 'GET',
         headers: {
@@ -565,7 +566,7 @@ const removeReaction = (messageId, reactionType, user) => {
   const token = localStorage.getItem('access_token');
   const requestBody = { message: messageId, reaction_type: reactionType, user: user };
   
-  return fetch(`${process.env.REACT_APP_API_URL}/api/reactions/delete-reaction/`, { // Hier wird ein Promise zurückgegeben
+  return fetch(`${process.env.REACT_APP_API_URL}api/reactions/delete-reaction/`, { // Hier wird ein Promise zurückgegeben
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

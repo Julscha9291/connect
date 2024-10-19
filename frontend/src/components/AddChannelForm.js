@@ -16,7 +16,7 @@ const AddChannelForm = ({ onClose }) => {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}api/users/`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -82,7 +82,7 @@ const AddChannelForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/channels/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/channels/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

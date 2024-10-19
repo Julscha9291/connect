@@ -164,7 +164,7 @@
   
   .search-container {
     position: relative; /* Stellt sicher, dass die Positionierung von .search-results-nav relativ zu .search-container ist */
-    width: 30%;
+    width: 50%;
     border-radius: 10px;
     padding: 10px;
     display: flex;

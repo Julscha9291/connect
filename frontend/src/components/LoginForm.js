@@ -159,7 +159,9 @@ function LoginForm({ onLogin }) {
                 localStorage.setItem('profile_picture', data.user.profile_picture);
                 onLogin();
                 localStorage.setItem('access_token', data.access);
+                window.location.reload();
                 navigate('/');  // Weiterleiten zur Startseite oder zum Dashboard
+             
             } else {
                 console.error('Guest login failed, no access token returned');
             }

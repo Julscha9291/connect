@@ -31,7 +31,8 @@ ALLOWED_HOSTS = ['127.0.0.1',
                  '127.0.0.1:62484', 
                  '127.0.0.1:54139',
                  'connect.julianschaepermeier.com',
-                'julianschaepermeier.com',]
+                'julianschaepermeier.com',
+                '85.22.34.217',]
 
 
 # Application definition
@@ -81,13 +82,14 @@ CHANNEL_LAYERS = {
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
     "https://connect.julianschaepermeier.com",
+    "http://localhost:3000",
 ]
 
 # For CSRF protection
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+      "https://connect.julianschaepermeier.com",
 ]
 
 CORS_ALLOW_METHODS = [

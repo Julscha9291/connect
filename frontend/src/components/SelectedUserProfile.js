@@ -22,7 +22,7 @@ const SelectedUserProfile = forwardRef(({ user, onClose, onMessageClick }, ref) 
       const user2_id = selectedUserIds[1]; // Verwende den zweiten User (selectedUserIds[1])
       
       // Zuerst prüfen, ob der Channel schon existiert
-      const existingChannelResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/create-private-channel/`, {
+      const existingChannelResponse = await fetch(`${process.env.REACT_APP_API_URL}api/create-private-channel/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -114,7 +114,7 @@ const App = () => {
       
       const token = localStorage.getItem('access_token'); // Token aus localStorage abrufen
   
-      const response = await fetch(`http://localhost:8000/api/channels/${channelId}/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`, // Token im Header mitsenden
