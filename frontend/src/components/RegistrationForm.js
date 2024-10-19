@@ -30,7 +30,7 @@ function RegistrationForm({ onSuccess, onSwitchToLogin }) {
         }
 
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/api/register/`, formData, {
+            await axios.post(`${process.env.REACT_APP_API_URL}api/register/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
