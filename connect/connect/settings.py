@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:62484', '127.0.0.1:54139']
 # Application definition
 
 INSTALLED_APPS = [
-     'ws4redis',
     'channels',
     "daphne",
     'django.contrib.admin',
