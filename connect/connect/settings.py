@@ -89,7 +89,7 @@ CORS_ALLOWED_ORIGINS = [
 # For CSRF protection
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-      "https://connect.julianschaepermeier.com",
+    "https://connect.julianschaepermeier.com",
 ]
 
 CORS_ALLOW_METHODS = [
