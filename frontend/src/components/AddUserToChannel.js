@@ -21,12 +21,12 @@ const AddUserToChannel = ({ channelId, closeModal, addUserToChannel, channelName
       };
   
       // Alle Benutzer abrufen
-      const usersResponse = await axios.get('http://localhost:8000/api/users/', config);
+      const usersResponse = await axios.get(`${process.env.REACT_APP_API_URL}api/users/`, config);
       const allUsers = usersResponse.data;
       console.log('Alle Benutzer:', allUsers);
   
       // Channel-Mitglieder abrufen
-      const channelResponse = await axios.get(`http://localhost:8000/api/channels/${channelId}/`, config);
+      const channelResponse = await axios.get(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/`, config);
       const channelData = channelResponse.data;
       const channelMembers = channelData.members;  // Angenommen, dass die Mitglieder unter `members` im Channel-Objekt gespeichert sind
       console.log('Channel-Mitglieder:', channelMembers);

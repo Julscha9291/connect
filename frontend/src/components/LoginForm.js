@@ -32,7 +32,7 @@ function LoginForm({ onLogin }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://localhost:8000/api/login/', {
+        fetch(`${process.env.REACT_APP_API_URL}api/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ function LoginForm({ onLogin }) {
                     onLogin();
                            // Überprüfen der Speicherung
             
-                           fetch('http://localhost:8000/api/profile/', {
+                           fetch(`${process.env.REACT_APP_API_URL}api/profile/`, {
                             headers: {
                                 'Authorization': `Bearer ${data.access}`,
                             },
@@ -136,7 +136,7 @@ function LoginForm({ onLogin }) {
         const guestEmail = 'guest@example.com';
         const guestPassword = 'guestpassword';
         
-        fetch('http://localhost:8000/api/login/', {
+        fetch(`${process.env.REACT_APP_API_URL}api/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ function LoginForm({ onLogin }) {
             ) : (
                 <>
                     <div className={`logo-container ${logoShrink ? 'shrink' : ''}`}>
-                        <img src="/images/connect.png" alt="Task Logo" />
+                        <img src="https://connect.julianschaepermeier.com/static/connect.png" alt="Task Logo" />
                     </div>
                     <div className={`login-container ${showLoginForm ? 'show' : ''}`}>
                         <div className="header-login">

@@ -23,7 +23,7 @@ const handleNameEdit = () => {
   const saveChanges = async () => {
     try {
     const token = localStorage.getItem('access_token');
-      const response = await fetch(`http://localhost:8000/api/channels/${channelId}/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -53,7 +53,7 @@ const handleNameEdit = () => {
   const leaveChannel = async () => {
     const token = localStorage.getItem('access_token');
     try {
-      const response = await fetch(`http://localhost:8000/api/channels/${channelId}/delete_user/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/delete_user/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

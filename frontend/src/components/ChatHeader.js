@@ -38,7 +38,7 @@ const ChatHeader = ({
 const handleAddUserToChannel = (user, refreshMessages) => {
   const userId = user.id;
 
-  fetch(`http://localhost:8000/api/channels/${channelId}/add_user/`, {
+  fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/add_user/`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',

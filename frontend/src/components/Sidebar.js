@@ -40,7 +40,7 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, className }) => {
       const fetchUsers = async () => {
         try {
           const token = localStorage.getItem('access_token');
-          const response = await fetch('http://localhost:8000/api/users/', {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
           });
@@ -71,7 +71,7 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, className }) => {
     const fetchChannels = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const channelsResponse = await fetch('http://localhost:8000/api/channels/', {
+        const channelsResponse = await fetch(`${process.env.REACT_APP_API_URL}api/channels/`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -93,7 +93,7 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, className }) => {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch('http://localhost:8000/api/users/', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}api/users/`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -172,7 +172,7 @@ const Sidebar = ({ onAddChannelClick, onSelectChat, className }) => {
     try {
       const user1Id = localStorage.getItem('user_id');
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:8000/api/private_chats/', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/private_chats/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

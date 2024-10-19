@@ -59,7 +59,7 @@ useEffect(() => {
   
   const fetchUsers = useCallback(async (token) => {
     try {
-      const response = await fetch('http://localhost:8000/api/users/', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/users/`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -83,7 +83,7 @@ useEffect(() => {
   const fetchChannelMembers = useCallback(async (channelId, token) => {
     setChannelId(channelId);
     try {
-      const response = await fetch(`http://localhost:8000/api/channels/${channelId}/`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -140,7 +140,7 @@ useEffect(() => {
         );
 
         if (partnerMember) {
-          fetch('http://localhost:8000/api/users/')
+          fetch(`${process.env.REACT_APP_API_URL}api/users/`)
             .then((response) => response.json())
             .then((users) => {
               const partnerData = users.find(user => user.id === partnerMember.user);
@@ -193,7 +193,7 @@ useEffect(() => {
     if (selectedChat) {
 
       const token = localStorage.getItem('access_token');
-      const wsUrl = `ws://localhost:8000/ws/chat/${selectedChat.data.id}/?token=${token}`;
+      const wsUrl = `wss://connect.julianschaepermeier.com/ws/chat/${selectedChat.data.id}/?token=${token}`;
 
       socket.current = new WebSocket(wsUrl);
 
@@ -262,7 +262,7 @@ useEffect(() => {
               }
 
 
-              fetch(`http://localhost:8000/api/reactions/?message=${data.message_id}`)
+              fetch(`${process.env.REACT_APP_API_URL}api/reactions/?message=${data.message_id}`)
                 .then(response => response.json())
                 .then(reactionsData => {
                   setMessages((prevMessages) => [
@@ -335,11 +335,11 @@ useEffect(() => {
       const refreshMessages = () => {
         if (selectedChat) {
             // Zuerst die Nachrichten abrufen
-            fetch(`http://localhost:8000/api/messages/${selectedChat.data.id}/`)
+            fetch(`${process.env.REACT_APP_API_URL}api/messages/${selectedChat.data.id}/`)
                 .then(response => response.json())
                 .then(messagesData => {
                     // Alle Reaktionen abrufen
-                    return fetch(`http://localhost:8000/api/reactions/`)
+                    return fetch(`${process.env.REACT_APP_API_URL}api/reactions/`)
                         .then(response => response.json())
                         .then(reactionsData => {
                             // Reaktionen nach Nachricht gruppieren
@@ -406,7 +406,7 @@ useEffect(() => {
 
   useEffect(() => {
     if (selectedChat) {
-      fetch(`http://localhost:8000/api/messages/${selectedChat.data.id}/`)
+      fetch(`${process.env.REACT_APP_API_URL}api/messages/${selectedChat.data.id}/`)
         .then(response => response.json())
         .then(data => {
           console.log('Initiale Nachrichten laden:', data);
@@ -429,7 +429,7 @@ useEffect(() => {
   }, [selectedChat]);
 
   const fetchReactions = (messageId) => {
-    fetch('http://localhost:8000/api/reactions/')
+    fetch(`${process.env.REACT_APP_API_URL}api/reactions/`)
       .then(response => response.json())
       .then(data => {
         const reactionsByMessage = data.reduce((acc, reaction) => {
@@ -542,7 +542,7 @@ useEffect(() => {
 const addReaction = (messageId, reactionType, user) => {
   const token = localStorage.getItem('access_token');
   
-  return fetch('http://localhost:8000/api/reactions/', { // Hier wird ein Promise zurückgegeben
+  return fetch(`${process.env.REACT_APP_API_URL}api/reactions/`, { // Hier wird ein Promise zurückgegeben
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -565,7 +565,7 @@ const removeReaction = (messageId, reactionType, user) => {
   const token = localStorage.getItem('access_token');
   const requestBody = { message: messageId, reaction_type: reactionType, user: user };
   
-  return fetch(`http://localhost:8000/api/reactions/delete-reaction/`, { // Hier wird ein Promise zurückgegeben
+  return fetch(`${process.env.REACT_APP_API_URL}/api/reactions/delete-reaction/`, { // Hier wird ein Promise zurückgegeben
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -648,7 +648,7 @@ const removeReaction = (messageId, reactionType, user) => {
             formData.append('file', attachedFile);
 
             try {
-                const response = await fetch('http://localhost:8000/api/upload/', {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}api/upload/`, {
                     method: 'POST',
                     body: formData,
                 });
@@ -778,7 +778,7 @@ const handleFileChange = (e) => {
   };
   
 
-const baseUrl = 'http://localhost:8000';
+const baseUrl = `${process.env.REACT_APP_API_URL}`;
 
 const toggleEmojiPicker = () => {
   setHideHoverIcons(true); // Nur Icons ausblenden
@@ -864,7 +864,7 @@ const getReactionUsersWithNames = async (reactions, messageId, reactionType, cur
   const userIds = Array.from(reactions[messageId][reactionType] || []);
 
   try {
-    const response = await fetch('http://localhost:8000/api/users/');
+    const response = await fetch(`${process.env.REACT_APP_API_URL}api/users/`);
     if (!response.ok) {
       throw new Error('Fehler beim Abrufen der Benutzerdaten');
     }

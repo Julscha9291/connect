@@ -61,7 +61,7 @@ const Threads = ({
 
       const token = localStorage.getItem('access_token');
 
-      const wsUrlThread = `ws://localhost:8000/ws/threads/${selectedThread.id}/?token=${token}`;
+      const wsUrlThread = `ws://connect.julianschaepermeier.com/ws/threads/${selectedThread.id}/?token=${token}`;
       console.log('WebSocket URL:', wsUrlThread);
   
       threadSocket.current = new WebSocket(wsUrlThread);
@@ -80,7 +80,7 @@ const Threads = ({
             if (data.content && data.message_id) {
               console.log('Neue Thread-Nachricht empfangen:', data);
               
-              fetch(`http://localhost:8000/api/thread-reactions/?message=${data.message_id}`)
+              fetch(`${process.env.REACT_APP_API_URL}api/thread-reactions/?message=${data.message_id}`)
               .then(response => response.json())
               .then(reactionsData => {
                 // Aktualisiere den Zustand mit dem neuen Thread und seinen Reaktionen
@@ -205,7 +205,7 @@ const Threads = ({
         }
     
         // Threads für die ausgewählte Nachricht abrufen
-        fetch(`http://localhost:8000/api/threads/`)
+        fetch(`${process.env.REACT_APP_API_URL}api/threads/`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Netzwerkantwort war nicht ok');
@@ -235,7 +235,7 @@ const Threads = ({
                 const userIds = filteredThreads.map(thread => Number(thread.sender));
     
                 // Benutzerinformationen basierend auf den User-IDs abrufen
-                fetch('http://localhost:8000/api/users/')
+                fetch(`${process.env.REACT_APP_API_URL}api/users/`)
                     .then(response => response.json())
                     .then(users => {
                         console.log('Fetched Users:', users); // Debugging
@@ -271,7 +271,7 @@ const Threads = ({
     };
     
     const fetchReactions = () => {
-      fetch('http://localhost:8000/api/thread-reactions/')
+      fetch(`${process.env.REACT_APP_API_URL}api/thread-reactions/`)
         .then(response => response.json())
         .then(data => {
           const reactionsByThread = data.reduce((acc, reaction) => {
@@ -339,7 +339,7 @@ useEffect(() => {
     const userIds = Array.from(reactions[threadId][reactionType] || []);
   
     try {
-      const response = await fetch('http://localhost:8000/api/users/');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/users/`);
       if (!response.ok) {
         throw new Error('Fehler beim Abrufen der Benutzerdaten');
       }
@@ -390,7 +390,7 @@ useEffect(() => {
 
   useEffect(() => {
     // Hole die Thread-Nachrichten
-    fetch(`http://localhost:8000/api/threads/?message_id=${messageId}`)
+    fetch(`${process.env.REACT_APP_API_URL}api/threads/?message_id=${messageId}`)
   .then(response => response.json())
   .then(data => {
     const filteredThreads = data.filter(thread => thread.message === messageId);
@@ -404,7 +404,7 @@ useEffect(() => {
     console.log(currentUserId);
 
     // Fetch user data only once
-    fetch('http://localhost:8000/api/users/')
+    fetch(`${process.env.REACT_APP_API_URL}api/users/`)
       .then(response => response.json())
       .then(users => {
         console.log(users);
@@ -434,7 +434,7 @@ useEffect(() => {
 
 
     // Hole Benutzerinformationen basierend auf dem sender_id der initialMessage
-    fetch('http://localhost:8000/api/users/')
+    fetch(`${process.env.REACT_APP_API_URL}api/users/`)
       .then(response => response.json())
       .then(users => {
         const senderData = users.find(user => user.id === initialMessage.sender_id);
@@ -453,7 +453,7 @@ useEffect(() => {
 
 
       const fetchReactions = (threadId) => {
-        fetch('http://localhost:8000/api/thread-reactions/')
+        fetch(`${process.env.REACT_APP_API_URL}api/thread-reactions/`)
           .then(response => response.json())
           .then(data => {
             const reactionsByThread = data.reduce((acc, reaction) => {
@@ -489,7 +489,7 @@ useEffect(() => {
         formData.append('file', attachedFile);
   
         try {
-          const response = await fetch('http://localhost:8000/api/upload/', {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}api/upload/`, {
             method: 'POST',
             body: formData,
           });
@@ -571,7 +571,7 @@ useEffect(() => {
     } else if (!isConnected) {
       console.error('WebSocket-Verbindung ist nicht offen.');
     
-      fetch(`http://localhost:8000/api/threads/${selectedThreadId}/`, {
+      fetch(`${process.env.REACT_APP_API_URL}api/threads/${selectedThreadId}/`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',  // Setze den Header für JSON
@@ -623,7 +623,7 @@ useEffect(() => {
       console.error('WebSocket-Verbindung ist nicht offen.');
       
       // Optional: Fallback, um die Nachricht über die REST-API zu löschen, wenn WebSocket nicht verfügbar ist
-      fetch(`http://localhost:8000/api/threads/${threadId}/`, {
+      fetch(`${process.env.REACT_APP_API_URL}api/threads/${threadId}/`, {
         method: 'DELETE',
       })
         .then(response => {
@@ -715,7 +715,7 @@ useEffect(() => {
 const addThreadReaction = (threadId, reactionType, user) => {
   const token = localStorage.getItem('access_token');
 
-  return fetch('http://localhost:8000/api/thread-reactions/', {  // Hier wird 'return' hinzugefügt
+  return fetch(`${process.env.REACT_APP_API_URL}api/thread-reactions/`, {  // Hier wird 'return' hinzugefügt
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -739,7 +739,7 @@ const addThreadReaction = (threadId, reactionType, user) => {
 const removeThreadReaction = (threadMessageId, reactionType, user) => {
   const token = localStorage.getItem('access_token');
   
-  return fetch(`http://localhost:8000/api/thread-reactions/delete-reaction/`, {  // Rückgabe von fetch
+  return fetch(`${process.env.REACT_APP_API_URL}api/thread-reactions/delete-reaction/`, {  // Rückgabe von fetch
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -765,7 +765,7 @@ const removeThreadReaction = (threadMessageId, reactionType, user) => {
     return threadReactions[threadId]?.[reactionType]?.size || 0;
   };
 
-  const baseUrl = 'http://localhost:8000';
+  const baseUrl = `${process.env.REACT_APP_API_URL}`;
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];

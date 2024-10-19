@@ -29,7 +29,7 @@ const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount,  notif
   const fetchUsers = async () => {
     try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch('http://localhost:8000/api/users/', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}api/users/`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -102,7 +102,7 @@ useEffect(() => {
     setInitials(`${firstInitial}${lastInitial}`);
 
     if (storedProfilePicture && storedProfilePicture !== 'null') {
-      setProfilePicture(`http://localhost:8000${storedProfilePicture}`);
+      setProfilePicture(`${process.env.REACT_APP_API_URL}${storedProfilePicture}`);
     }
   }, []);
 
@@ -110,7 +110,7 @@ useEffect(() => {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch('http://localhost:8000/api/users/', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}api/users/`, {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -141,7 +141,7 @@ useEffect(() => {
       const fetchUsers = async () => {
         try {
           const token = localStorage.getItem('access_token');
-          const response = await fetch('http://localhost:8000/api/users/', {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}api/users/`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
           });
@@ -183,7 +183,7 @@ useEffect(() => {
 
   const fetchChannelName = async (channelId) => {
     const token = localStorage.getItem('access_token');
-    const response = await fetch(`http://localhost:8000/api/channels/${channelId}/`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -265,7 +265,7 @@ useEffect(() => {
       <nav className="navbar">
         <div className="navbar-left">
           <Link to="/" className="media-logo">
-            <img src="/images/connect_logo.png" alt="connect-Logo" className="connect-logo" />
+            <img src="https://connect.julianschaepermeier.com/static/connect_logo.png" alt="connect-Logo" className="connect-logo" />
           </Link>
           <h2 className="connect-title">.connect</h2>
         </div>

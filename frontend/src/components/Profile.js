@@ -23,7 +23,7 @@ const Profile = ({ onClose }) => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('access_token'); // JWT Token abrufen
-        const response = await fetch('http://localhost:8000/api/profile/', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}api/profile/`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -56,7 +56,7 @@ const Profile = ({ onClose }) => {
   const handleSaveClick = async () => {
     try {
       const token = localStorage.getItem('access_token'); // JWT Token abrufen
-      const response = await fetch('http://localhost:8000/api/profile/', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/profile/`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`, // Token im Header senden
@@ -97,7 +97,7 @@ const Profile = ({ onClose }) => {
   };
 
   // Basis-URL für das Bild
-  const baseUrl = 'http://localhost:8000';
+  const baseUrl = `${process.env.REACT_APP_API_URL}`;
 
   // Funktion zum Generieren der Initialen
   const getInitials = (firstName, lastName) => {
