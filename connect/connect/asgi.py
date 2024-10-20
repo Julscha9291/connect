@@ -7,11 +7,9 @@ from channels.security.websocket import AllowedHostsOriginValidator
 import dev.routing  # Ersetze durch den Pfad zu deiner Routing-Datei
 from connect.token import TokenAuthMiddleware  # Importiere die TokenAuthMiddleware
 
-django.setup()  # Stelle sicher, dass Django vollständig initialisiert wird
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'connect.settings')
+django_asgi_app = get_asgi_application()
 
-# Initialisiere Django
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),

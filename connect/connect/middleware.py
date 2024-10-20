@@ -1,6 +1,3 @@
-import django
-django.setup() 
-
 class BaseMiddleware:
     """
     Base class for implementing ASGI middleware.
