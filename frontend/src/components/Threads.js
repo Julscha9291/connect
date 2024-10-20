@@ -61,7 +61,7 @@ const Threads = ({
 
       const token = localStorage.getItem('access_token');
 
-      const wsUrlThread = `ws://connect.julianschaepermeier.com/ws/threads/${selectedThread.id}/?token=${token}`;
+      const wsUrlThread = `wss://connect.julianschaepermeier.com/ws/threads/${selectedThread.id}/?token=${token}`;
       console.log('WebSocket URL:', wsUrlThread);
   
       threadSocket.current = new WebSocket(wsUrlThread);
