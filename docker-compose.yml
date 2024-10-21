@@ -11,19 +11,19 @@ services:
     env_file:
       - ./connect/.env  # Umgebungsvariablen (falls vorhanden)
     expose:
-      - "8001"  # Exponiert Port 8001
+      - "8001:8000"  # Exponiert Port 8001
 
   frontend:
     build:
       context: ./frontend  # Setzt den Kontext auf den connect-Ordner
       dockerfile: Dockerfile  # Hier ist der Dockerfile für React
     ports:
-      - "80:80"  # Bindet Port 80 vom Container an Port 80 des Hosts
+      - "8080:80"  # Bindet Port 80 vom Container an Port 80 des Hosts
 
   redis:
     image: "redis:alpine"  # Redis-Dienst
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
 networks:
   default:
