@@ -3,7 +3,7 @@ FROM node:14-alpine as build
 
 WORKDIR /app
 
-COPY ./package.json ./frontend/package-lock.json /app/
+COPY ./package.json ./package-lock.json /app/
 
 RUN npm install --silent
 
