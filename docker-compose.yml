@@ -5,6 +5,8 @@ services:
     build:
       context: ./connect  # Setzt den Kontext auf den connect-Ordner
       dockerfile: Dockerfile  # Hier ist der Dockerfile für Django
+    ports:
+      - "8000:8000"  
     command: daphne -b 0.0.0.0 -p 8002 connect.asgi:application  # Daphne auf Port 8002
     volumes:
       - ./connect:/app  # Synchronisiert den connect-Ordner
@@ -12,15 +14,14 @@ services:
       - ./connect/.env  # Umgebungsvariablen (falls vorhanden)
     environment:  # Füge dies hinzu
       - DJANGO_SETTINGS_MODULE=connect.settings  
-    expose:
-      - "8001"  # Exponiert Port 8002
+
 
   frontend:
     build:
       context: ./frontend  # Setzt den Kontext auf den frontend-Ordner
       dockerfile: Dockerfile  # Hier ist der Dockerfile für React
     ports:
-      - "8080:80"  # Bindet Port 80 vom Container an Port 8080 des Hosts
+      - "3000:3000"  # Bindet Port 80 vom Container an Port 8080 des Hosts
 
   redis:
     image: "redis:alpine"  # Redis-Dienst

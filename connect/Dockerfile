@@ -17,3 +17,5 @@ COPY . /app
 
 # Run Daphne server
 CMD ["daphne", "-b", "0.0.0.0", "-p", "8001", "connect.asgi:application"]
+
+EXPOSE 8000
