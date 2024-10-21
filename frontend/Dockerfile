@@ -7,7 +7,7 @@ COPY ./package.json ./package-lock.json /app/
 
 RUN npm install --silent
 
-COPY ./frontend /app
+COPY . .
 
 RUN npm run build
 
