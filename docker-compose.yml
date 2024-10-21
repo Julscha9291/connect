@@ -13,7 +13,7 @@ services:
     environment:  # Füge dies hinzu
       - DJANGO_SETTINGS_MODULE=connect.settings  
     expose:
-      - "8002"  # Exponiert Port 8002
+      - "8002:8002"  # Exponiert Port 8002
 
   frontend:
     build:
