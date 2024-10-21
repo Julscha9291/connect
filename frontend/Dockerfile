@@ -1,7 +1,7 @@
 # Dockerfile for React
 FROM node:18-alpine as build
 
-WORKDIR /app
+WORKDIR /home/coding/frontend
 
 COPY ./package.json ./package-lock.json /app/
 
