@@ -16,5 +16,5 @@ FROM httpd:alpine
 
 COPY --from=build /app/build /usr/local/apache2/htdocs/
 
-EXPOSE 3000
+EXPOSE 80
 
