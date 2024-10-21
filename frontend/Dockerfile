@@ -1,9 +1,9 @@
 # Dockerfile for React
 FROM node:18-alpine as build
 
-WORKDIR /home/coding/frontend
+WORKDIR /app
 
-COPY ./package.json ./package-lock.json 
+COPY ./package.json ./package-lock.json /app/
 
 RUN npm install --silent
 
