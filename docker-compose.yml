@@ -15,8 +15,8 @@ services:
 
   frontend:
     build:
-      context: ./connect  # Setzt den Kontext auf den connect-Ordner
-      dockerfile: Dockerfile-react  # Hier ist der Dockerfile für React
+      context: ./frontend  # Setzt den Kontext auf den connect-Ordner
+      dockerfile: Dockerfile  # Hier ist der Dockerfile für React
     ports:
       - "80:80"  # Bindet Port 80 vom Container an Port 80 des Hosts
 
