@@ -24,6 +24,9 @@ COPY ./apache-config.conf /etc/apache2/sites-available/connect.conf
 # Enable mod_wsgi
 RUN a2enmod wsgi
 
+# Enable the Apache site configuration
+RUN a2ensite connect
+
 # Expose the port
 EXPOSE 80
 
