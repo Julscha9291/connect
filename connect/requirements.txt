@@ -19,3 +19,5 @@ redis>=5.0.0
 Pillow
 
 gunicorn
+
+uvicorn
