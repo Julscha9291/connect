@@ -21,3 +21,5 @@ Pillow
 gunicorn
 
 uvicorn
+
+django-websocket-redis
