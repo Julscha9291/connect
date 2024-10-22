@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  frontend:
+    build:
+      context: ./frontend  # Setzt den Kontext auf den frontend-Ordner
+      dockerfile: Dockerfile  # Hier ist der Dockerfile für React
+    ports:
+      - "8080:80"  # Bindet Port 80 vom Container an Port 8080 des Hosts
+    volumes:
+      - ./frontend/public/images:/usr/local/apache2/htdocs/images  # Statische Bilder vom Frontend
+
   backend:
     build:
       context: ./connect  # Setzt den Kontext auf den connect-Ordner
@@ -15,22 +24,16 @@ services:
       - DJANGO_SETTINGS_MODULE=connect.settings  
     working_dir: /app  # Setzt das Arbeitsverzeichnis  
     expose:
-      - "8000"  # Exponiert Port 80, den Apache verwenden wird 
+      - "8000"  # Exponiert Port 8000 für interne Kommunikation
 
-  frontend:
-    build:
-      context: ./frontend  # Setzt den Kontext auf den frontend-Ordner
-      dockerfile: Dockerfile  # Hier ist der Dockerfile für React
-    ports:
-      - "8080:80"  # Bindet Port 80 vom Container an Port 8080 des Hosts
-    volumes:
-      - ./frontend/public/images:/usr/local/apache2/htdocs/images
+    # Abhängigkeit vom Frontend-Dienst
+    depends_on:
+      - frontend  # Warten, bis das Frontend gestartet ist
 
   redis:
     image: "redis:alpine"  # Redis-Dienst
     ports:
       - "6380:6379"
-  
 
 networks:
   default:
