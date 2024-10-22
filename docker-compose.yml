@@ -20,6 +20,7 @@ services:
       - ./connect:/app  # Synchronisiert den connect-Ordner
       - ./connect/staticfiles:/app/staticfiles  # Statische Dateien
       - ./connect/media:/app/media  # Medien-Dateien (falls benötigt)
+      - ./connect/db.sqlite3:/app/db.sqlite3  # Persistiere die SQLite-Datenbank
     env_file:
       - ./connect/.env  # Umgebungsvariablen (falls vorhanden)
     environment:  
