@@ -16,4 +16,5 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY . /app  
 
 # Run Gunicorn server
-CMD ["gunicorn", "connect.wsgi:application", "-b", "0.0.0.0:8002"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "connect.asgi:application", "-b", "0.0.0.0:8002"]
+
