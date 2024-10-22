@@ -16,4 +16,4 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY . /app  
 
 # Run Daphne server
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8002", "connect.asgi:application"]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8003", "connect.asgi:application"]
