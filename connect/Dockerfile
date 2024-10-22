@@ -14,6 +14,10 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy project files to the working directory
 COPY . /app  
+
+# Kopiere die Bilder vom Frontend in das statische Verzeichnis
+RUN cp -r /app/frontend/public/images /app/staticfiles/
+
 # Statische Dateien sammeln
 RUN python manage.py collectstatic --noinput  
 
