@@ -15,6 +15,5 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Copy project files to the working directory
 COPY . /app  
 
-# Run Gunicorn server
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "connect.asgi:application", "-b", "0.0.0.0:8002"]
-
+# Run Daphne server
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8003", "connect.asgi:application"]
