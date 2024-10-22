@@ -27,7 +27,7 @@ services:
       - DJANGO_SETTINGS_MODULE=connect.settings  
     working_dir: /app  # Setzt das Arbeitsverzeichnis  
     expose:
-      - "8000"  # Exponiert Port 8000 für interne Kommunikation
+      - "8000:8000" # Exponiert Port 8000 für interne Kommunikation
 
     # Abhängigkeit vom Frontend-Dienst
     depends_on:
