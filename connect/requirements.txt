@@ -23,3 +23,5 @@ gunicorn
 uvicorn
 
 django-websocket-redis
+
+django-cors-headers
