@@ -14,7 +14,7 @@ services:
       - DJANGO_SETTINGS_MODULE=connect.settings  
     working_dir: /app  # Setzt das Arbeitsverzeichnis  
     expose:
-      - "8001"  # Exponiert Port 8002
+      - "8002"  # Exponiert Port 8002
 
   frontend:
     build:
