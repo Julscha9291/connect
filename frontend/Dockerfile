@@ -16,5 +16,7 @@ FROM httpd:alpine
 
 COPY --from=build /app/build /usr/local/apache2/htdocs/
 
+RUN cp -r /usr/local/apache2/htdocs/images/* /usr/local/apache2/htdocs/static/ 
+
 EXPOSE 80
 

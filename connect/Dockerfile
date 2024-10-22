@@ -15,8 +15,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Copy project files to the working directory
 COPY . /app  
 
-# Kopiere die Bilder von Apache zu den Django Staticfiles
-RUN cp -r /usr/local/apache2/htdocs/images /app/staticfiles/
+
+
 
 # Statische Dateien sammeln
 RUN python manage.py collectstatic --noinput  
