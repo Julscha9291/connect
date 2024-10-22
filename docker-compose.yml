@@ -5,16 +5,15 @@ services:
     build:
       context: ./connect  # Setzt den Kontext auf den connect-Ordner
       dockerfile: Dockerfile  # Hier ist der Dockerfile für Django
-    command: daphne -b 0.0.0.0 -p 8003 connect.asgi:application  # Daphne auf Port 8002
     volumes:
       - ./connect:/app  # Synchronisiert den connect-Ordner
     env_file:
       - ./connect/.env  # Umgebungsvariablen (falls vorhanden)
-    environment:  # Füge dies hinzu
+    environment:  
       - DJANGO_SETTINGS_MODULE=connect.settings  
     working_dir: /app  # Setzt das Arbeitsverzeichnis  
     expose:
-      - "8003"  # Exponiert Port 8002
+      - "80"  # Exponiert Port 80, den Apache verwenden wird
 
   frontend:
     build:

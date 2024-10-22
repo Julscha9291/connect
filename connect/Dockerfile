@@ -15,5 +15,17 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Copy project files to the working directory
 COPY . /app  
 
-# Run Daphne server
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8003", "connect.asgi:application"]
+# Install Apache and mod_wsgi
+RUN apt-get update && apt-get install -y apache2 libapache2-mod-wsgi-py3
+
+# Copy the Apache configuration file
+COPY ./apache-config.conf /etc/apache2/sites-available/connect.conf
+
+# Enable mod_wsgi
+RUN a2enmod wsgi
+
+# Expose the port
+EXPOSE 80
+
+# Start Apache
+CMD ["apachectl", "-D", "FOREGROUND"]
