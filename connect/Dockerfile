@@ -15,20 +15,6 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Copy project files to the working directory
 COPY . /app  
 
-# Install Apache and mod_wsgi
-RUN apt-get update && apt-get install -y apache2 libapache2-mod-wsgi-py3
+# Starte Django Development Server (für API)
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
-# Copy the Apache configuration file
-COPY ./apache-config.conf /etc/apache2/sites-available/connect.conf
-
-# Enable mod_wsgi
-RUN a2enmod wsgi
-
-# Enable the Apache site configuration
-RUN a2ensite connect
-
-# Expose the port
-EXPOSE 80
-
-# Start Apache
-CMD ["apachectl", "-D", "FOREGROUND"]

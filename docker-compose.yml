@@ -7,13 +7,17 @@ services:
       dockerfile: Dockerfile  # Hier ist der Dockerfile für Django
     volumes:
       - ./connect:/app  # Synchronisiert den connect-Ordner
+      - ./connect/staticfiles:/app/staticfiles  # Statische Dateien
+      - ./connect/media:/app/media  # Medien-Dateien (falls benötigt)
     env_file:
       - ./connect/.env  # Umgebungsvariablen (falls vorhanden)
     environment:  
       - DJANGO_SETTINGS_MODULE=connect.settings  
     working_dir: /app  # Setzt das Arbeitsverzeichnis  
     expose:
-      - "80"  # Exponiert Port 80, den Apache verwenden wird
+      - "8000"  # Exponiert Port 80, den Apache verwenden wird
+    networks:
+      - connect-net  
 
   frontend:
     build:
@@ -21,11 +25,17 @@ services:
       dockerfile: Dockerfile  # Hier ist der Dockerfile für React
     ports:
       - "8080:80"  # Bindet Port 80 vom Container an Port 8080 des Hosts
+    networks:
+      - connect-net  
+    volumes:
+      - ./frontend/public/images:/usr/local/apache2/htdocs/images
 
   redis:
     image: "redis:alpine"  # Redis-Dienst
     ports:
       - "6380:6379"
+    networks:
+      - connect-net    
 
 networks:
   default:
