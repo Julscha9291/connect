@@ -36,7 +36,8 @@ ALLOWED_HOSTS = ['127.0.0.1',
                 'julianschaepermeier.com',
                 '85.22.34.217',
                 '172.17.0.1',
-                '172.17.0.1:8001',]
+                '172.17.0.1:8001',
+                '172.24.0.4']
 
 
 # Application definition
