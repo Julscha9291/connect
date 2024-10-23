@@ -401,8 +401,8 @@ const handleNotificationClick = () => {
 
 
       {selectedUser && (
-        <div className="modal-overlay" onClick={handleCloseProfile}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="" onClick={handleCloseProfile}>
+          <div className="" onClick={(e) => e.stopPropagation()}>
             <SelectedUserProfile 
               user={selectedUser} 
               onClose={handleCloseProfile} 
