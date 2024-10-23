@@ -166,6 +166,7 @@ const App = () => {
                     setNotifications={setNotifications} 
                   />
                 ) : (
+                  <div className="no-chat-message">Please select a channel or chat</div>
                 )}
               </div>
   
