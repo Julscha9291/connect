@@ -16,7 +16,7 @@
 - **Backend**: Django (including Django Channels for WebSocket support)
 - **Frontend**: React
 - **WebSockets**: For real-time communication
-- **Database**: Django ORM with SQLite (or another supported DB)
+- **Database**: Django ORM with SQLite 
 
 ## Installation
 
