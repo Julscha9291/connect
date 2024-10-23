@@ -773,7 +773,7 @@ if (!selectedChat) {
   
         <div className="chat-body">
           {messages.length === 0 ? (
-            <div className="no-messages">Keine Nachrichten</div>
+            <div className="no-messages"></div>
           ) : (
             <div className="chat-container">
               <div className="messages">
