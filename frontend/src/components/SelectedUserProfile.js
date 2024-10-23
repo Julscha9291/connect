@@ -71,9 +71,13 @@ const SelectedUserProfile = forwardRef(({ user, onClose, onMessageClick }, ref) 
           )}
               <h2>{user.first_name} {user.last_name}</h2>
 
-              <div style={{ display: 'flex', alignItems: 'center', color: 'green' }}>
-                <FontAwesomeIcon icon={faCircle} style={{ fontSize: '12px', marginRight: '5px' }} />
-                <span style={{ color: 'green', fontWeight: 'bold', fontSize:'20px' }}>Online</span>
+              <div className="online-wrapper">
+              <FontAwesomeIcon icon={faCircle}  className={user.is_online ? 'icon-online' : 'icon-offline'}  style={{ fontSize: '12px', marginRight: '5px' }} />
+                {user.is_online ? (
+                            <span className="status-profile ProfilOnline"> Online </span>
+                          ) : (
+                            <span className="status-profile ProfilOffline"> Offline </span>
+                          )}
               </div>
 
           <div className="profile-details">

@@ -7,7 +7,6 @@
 .App-content {
     display: flex;
     position: relative;
-    margin-top: 20px;
 }
 
 .toggle-sidebar-button {

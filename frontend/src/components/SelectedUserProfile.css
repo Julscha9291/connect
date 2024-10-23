@@ -84,3 +84,54 @@
 .close-button:hover {
     color: red;
 }
+
+.online-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.status-profile {
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.status-profile.online::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  color:#555;
+}
+
+.status-profile.offline::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  color:#555;
+}
+
+.icon-online {
+  color: green; 
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.icon-offline {
+  color: gray; 
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.ProfilOnline{
+  color:#555;
+}
+
+.ProfilOffline{
+  color:#555;
+}

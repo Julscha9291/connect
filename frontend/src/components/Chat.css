@@ -719,6 +719,7 @@
   .chat-window {
     flex-direction: column; 
     flex-grow: 0;
+    margin-top:10px
   }
 
   .thread-class {
