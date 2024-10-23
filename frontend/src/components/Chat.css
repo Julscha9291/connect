@@ -756,7 +756,7 @@
   }
 
   .chat-full-width {
-    width: -webkit-fill-available;
+    width: -webkit-fill-available !important;
     margin-left: 20px !important;
     margin-right: 10px;
   }
