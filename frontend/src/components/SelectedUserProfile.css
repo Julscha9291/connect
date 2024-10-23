@@ -1,23 +1,21 @@
 .selected-user-profile-overlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index:1005
-  }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index:1005
+}
   
-  .selected-user-profile {
-display: flex;
+.selected-user-profile {
+    display: flex;
+}
 
-  }
-
-
-  .selected-user-profile-card {
+.selected-user-profile-card {
     display: flex;
     background-color: white;
     border-radius: 10px;
@@ -29,51 +27,51 @@ display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
+}
   
-  .profile-header {
+.profile-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
-  }
+}
   
-  .profile-image {
+.profile-image {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     margin-bottom: 10px;
-  }
+ }
   
-  .profile-info {
+.profile-info {
     margin-top: 10px;
-  }
+}
   
-  .profile-info h2 {
+.profile-info h2 {
     margin: 0;
     font-size: 1.5rem;
-  }
+}
   
-  .status-text {
+.status-text {
     color: green;
-  }
+}
   
-  .profile-initials {
+.profile-initials {
     display: flex;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     align-items: center;
     justify-content: center;
-  }
+}
   
-  .close-button {
+.close-button {
     background: transparent;
     border: none;
     font-size: 20px;
     cursor: pointer;
-  }
+}
   
-  .close-button {
+.close-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -81,8 +79,8 @@ display: flex;
     border: none;
     font-size: 20px;
     cursor: pointer;
-  }
+}
   
-  .close-button:hover {
+.close-button:hover {
     color: red;
-  }
+}

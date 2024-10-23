@@ -765,7 +765,7 @@
     display: flex;
     z-index: 1;
     margin-right: 0px;
-    width: auto;
+    width: 95%;
   }
 
   .channel-button {
