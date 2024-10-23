@@ -18,7 +18,5 @@ class BaseMiddleware:
         ASGI application; can insert things into the scope and run asynchronous
         code.
         """
-        # Copy scope to stop changes going upstream
         scope = dict(scope)
-        # Run the inner application along with the scope
         return await self.inner(scope, receive, send)

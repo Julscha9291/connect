@@ -16,7 +16,6 @@ function RegistrationForm({ onSuccess, onSwitchToLogin }) {
         setProfilePicture(e.target.files[0]);
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -37,7 +36,6 @@ function RegistrationForm({ onSuccess, onSwitchToLogin }) {
             });
             onSuccess(); 
              } catch (error) {
-                 console.error('Registration error:', error);
             }
          };
 

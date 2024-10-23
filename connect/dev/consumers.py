@@ -14,7 +14,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-         # Abrufen aller Channels, in denen der Nutzer Mitglied ist (async-fähig machen)
         member_channels = await sync_to_async(list)(
             ChannelMembership.objects.filter(user=self.user)
         )
@@ -23,36 +22,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-        # Den Nutzer zu allen Channel-Gruppen hinzufügen, in denen er Mitglied ist
         for membership in member_channels:
-            # Asynchron auf das Channel-Objekt zugreifen
             channel_id = await sync_to_async(lambda: membership.channel.id)()
 
             group_name = f'chat_{channel_id}'
 
-            # Nutzer zur Gruppe hinzufügen
             await self.channel_layer.group_add(
                 group_name,
                 self.channel_name
             )
 
-        # Verbindung akzeptieren
         await self.accept()
 
     async def disconnect(self, close_code):
-        # Abrufen aller Channels, in denen der Nutzer Mitglied ist (async-fähig machen)
+
         member_channels = await sync_to_async(list)(
             ChannelMembership.objects.filter(user=self.user)
         )
 
-        # Entfernen des Nutzers aus allen Channel-Gruppen
         for membership in member_channels:
-            # Asynchron auf das Channel-Objekt zugreifen
             channel_id = await sync_to_async(lambda: membership.channel.id)()
 
             group_name = f'chat_{channel_id}'
 
-            # Nutzer von der Gruppe entfernen
             await self.channel_layer.group_discard(
                 group_name,
                 self.channel_name
@@ -65,10 +57,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         reaction_type = text_data_json.get('reaction_type')
         file_url = text_data_json.get('fileUrl')
         channel_id = text_data_json.get('channel_id')
-
-        print(f'Empfangene Aktion: {action}')
-        print(f'Nachricht ID: {message_id}')
-        print(f'Reaktions Typ: {reaction_type}')
 
         if self.user.is_anonymous:
             await self.send(text_data=json.dumps({

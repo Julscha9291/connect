@@ -1,10 +1,7 @@
 from rest_framework import serializers
 from .models import Contact,CustomUser, Channel, ChannelMembership, Message, Reaction, Thread, ThreadReaction
-from django.contrib.auth.models import User
 import random
-from rest_framework.exceptions import ValidationError
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+
 
 def get_unique_color():
     colors = [
@@ -24,12 +21,10 @@ def get_unique_color():
 
     return random.choice(available_colors)
 
-
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('id', 'email', 'first_name', 'last_name', 'color', 'profile_picture')
-
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,11 +40,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password'],
             color=color,  # Farbezuteilung
-            profile_picture=validated_data.get('profile_picture')  # Profilbild hinzufügen
+            profile_picture=validated_data.get('profile_picture')  
         )
         return user
     
-
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -72,14 +66,12 @@ class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel
         fields = ['id', 'name', 'description', 'creator', 'created_at', 'members', 'is_private']
-   
-        
+         
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'sender', 'file_url', 'channel', 'content', 'timestamp', 'sender_id']        
         
-
 class ReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reaction
@@ -90,10 +82,7 @@ class ThreadSerializer(serializers.ModelSerializer):
         file_url = serializers.CharField(allow_blank=True, required=False) 
         model = Thread
         fields = '__all__'       
-        
-        
-         
-        
+              
 class ThreadReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThreadReaction

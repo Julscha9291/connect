@@ -1,12 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Navbar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown, faMagnifyingGlass, faBell,faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faMagnifyingGlass, faBell,faUser, faSignOutAlt, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import SelectedUserProfile from './SelectedUserProfile';
 import { Link } from 'react-router-dom';
 
 
-const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount,  notifications, openChat }) => {
+const Navbar = ({ 
+        onLogout, 
+        onProfileToggle, 
+        unreadCount, 
+        setUnreadCount,  
+        notifications, 
+        openChat, 
+        toggleSidebar, 
+        isSidebarVisible }) => {
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
@@ -22,8 +31,7 @@ const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount,  notif
   const [userMap, setUserMap] = useState({});
   const searchResultsRef = useRef(null);
   const selectedUserProfileRef = useRef(null);
-  const dropdownRef = useRef(null); // Referenz für das Dropdown-Menü
-
+  const dropdownRef = useRef(null); 
   const notificationList = Array.isArray(notifications) ? notifications : [notifications];
 
   const fetchUsers = async () => {
@@ -33,43 +41,32 @@ const Navbar = ({ onLogout, onProfileToggle, unreadCount, setUnreadCount,  notif
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         });
-
         if (response.ok) {
             const data = await response.json();
-            // Erstelle eine Map von userId zu firstName
             const userMapping = data.reduce((acc, user) => {
-                acc[user.id] = user.first_name; // Setze den Vornamen im Mapping
+                acc[user.id] = user.first_name; 
                 return acc;
             }, {});
-            setUserMap(userMapping); // Speichere die Map im Zustand
+            setUserMap(userMapping); 
         } else {
-            console.error('Fehler beim Abrufen der Benutzer:', response.status);
         }
     } catch (error) {
-        console.error('Fehler beim Abrufen der Benutzer:', error);
     }
 };
   
-
 const handleNotificationClick = () => {
   setNotificationDropdownOpen(prevState => !prevState);
-  console.log(unreadCount);
-  console.log('Benachrichtigungsglocke geklickt');
-  setUnreadCount(0); // Setzt den Zähler zurück
+  setUnreadCount(0); 
   
-  // Benachrichtigungen mit Vornamen aktualisieren
   const notificationsWithNames = notifications.map(notification => ({
       ...notification,
-      senderName: userMap[notification.sender], // Füge den Vornamen hinzu
+      senderName: userMap[notification.sender], 
   }));
-
-  console.log(notificationsWithNames); // Gibt die Benachrichtigungen mit den Vornamen aus
 };
 
-// Rufe fetchUsers auf, um die Benutzerdaten zu laden, wenn die Komponente geladen wird
-useEffect(() => {
-  fetchUsers();
-}, []);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -79,12 +76,10 @@ useEffect(() => {
     }
 
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => document.removeEventListener('mousedown', handleClickOutside);
 }, []);
 
   useEffect(() => {
-    console.log('Aktueller ungelesener Zähler:', unreadCount);
   }, [unreadCount]);
 
   useEffect(() => {
@@ -119,15 +114,14 @@ useEffect(() => {
           const data = await response.json();
           setSearchResults(data);
         } else {
-          console.error('Fehler beim Abrufen der Benutzer:', response.status);
         }
       } catch (error) {
-        console.error('Fehler beim Abrufen der Benutzer:', error);
       }
     };
 
     fetchUsers();
   }, []);
+
 
   useEffect(() => {
     if (searchTerm) {
@@ -150,36 +144,33 @@ useEffect(() => {
             const data = await response.json();
             setSearchResults(data);
           } else {
-            console.error('Fehler beim Abrufen der Benutzer:', response.status);
           }
         } catch (error) {
-          console.error('Fehler beim Abrufen der Benutzer:', error);
         }
       };
-
       fetchUsers();
     }
   }, [searchTerm]);
 
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchResultsRef.current && !searchResultsRef.current.contains(event.target)) {
-        setSearchTerm(''); // Suchfeld zurücksetzen
-        setSearchResults([]); // Suchergebnisse zurücksetzen
+        setSearchTerm(''); 
+        setSearchResults([]); 
       }
-
       if (selectedUserProfileRef.current && !selectedUserProfileRef.current.contains(event.target)) {
-        setSelectedUser(null); // Profil schließen
+        setSelectedUser(null); 
       }
 
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false); // Dropdown schließen, wenn außerhalb geklickt wird
+        setDropdownOpen(false); 
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
 
   const fetchChannelName = async (channelId) => {
     const token = localStorage.getItem('access_token');
@@ -226,9 +217,8 @@ useEffect(() => {
 
   const handleUserClick = (user) => {
     setSelectedUser(user);
-    console.log("Selected user:", user); 
-    setSearchTerm(''); // Suchfeld zurücksetzen
-    setSearchResults([]); // Suchergebnisse zurücksetzen
+    setSearchTerm(''); 
+    setSearchResults([]); 
   };
 
   const handleCloseProfile = () => {
@@ -236,9 +226,7 @@ useEffect(() => {
   };
 
   const handleMessageClick = (user) => {
-    // Handle message click action here
     console.log('Message click for user:', user);
-    // Example: open a new chat with the user
   };
 
   const getReactionEmoji = (reactionType) => {
@@ -256,7 +244,7 @@ useEffect(() => {
       case 'like':
         return <span aria-label="like" role="img">👍</span>;
       default:
-        return null; // Falls kein passendes Emoji gefunden wird
+        return null; 
     }
   };
   
@@ -267,7 +255,6 @@ useEffect(() => {
           <Link to="/" className="media-logo">
             <img src="https://connect.julianschaepermeier.com/static/connect_logo.png" alt="connect-Logo" className="connect-logo" />
           </Link>
-          <h2 className="connect-title">.connect</h2>
         </div>
 
         <div className="navbar-center">
@@ -314,86 +301,66 @@ useEffect(() => {
           </div>
         </div>
 
-
-
         <div className="navbar-right">
           <div className="notification-bell" onClick={handleNotificationClick}>
             <FontAwesomeIcon 
               icon={faBell} 
-              style={{ fontSize: '24px' }} // Ändere '24px' auf die gewünschte Größe
+              style={{ fontSize: '24px' }} 
             />
             {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
             {notificationDropdownOpen && (
-  <div ref={notificationDropdownRef} className="notification-dropdown">
-           <div 
-          className="dropdown-arrow" 
-          style={{ right: unreadCount > 0 ? '40px' : '20px' }} 
-        ></div>
-    
-    {notificationList.length > 0 ? (
-  notificationList.map((notification, index) => (
-    <div key={index} className="notification-item">
-      <div className="notification-content">
-        <div className="notification-details">
-          {notification.channel_id ? (
-            // Wenn channel_id vorhanden ist, ist es eine Chat-Benachrichtigung
-            <>
-              <span style={{ fontWeight: 'bold' }}>{notification.sender}{' '}</span> 
-              sent a message in {channelNames[notification.channel_id]?.startsWith("#priv_") ? 
-                'a private chat' : 
-                <>
-                  the chat{' '}
-                  <span style={{ fontWeight: 'bold' }}>
-                    {channelNames[notification.channel_id] || notification.channel_id}
-                  </span>
-                </>
-              }.
-            </>
-          ) : (
-            // Wenn channel_id nicht vorhanden ist, handelt es sich um eine Reaktionsbenachrichtigung
-            <>
-              <span style={{ fontWeight: 'bold' }}>{userMap[notification.sender]}{` `}</span> 
-              sent a reaction:{getReactionEmoji(notification.reactionType)}{/* Emoji hier */}
-            </>
-          )}
-        </div>
-      </div>
-      <div className="button">
-        {notification.channel_id && ( // Button nur anzeigen, wenn es eine Chat-Benachrichtigung ist
-          <button 
-            type="button" 
-            className="create-button" 
-            onClick={() => openChat(notification.channel_id)}  // Hier den openChat Handler verwenden
-          >
-            Chat anzeigen
-          </button>
+            <div ref={notificationDropdownRef} className="notification-dropdown">
+              <div 
+              className="dropdown-arrow" 
+              style={{ right: unreadCount > 0 ? '40px' : '20px' }} 
+            ></div>
+              {notificationList.length > 0 ? (
+                      notificationList.map((notification, index) => (
+                        <div key={index} className="notification-item">
+                          <div className="notification-content">
+                            <div className="notification-details">
+                              {notification.channel_id ? (
+                                <>
+                                  <span style={{ fontWeight: 'bold' }}>{notification.sender}{' '}</span> 
+                                  sent a message in {channelNames[notification.channel_id]?.startsWith("#priv_") ? 
+                                    'a private chat' : 
+                                    <>
+                                      the chat{' '}
+                                      <span style={{ fontWeight: 'bold' }}>
+                                        {channelNames[notification.channel_id] || notification.channel_id}
+                                      </span>
+                                    </>
+                                  }.
+                                </>
+                              ) : (
+                                <>
+                                    <span style={{ fontWeight: 'bold' }}>{userMap[notification.sender]}{` `}</span> 
+                                    sent a reaction:{getReactionEmoji(notification.reactionType)}{/* Emoji hier */}
+                                  </>
+                                )}
+                          </div>
+                        </div>
+                          <div className="button">
+                            {notification.channel_id && ( 
+                              <button 
+                                type="button" 
+                                className="create-button" 
+                                onClick={() => openChat(notification.channel_id)}  
+                              >
+                                Show chat
+                              </button>
+                            )}
+                          </div>
+                      </div>
+                  ))
+                ) : (
+       <div className="no-notifications">No notifications</div>
         )}
       </div>
+        )}
     </div>
-  ))
-) : (
 
-
-      <div className="no-notifications">Keine neuen Benachrichtigungen</div>
-    )}
-  </div>
-)}
-
-          </div>
-
-
-
-
-
-
-
-
-
-
-
-
-          
-          <div className="navbar-user" ref={dropdownRef}> {/* Hier wird die Dropdown-Referenz hinzugefügt */}
+     <div className="navbar-user" ref={dropdownRef}> 
             {profilePicture ? (
               <img src={profilePicture} alt="User" className="user-avatar" />
             ) : (
@@ -401,14 +368,13 @@ useEffect(() => {
                 {initials}
               </div>
             )}
-
-            <span className="user-name" style={{ color: 'white' }}>
-              {`${firstName} ${lastName}`}
-            </span>
+              <span className="user-name" style={{ color: 'white' }}>
+                {`${firstName} ${lastName}`}
+              </span>
 
             <div className="dropdown-icon">
                   <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={handleDropdownToggle} />
-                </div>
+            </div>
 
               {dropdownOpen && (
                 <div className="dropdown-menu">
@@ -421,28 +387,33 @@ useEffect(() => {
                     Logout
                   </div>
                 </div>
-    
               )}
 
-
+              <button 
+                className="toggle-sidebar-navbar" 
+                onClick={toggleSidebar}
+              >
+                <FontAwesomeIcon icon={isSidebarVisible ? faTimes : faBars} />
+              </button>
           </div>
         </div>
       </nav>
 
+
       {selectedUser && (
-  <div className="modal-overlay-nav" onClick={handleCloseProfile}>
-    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-      <SelectedUserProfile 
-        user={selectedUser} 
-        onClose={handleCloseProfile} 
-        onMessageClick={handleMessageClick} 
-        ref={selectedUserProfileRef} 
-      />
-    </div>
-  </div>
-)}
-    </>
-  );
-};
+        <div className="modal-overlay" onClick={handleCloseProfile}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <SelectedUserProfile 
+              user={selectedUser} 
+              onClose={handleCloseProfile} 
+              onMessageClick={handleMessageClick} 
+              ref={selectedUserProfileRef} 
+            />
+          </div>
+        </div>
+      )}
+          </>
+        );
+      };
 
 export default Navbar;

@@ -4,51 +4,40 @@ from django.db.models import ObjectDoesNotExist
 from asgiref.sync import sync_to_async
 from .models import Message, Thread, ThreadReaction, ChannelMembership
 
-
 class ThreadConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user = self.scope["user"]
         self.message_id = self.scope['url_route']['kwargs'].get('message_id')
-        self.thread_group_name = f'message_{self.message_id}'  # Gruppennamen basierend auf der message_id
+        self.thread_group_name = f'message_{self.message_id}'  
 
-        # Überprüfen, ob die message_id vorhanden ist und der Benutzer nicht anonym ist
         if not self.message_id or self.user.is_anonymous:
             print("Abgelehnt: Ungültige message_id oder anonymer Benutzer.")
             await self.close()
             return
 
         try:
-            # Hole die Nachricht anhand der message_id
             message = await sync_to_async(Message.objects.get)(id=self.message_id)
-
-            # Hole den Channel, zu dem die Nachricht gehört
             channel = await sync_to_async(lambda: message.channel)()
 
-            # Hole alle Benutzer, die Mitglieder des Channels sind
             members = await sync_to_async(list)(
                 ChannelMembership.objects.filter(channel=channel).values_list('user', flat=True)
             )
-
-            # Prüfen, ob der Benutzer Mitglied des Channels ist
             if self.user.id not in members:
                 print(f"Benutzer {self.user.email} ist kein Mitglied des Channels {channel.id}.")
                 await self.close()
                 return
 
-            # Benutzer zur Gruppen-Thread-Gruppe hinzufügen
             await self.channel_layer.group_add(
                 self.thread_group_name,
                 self.channel_name
             )
+            
             await self.accept()
-            print(f"Benutzer {self.user.email} erfolgreich mit Thread der Nachricht {self.message_id} verbunden (Channel {channel.id}).")
 
         except ObjectDoesNotExist:
-            print(f"Abgelehnt: Nachricht mit ID {self.message_id} existiert nicht.")
             await self.close()
 
     async def disconnect(self, close_code):
-        # Benutzer von der Thread-Gruppe entfernen
         await self.channel_layer.group_discard(
             self.thread_group_name,
             self.channel_name
@@ -57,7 +46,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         action = text_data_json.get('type')
-        message_id = self.message_id  # Verwende message_id
+        message_id = self.message_id 
         reaction_type = text_data_json.get('reaction_type')
         file_url = text_data_json.get('fileUrl')
         thread_id = text_data_json.get('message_id')
@@ -70,7 +59,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
 
         try:
             message = await sync_to_async(Message.objects.get)(id=message_id)
-            thread = await sync_to_async(Thread.objects.filter)(message=message)  # Filter nach Thread, der zur Nachricht gehört
+            thread = await sync_to_async(Thread.objects.filter)(message=message)  
 
         except ObjectDoesNotExist:
             await self.send(text_data=json.dumps({
@@ -87,7 +76,6 @@ class ThreadConsumer(AsyncWebsocketConsumer):
                 }))
                 return
 
-            # Überprüfe den Sender in einer sync_to_async-Funktion
             thread = await sync_to_async(Thread.objects.get)(id=thread_id)
 
             thread_sender = await sync_to_async(lambda: thread.sender)()
@@ -112,7 +100,6 @@ class ThreadConsumer(AsyncWebsocketConsumer):
                 }
             )
 
-
         elif action == 'delete':
                 if not message_id:
                     await self.send(text_data=json.dumps({
@@ -121,10 +108,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
                     return
 
                 try:
-                    print(f"Received delete request for message_id: {thread_id}")  # Debugging-Ausgabe
                     thread = await sync_to_async(Thread.objects.get)(id=thread_id)
-                    print(f"Trying to delete thread with ID: {thread_id}")  # Überprüfe die Thread-ID
-                    # Überprüfe, ob der Benutzer der Sender des Threads ist
                     thread_sender = await sync_to_async(lambda: thread.sender)()
                     if thread_sender != self.user:
                         await self.send(text_data=json.dumps({
@@ -132,10 +116,8 @@ class ThreadConsumer(AsyncWebsocketConsumer):
                         }))
                         return
 
-                    # Thread löschen
                     await sync_to_async(thread.delete)()
 
-                    # Sende ein Lösch-Ereignis an die Kanalgruppe
                     await self.channel_layer.group_send(
                         self.thread_group_name,
                         {
@@ -157,10 +139,8 @@ class ThreadConsumer(AsyncWebsocketConsumer):
                             }))
                             return
 
-                        # Verwende sync_to_async als Dekorator oder bei Methodenaufrufen
-                        thread = await sync_to_async(Thread.objects.get)(id=thread_id)  # Hol das Thread-Objekt
+                        thread = await sync_to_async(Thread.objects.get)(id=thread_id)  
 
-                        # Danach kannst du wie gewohnt fortfahren:
                         existing_reaction = await sync_to_async(lambda: ThreadReaction.objects.filter(
                             user=self.user,
                             thread_message_id=thread_id,
@@ -198,23 +178,21 @@ class ThreadConsumer(AsyncWebsocketConsumer):
                     }))
                     return
 
-                # Erstelle den neuen Thread
                 new_thread = await sync_to_async(Thread.objects.create)(
                     sender=self.user,
-                    message=message,  # Hier kannst du die Message-Referenz setzen
-                    content=message_content,  # Setze den content für den Thread
+                    message=message,  
+                    content=message_content, 
                     file_url=file_url
                 )
 
-                # Sende die Nachricht über WebSocket
                 await self.channel_layer.group_send(
                     self.thread_group_name,
                     {
                         'type': 'thread_message',
-                        'message_id': new_thread.id,  # Verwende die ID des neuen Threads
-                        'content': new_thread.content,  # Hier den Inhalt des neu erstellten Threads verwenden
-                        'sender': new_thread.sender.username,  # Sender aus dem Thread-Modell
-                        'sender_id': new_thread.sender.id,  # Sender-ID
+                        'message_id': new_thread.id, 
+                        'content': new_thread.content,  
+                        'sender': new_thread.sender.username,  
+                        'sender_id': new_thread.sender.id,  
                         'action': 'new',
                     }
                 )
@@ -226,7 +204,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
         message_id = event.get('message_id')
         reaction_type = event.get('reaction_type')
         content = event.get('content')
-        file_url = event.get('fileUrl')  # Reaktionstyp
+        file_url = event.get('fileUrl')  
 
         await self.send(text_data=json.dumps({
             'sender': sender,

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './LoginForm.css';
 import RegistrationForm from './RegistrationForm';
+import Impressum from './Impressum';
+import Datenschutz from './Datenschutz';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -10,18 +12,18 @@ function LoginForm({ onLogin }) {
     const [showRegistration, setShowRegistration] = useState(false);
     const [logoShrink, setLogoShrink] = useState(false);
     const [showLoginForm, setShowLoginForm] = useState(false);
-
+    const [showImpressum, setShowImpressum] = useState(false); 
+    const [showDatenschutz, setShowDatenschutz] = useState(false); 
     const navigate = useNavigate();
-
 
     useEffect(() => {
         const timer1 = setTimeout(() => {
             setLogoShrink(true);
-        }, 1000); // 1 Sekunde warten, bevor die Animation beginnt
+        }, 1000); 
 
         const timer2 = setTimeout(() => {
             setShowLoginForm(true);
-        }, 2000); // 2 Sekunden nach dem Shrink das Login-Formular anzeigen
+        }, 2000); 
 
         return () => {
             clearTimeout(timer1);
@@ -46,7 +48,6 @@ function LoginForm({ onLogin }) {
                 return response.json();
             })
             .then(data => {
-                console.log('Server response:', data); // Debugging
                 if (data.access) {            
                     localStorage.setItem('access_token', data.access);
                     localStorage.setItem('user_id', data.user.id);
@@ -54,20 +55,7 @@ function LoginForm({ onLogin }) {
                     localStorage.setItem('last_name', data.user.last_name);
                     localStorage.setItem('color', data.user.color);
                     localStorage.setItem('profile_picture', data.user.profile_picture);
-                    
-            
-                    // Überprüfen der Speicherung
-                    console.log('LocalStorage after login:', {
-                        access_token: localStorage.getItem('access_token'),
-                        user_id: localStorage.getItem('user_id'),
-                        first_name: localStorage.getItem('first_name'),
-                        last_name: localStorage.getItem('last_name'),
-                        color: localStorage.getItem('color'),
-                        profile_picture: localStorage.getItem('profile_picture')
-                    });
-            
                     onLogin();
-                           // Überprüfen der Speicherung
             
                            fetch(`${process.env.REACT_APP_API_URL}api/profile/`, {
                             headers: {
@@ -81,7 +69,6 @@ function LoginForm({ onLogin }) {
                             return response.json();
                         })
                         .then(profileData => {
-                            console.log('Profile response:', profileData); // Überprüfen der Profildaten
                             if (profileData.user) {
                                 localStorage.setItem('first_name', profileData.user.first_name);
                                 localStorage.setItem('last_name', profileData.user.last_name);
@@ -90,34 +77,20 @@ function LoginForm({ onLogin }) {
                             }
                             navigate('/');
                             window.location.reload();
-                            // Überprüfen der Speicherung nach Profil-Update
                             localStorage.setItem('access_token', data.access);
-                            console.log('LocalStorage after profile fetch:', {
-                            
-                                access_token: localStorage.getItem('access_token'),
-                                first_name: localStorage.getItem('first_name'),
-                                last_name: localStorage.getItem('last_name'),
-                                color: localStorage.getItem('color'),
-                                profile_picture: localStorage.getItem('profile_picture')
-                            });
                         })
                         .catch(error => {
-                            console.error('Error fetching profile data:', error);
                             navigate('/');
                         });
                         
                     } else {
-                        console.error('Login failed, no access token returned');
                     }
                 })
                 .catch((error) => {
-                    console.error('Fetch error:', error); // Hier werden Fetch-Fehler behandelt
-                    console.error('Error message:', error.message); // Zeigt die spezifische Fehlermeldung an
                 });
             };
-    
 
-    
+   
     const handleSignUpClick = () => {
         setShowRegistration(true);
     };
@@ -132,7 +105,6 @@ function LoginForm({ onLogin }) {
     };
 
     const handleGuestLogin = () => {
-        // Hier die Gast-Zugangsdaten, die im Backend erstellt wurden
         const guestEmail = 'guest@example.com';
         const guestPassword = 'guestpassword';
         
@@ -150,7 +122,6 @@ function LoginForm({ onLogin }) {
             return response.json();
         })
         .then(data => {
-            console.log('Server response:', data);
             if (data.access) {
                 localStorage.setItem('user_id', data.user.id); 
                 localStorage.setItem('first_name', data.user.first_name);
@@ -160,35 +131,50 @@ function LoginForm({ onLogin }) {
                 onLogin();
                 localStorage.setItem('access_token', data.access);
                 window.location.reload();
-                navigate('/');  // Weiterleiten zur Startseite oder zum Dashboard
+                navigate('/');  
              
             } else {
-                console.error('Guest login failed, no access token returned');
             }
         })
         .catch(error => {
-            console.error('Fetch error:', error);
         });
     };
-    
+
+    const handleImpressumClick = () => {
+            setShowImpressum(true); 
+        };
+
+    const handleBackToLogin = () => {
+            setShowImpressum(false);
+            setShowDatenschutz(false);
+        };
+
+    const handleDatenschutzClick = () => {
+            setShowDatenschutz(true); 
+        };
 
     return (
         <div className="login-page">
             {showRegistration ? (
                 <RegistrationForm onSuccess={handleRegistrationSuccess} onSwitchToLogin={handleSwitchToLogin} />
-            ) : (
+            ) : showImpressum ? (
+                <Impressum onBack={handleBackToLogin} /> 
+            ) : showDatenschutz? (
+                <Datenschutz onBack={handleBackToLogin} /> 
+            ):(
                 <>
                     <div className={`logo-container ${logoShrink ? 'shrink' : ''}`}>
                         <img src="https://connect.julianschaepermeier.com/static/connect.png" alt="Task Logo" />
                     </div>
                     <div className={`login-container ${showLoginForm ? 'show' : ''}`}>
                         <div className="header-login">
-                        <div className="title-task-container">
-                        <h3 className='title-task'>.connect</h3>
-                        <div className="text-container">
+                            <div className="title-task-container">
+                                <h3 className='title-task'>.connect</h3>
+                                     <div className="text-container">
+                                    </div>
+                            </div>
                         </div>
-                        </div>
-                        </div>
+
                         <div className="form-container-login">
                             <form onSubmit={handleSubmit}>
                                 <h2>Login</h2>
@@ -196,13 +182,22 @@ function LoginForm({ onLogin }) {
                                 <input className="login-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Passwort" required /><br />
                                 <button className="login-button" type="submit">Login</button>
                             </form>
-                            <p className="register-text">Not registered yet? 
-                                <button onClick={handleSignUpClick} className="sign-button">Sign up!</button>
-                            </p>
-                            <p className="guest-text">
-                                <button onClick={handleGuestLogin} className="guest-button">Guest-Login</button>
-                            </p>
+                                <p className="register-text">Not registered yet? 
+                                    <button onClick={handleSignUpClick} className="sign-button">Sign up!</button>
+                                </p>
+                                <p className="guest-text">
+                                    <button onClick={handleGuestLogin} className="guest-button">Guest-Login</button>
+                                </p>
                         </div>
+                    </div>
+
+                    <div className="footer-impressum">  
+                    <div className="impressum-link" onClick={handleImpressumClick}>
+                        Impressum
+                    </div>
+                    <div className="datenschutz-link" onClick={handleDatenschutzClick}>
+                        Datenschutz
+                    </div>
                     </div>
                 </>
             )}

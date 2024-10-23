@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AddChannelForm.css';
 
-
 const AddChannelForm = ({ onClose }) => {
   const [channelName, setChannelName] = useState('');
   const [channelDescription, setChannelDescription] = useState('');
@@ -9,7 +8,7 @@ const AddChannelForm = ({ onClose }) => {
   const [allUsers, setAllUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectAll, setSelectAll] = useState(true); // Standardmäßig alle Nutzer auswählen
+  const [selectAll, setSelectAll] = useState(true);
 
 
   useEffect(() => {
@@ -26,15 +25,13 @@ const AddChannelForm = ({ onClose }) => {
           setAllUsers(data);
           setFilteredUsers(data);
         } else {
-          console.error('Fehler beim Abrufen der Benutzer:', response.status);
         }
       } catch (error) {
-        console.error('Fehler beim Abrufen der Benutzer:', error);
       }
     };
-
     fetchUsers();
   }, []);
+
 
   useEffect(() => {
     if (searchTerm) {
@@ -66,17 +63,13 @@ const AddChannelForm = ({ onClose }) => {
   };
 
   const handleSelectAllChange = () => {
-    console.log('Select All Before:', selectAll);
     if (selectAll) {
         setSelectedUserIds([]);
-        console.log('Deselecting all users');
     } else {
         const allSelectedIds = allUsers.map(user => user.id);
         setSelectedUserIds(allSelectedIds);
-        console.log('Selecting all users:', allSelectedIds);
     }
     setSelectAll(!selectAll);
-    console.log('Select All After:', !selectAll);
 };
 
   const handleSubmit = async (e) => {
@@ -89,35 +82,32 @@ const AddChannelForm = ({ onClose }) => {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         },
         body: JSON.stringify({ 
-          name: `#${channelName}`, // Prefix with #
+          name: `#${channelName}`, 
           description: channelDescription,
-          members: selectedUserIds // IDs der ausgewählten Benutzer
+          members: selectedUserIds 
         }),
       });
 
       if (response.ok) {
-        console.log('Channel added');
         setChannelName('');
         setChannelDescription('');
-        setSelectedUserIds([]); // Zurücksetzen der ausgewählten Benutzer
-        setSelectAll(false); // Zurücksetzen der Auswahl aller
-        onClose(); // Schließt das Formular nach dem erfolgreichen Hinzufügen
+        setSelectedUserIds([]); 
+        setSelectAll(false); 
+        onClose(); 
         window.location.reload();
       } else {
         const errorData = await response.json();
-        console.error('Fehler beim Erstellen des Channels:', errorData);
       }
     } catch (error) {
-      console.error('Fehler beim Erstellen des Channels:', error);
     }
   };
 
   return (
     <div className="add-channel-form-overlay">
       <div className="add-channel-form">
-      <div className="add-channel-header">
-        <button className="close-button" onClick={onClose}>×</button>
-        <h3>New Channel</h3>
+        <div className="add-channel-header">
+          <button className="close-button" onClick={onClose}>×</button>
+           <h3>New Channel</h3>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="input-wrapper">
@@ -159,7 +149,7 @@ const AddChannelForm = ({ onClose }) => {
             </label>
             </div>
 
-            {!selectAll && (
+          {!selectAll && (
               <>
                 <input
                   type="text"
@@ -202,10 +192,9 @@ const AddChannelForm = ({ onClose }) => {
                 </div>
               </>
             )}
-          </div>
-     
+          </div>   
           <div className="button-class"> 
-          <button className="leave-channel-button" type="submit">Add Channel</button>
+            <button className="leave-channel-button" type="submit">Add Channel</button>
           </div>
         </form>
       </div>

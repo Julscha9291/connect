@@ -3,7 +3,7 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    min-width: 300px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -11,44 +11,43 @@
     z-index:2000;
   }
   
-  .modal-header {
+.modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+}
   
-  .modal-body {
+.modal-body {
     margin-top: 20px;
-  }
+}
   
-  .modal-body h4 {
+.modal-body h4 {
     color: #5a5a5a;
-  }
+}
   
-  .modal-footer {
+.modal-footer {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-  }
-  
-  
-  .user-list {
+}
+   
+.user-list {
     list-style: none;
     padding: 0;
-  }
+}
   
-  .user-list li {
+.user-list li {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #eee;
     color: #555;
-  }
+}
   
-  .user-list li:hover {
+.user-list li:hover {
     background-color: #f0f0f0;
-  }
+}
   
-  .add-button {
+.add-button {
       width: calc(100% - 20px);
       padding: 5px 20px;
       margin: 15px 0;
@@ -59,12 +58,11 @@
       color: #fff;
       font-size: 1rem;
       width: 50%;
-  }
-  
-  
-  .add-button:hover {
+}
+   
+.add-button:hover {
     background-color: #8f0fb6;
-  }
+}
   
 .input-add-user{
   width: calc(100% - 20px);

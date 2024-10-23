@@ -6,6 +6,6 @@ class DevConfig(AppConfig):
     name = 'dev'
     
     def ready(self):
-        import dev.signals  # Hiermit werden die Signale registriert
+        import dev.signals  
 
 

@@ -20,7 +20,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 
 .sidebar-menu {
@@ -64,7 +63,6 @@
   justify-content: center;
 }
 
-
 .sidebar-item {
   background-color: transparent;
 }
@@ -72,7 +70,7 @@
   background-color: transparent;
   border: none;
   color:#fff;
-  font-size: 20px;
+  font-size: 16px;
   margin-left: 10px;
 }
 
@@ -86,8 +84,8 @@
 
 .sidebar-item.selected,
 .user-item.selected {
-  background-color: #4742eb; /* Hintergrundfarbe für ausgewählte Elemente */
-  font-weight: bold; /* Fettgedruckter Text für ausgewählte Elemente */
+  background-color: #4742eb; 
+  font-weight: bold; 
   border-radius: 10px;
   padding:5px;
   color:#fff;
@@ -119,7 +117,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: black;
   font-weight: bold;
   margin-right: 10px;
   font-size: 18px;
@@ -147,7 +145,7 @@
 .status-indicator.online {
   position: absolute;
   margin-top: 35px;
-  background-color: green; /* Farbe für Online */
+  background-color: green;
   margin-left: 40px;
 }
 
@@ -158,13 +156,10 @@
   margin-left: 40px;
 }
 
-
-
 .user-list{
   display: flex;
   flex-direction: column;
   margin-right: 10px;;
-
 }
 
 .user-item{
@@ -186,19 +181,19 @@
 }
 
 .user-profile-image {
-  width: 50px; /* Größe des Profilbilds */
-  height: 50px; /* Größe des Profilbilds */
-  border-radius: 50%; /* Runde Form */
+  width: 50px; 
+  height: 50px; 
+  border-radius: 50%; 
 }
 
 .user-profile-placeholder {
-  width: 50px; /* Größe des Platzhalters */
-  height: 50px; /* Größe des Platzhalters */
-  border-radius: 50%; /* Runde Form */
+  width: 50px; 
+  height: 50px; 
+  border-radius: 50%; 
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white; /* Textfarbe */
+  color: black; 
 }
 
 .status-dot {
@@ -213,15 +208,14 @@
 }
 
 .online {
-  background-color: green; /* Farbe für online */
+  background-color: green; 
 }
 
 .offline {
-  background-color: gray; /* Farbe für offline */
+  background-color: gray; 
 }
 
-
 .sidebar-item.active {
-  background-color: #f0f0f0; /* Beispielhafte Farbe für ausgewählte Chats */
+  background-color: #f0f0f0; 
   font-weight: bold;
 }

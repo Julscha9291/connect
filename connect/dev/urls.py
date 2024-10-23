@@ -11,8 +11,6 @@ router.register(r'threads', ThreadViewSet)
 router.register(r'thread-reactions', ThreadReactionViewSet, basename='thread-reaction')
 
 
-
-
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', UserRegistrationView.as_view(), name='user-register'),
@@ -30,9 +28,8 @@ urlpatterns = [
     path('thread-reactions/threads/<int:thread_id>/', ThreadReactionViewSet.as_view({'get': 'reactions_for_threads'}), name='reactions_for_threads'),
     path('upload/', upload_file, name='file-upload'),
     path('threads/', get_threads, name='get-threads'),
-    path('threads/<int:thread_id>/', ThreadViewSet.as_view({'get': 'retrieve'}), name='thread-detail'),  # Detail-Endpunkt für Threads
+    path('threads/<int:thread_id>/', ThreadViewSet.as_view({'get': 'retrieve'}), name='thread-detail'), 
     path('threads/<int:thread_id>/delete/', delete_thread, name='delete_thread'),
-      path('threads/<int:thread_id>/edit/', edit_thread, name='edit_thread'),
+    path('threads/<int:thread_id>/edit/', edit_thread, name='edit_thread'),
     path('channels/<int:channel_id>/delete_user/', ChannelViewSet.as_view({'delete': 'delete_user'}), name='delete_user'),
-
 ]

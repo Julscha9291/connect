@@ -1,4 +1,3 @@
-/* LoginForm.css */
 .login-page {
     display: flex;
     justify-content: center;
@@ -8,7 +7,7 @@
     position: relative;
   }
   
-  .login-container {
+.login-container {
     width: 400px;
     background-color: #f2f2f2;
     border-radius: 15px;
@@ -19,13 +18,13 @@
     position: absolute;
     opacity: 0;
     transition: opacity 1s ease;
-  }
+}
   
-  .login-container.show {
+.login-container.show {
     opacity: 1;
-  }
+}
   
-  .header-login {
+.header-login {
     display: flex;
     height: 60px;
     background-color:    #2d345f;
@@ -38,68 +37,64 @@
     justify-content: center;
     align-items: center;
     flex-direction: row;
-  }
+}
 
-
-
-  .title-task{
+.title-task{
     font-size: 30px;
-  }
+}
   
-  
-  img {
+img {
     width: 200px;
     height: 200px;
     height: auto;
     transition: all 1s ease;
-  }
+}
   
-  .shrink img {
+.shrink img {
     width: 100px;
     height: 100px;
-  }
+}
   
-  .header.shrink {
+.header.shrink {
     justify-content: flex-start;
     position: absolute;
     top: 10px;
     left: 10px;
     width: 50px;
     height: 50px;
-  }
+}
   
-  
-  .image {
+.image {
     width: 50px;
     height: 50px;
     padding: 5px;
     align-self: center;
     margin-right: 90px;
     margin-left: 10px;
-  }
+}
   
-  .h1-login{
+.h1-login{
     display: flex;
     justify-content: center;
-  }
+}
   
-  .form-container-login {
+.form-container-login {
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-content: center;
     justify-content: flex-end;
     align-items: stretch;
-  }
+}
   
-  h2{
+h2{
     color: #555;
     display: flex;
     align-self: center;
     justify-content: center;
-  }
+}
   
-  .login-input {
+.login-input {
     width: calc(100% - 20px);
     padding: 5px;
     margin: 5px 0;
@@ -108,9 +103,9 @@
     background-color: #edeaea;
     border-radius: 10px;
     width: 100%;
-  }
+}
   
-  .login-button  {
+.login-button  {
     width: calc(100% - 20px);
     padding: 5px 20px;
     margin: 15px 0;
@@ -121,9 +116,9 @@
     color: #fff;
     font-size: 1rem;
     width: 100%;
-  }
+}
   
-  .sign-button{
+.sign-button{
     padding: 5px;
     margin: 15px 10px;
     background-color:   #4742eb;
@@ -131,10 +126,10 @@
     cursor: pointer;
     border-radius: 3px;
     color: #fff;
-    
-  }
+   
+}
   
-  .guest-button {
+.guest-button {
     padding: 10px;
     margin: 10px 10px;
     background-color: transparent;
@@ -142,34 +137,32 @@
     cursor: pointer;
     border-radius: 3px;
     color: #555;
+}
   
-    
-  }
-  
-  .guest-text {
+.guest-text {
     display: flex;
       font-size: 0.8rem;
       color: #282727;
       margin-top: -10px;
       align-self: center;
-  }
+}
   
-  .register-text {
+.register-text {
     font-size: 0.8rem;
     color: #666;
     margin-top: 10px;
     align-self: center;
-  }
+}
   
-  .register-text a {
+.register-text a {
     color: #007bff;
     text-decoration: none;
-  }
+}
   
-  .register-text a:hover {
+.register-text a:hover {
     text-decoration: underline;
     cursor: pointer;
-  }
+}
   
   .logo-container {
     position: absolute;
@@ -181,10 +174,41 @@
     height: 200px; 
   }
   
-  .logo-container.shrink {
+.logo-container.shrink {
     top: 10px;
     left: 10px;
     transform: translate(0, 0);
     width: 50px;
     height: 50px;
+}
+
+  .footer-impressum{
+    left: 50%;
+    position: absolute;
+    display: flex;
+    transform: translateX(-50%);
+    top: 95%;
+  }
+
+.impressum-link {
+    margin-right: 10px;
+    color: #19dae5;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.datenschutz-link {
+  color: #19dae5;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+  @media (max-width: 768px) {
+
+    .login-container {
+      width: 80%;
+    }
+
   }

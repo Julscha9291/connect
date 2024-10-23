@@ -13,16 +13,12 @@ class TokenAuthMiddleware(BaseMiddleware):
             query_params = urllib.parse.parse_qs(query_string)
             token = query_params.get('token', [None])[0]
 
-        print(f"Token: {token}")  # Debug-Ausgabe
-
         if token:
             try:
                 access_token = AccessToken(token)
                 user_id = access_token['user_id']
                 scope['user'] = await self.get_user(user_id)
-                print(f"User from token: {scope['user']}")  # Debug-Ausgabe
             except Exception as e:
-                print(f"Token error: {e}")
                 scope['user'] = AnonymousUser()
         else:
             scope['user'] = AnonymousUser()

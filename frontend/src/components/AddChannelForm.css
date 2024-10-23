@@ -12,7 +12,7 @@
 }
 
 .add-channel-form {
-  height: 80vh; /* Behalte die Höhe bei */
+  height: 80vh; 
   padding: 20px;
   background: #fff;
   border-radius: 8px;
@@ -20,7 +20,7 @@
   position: relative;
   z-index: 1001;
   min-width:300px ;
-  overflow: auto; /* Ändere von hidden auf auto, damit Scrollbars angezeigt werden, wenn nötig */
+  overflow: auto; 
 }
 
 .add-channel-form h3 {
@@ -76,8 +76,6 @@ label{
   width: 95%;
 }
 
-
-
 .add-channel-form button:hover {
   background-color: #2e2a9a
 }
@@ -93,6 +91,7 @@ label{
 .user-selection {
   margin-top: 10px;
 }
+
 .user-selection-all {
   margin-top: 20px;
   display: flex;
@@ -194,7 +193,6 @@ label{
 .leave-channel{
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
 }
 
 .leave-channel-button{
@@ -210,7 +208,6 @@ label{
   width: 50%;
 }
 
-
 .user-item-channel{
   display: flex;
   flex-direction: row;
@@ -218,8 +215,8 @@ label{
 }
 
 .user-item-channel.selected {
-  background-color: rgba(94, 59, 205, 0.4); /* 50% Transparenz */
-  font-weight: bold; /* Fettgedruckter Text für ausgewählte Elemente */
+  background-color: rgba(94, 59, 205, 0.4); 
+  font-weight: bold; 
   border-radius: 10px;
   padding:5px;
   color:#fff;

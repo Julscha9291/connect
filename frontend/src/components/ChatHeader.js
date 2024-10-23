@@ -17,50 +17,39 @@ const ChatHeader = ({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isDropdownProfileOpen, setIsDropdownProfileOpen] = useState(false);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
-
-
   const toggleDropdownProfile = () => setIsDropdownProfileOpen(prev => !prev);
   const openAddUserModal = () => setIsAddUserModalOpen(true);
   const closeAddUserModal = () => setIsAddUserModalOpen(false);
-
-  
 
   const handleToggleProfile = () => {
     setIsProfileOpen((prevState) => !prevState);
   };
 
- // Funktion zum Schließen des Profils (z.B. wenn das Modal geschlossen wird)
- const handleCloseProfile = () => {
-  setIsProfileOpen(false);
+  const handleCloseProfile = () => {
+    setIsProfileOpen(false);
+  };
+
+  const handleAddUserToChannel = (user, refreshMessages) => {
+    const userId = user.id;
+
+    fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/add_user/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+        body: JSON.stringify({ user_id: userId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        closeAddUserModal();
+        refreshMessages();
+    })
+    .catch(error => {
+    });
 };
 
-
-const handleAddUserToChannel = (user, refreshMessages) => {
-  const userId = user.id;
-
-  fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/add_user/`, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-      },
-      body: JSON.stringify({ user_id: userId }),
-  })
-  .then(response => response.json())
-  .then(data => {
-      console.log('User added:', data);
-      // Hier kannst du weitere Logik hinzufügen, z.B. den Modal schließen
-      closeAddUserModal();
-      refreshMessages();
-  })
-  .catch(error => {
-      console.error('Error:', error);
-  });
-};
-
-
-
-  return (
+return (
     <div className="chat-header">
       {selectedChat.data.is_private ? (
         partner ? (
@@ -83,27 +72,28 @@ const handleAddUserToChannel = (user, refreshMessages) => {
             <div className="dropdown-icon" onClick={handleToggleProfile}>
               <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" />
             </div>
-            {isProfileOpen && (
-              <SelectedUserProfile user={partner} onClose={handleCloseProfile} />
-            )}
+              {isProfileOpen && (
+                <SelectedUserProfile user={partner} onClose={handleCloseProfile} />
+              )}
           </div>
         ) : (
           <div>Partnerdaten werden geladen...</div>
         )
       ) : (
+
         <div className="chat-header-channel">
           <div className="channel-left">
             <div className="channel-title">{selectedChat.data.name}</div>
-            <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={toggleDropdownProfile} />
-            {isDropdownProfileOpen && (
-              <ChannelInfo 
-                channelName={selectedChat.data.name}
-                description={selectedChat.data.description}
-                creator={selectedChat.data.creator}
-                onClose={toggleDropdownProfile} 
-                channelId={channelId}
-              />
-            )}
+                <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={toggleDropdownProfile} />
+                {isDropdownProfileOpen && (
+                  <ChannelInfo 
+                    channelName={selectedChat.data.name}
+                    description={selectedChat.data.description}
+                    creator={selectedChat.data.creator}
+                    onClose={toggleDropdownProfile} 
+                    channelId={channelId}
+                  />
+                )}
           </div>
           <div className="channel-right">
             <div className="channel-members-header">
@@ -120,7 +110,6 @@ const handleAddUserToChannel = (user, refreshMessages) => {
               ))}
             </div>
             <FontAwesomeIcon icon={faUserPlus} className="user-icon" onClick={openAddUserModal} />
-
             {isAddUserModalOpen && (
               <>
                 <div className="overlay" onClick={closeAddUserModal}></div>

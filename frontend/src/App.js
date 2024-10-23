@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -6,6 +6,7 @@ import Chat from './components/Chat';
 import LoginForm from './components/LoginForm'; 
 import Profile from './components/Profile';
 import AddChannelForm from './components/AddChannelForm'; 
+import Footer from './components/Footer'; 
 
 import './App.css';
 
@@ -15,10 +16,8 @@ const App = () => {
   const [showAddChannelForm, setShowAddChannelForm] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isSidebarVisible, setIsSidebarVisible] = useState(false); // Standardmäßig verborgen
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false); 
   const [notifications, setNotifications] = useState([]);
-
-
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -28,17 +27,17 @@ const App = () => {
 
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setIsSidebarVisible(false); // Sidebar standardmäßig schließen bei kleinen Bildschirmen
+        setIsSidebarVisible(false); 
       } else {
-        setIsSidebarVisible(true); // Sidebar öffnen bei größeren Bildschirmen
+        setIsSidebarVisible(true);
       }
     };
 
     window.addEventListener('resize', handleResize);
-    handleResize(); // Initiale Überprüfung der Fenstergröße
+    handleResize(); 
 
     return () => {
-      window.removeEventListener('resize', handleResize); // Aufräumen des Event Listeners
+      window.removeEventListener('resize', handleResize); 
     };
   }, []);
 
@@ -74,71 +73,55 @@ const App = () => {
   };
 
   const handleSelectChat = (chat) => {
-    console.log('handleSelectChat aufgerufen mit chat:', chat); // Überprüfe, welche Daten übergeben werden
     setSelectedChat(chat);
-  
+
     if (window.innerWidth < 768) {
-      setIsSidebarVisible(false); // Sidebar schließen, wenn auf kleinem Bildschirm
+      setIsSidebarVisible(false); 
     }
   };
   
-  // Funktion, um über Benachrichtigungen zu einem Chat zu wechseln
   const openChat = async (channelId) => {
-    console.log('openChat aufgerufen mit channelId:', channelId); // Überprüfe, ob die Funktion aufgerufen wird
-    const chatData = await fetchChatDetails(channelId); // Hole die vollständigen Daten
-    console.log('chatData:', chatData); // Überprüfe, welche Daten abgerufen wurden
+    const chatData = await fetchChatDetails(channelId); 
     
     if (chatData) {
-      // Organisiere die Daten im gleichen Format wie bei der Sidebar-Auswahl
       handleSelectChat({
-        type: 'channel',  // Setze den Typ auf 'channel'
+        type: 'channel',  
         data: {
           id: chatData.id,
           name: chatData.name,
           members: chatData.members,
           description: chatData.description,
-          is_private: chatData.is_private || false, // Setze is_private oder false
-          created_at: chatData.created_at,  // Füge weitere Daten hinzu, falls notwendig
+          is_private: chatData.is_private || false, 
+          created_at: chatData.created_at,  
           creator: chatData.creator
         }
       });
     } else {
-      console.error('Keine Chat-Daten gefunden');
     }
   };
   
   // API-Aufruf, um die Chat-Daten zu holen
   const fetchChatDetails = async (channelId) => {
     try {
-      console.log('fetchChatDetails aufgerufen mit channelId:', channelId); // Überprüfe, ob die Funktion aufgerufen wird
-      
-      const token = localStorage.getItem('access_token'); // Token aus localStorage abrufen
+      const token = localStorage.getItem('access_token'); 
   
       const response = await fetch(`${process.env.REACT_APP_API_URL}api/channels/${channelId}/`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`, // Token im Header mitsenden
+          'Authorization': `Bearer ${token}`, 
           'Content-Type': 'application/json',
         },
       });
-  
-      console.log('fetch response:', response); // Überprüfe die Antwort
-  
       if (!response.ok) {
         throw new Error('Fehler beim Abrufen des Channels');
       }
   
       const chatData = await response.json();
-      console.log('Chat-Daten erfolgreich abgerufen:', chatData); // Überprüfe die abgerufenen Daten
       return chatData;
     } catch (error) {
-      console.error('Fehler beim Abrufen der Chat-Daten:', error);
     }
   };
   
-
-
-
   return (
     <Router>
       <div className="app-container">
@@ -152,8 +135,9 @@ const App = () => {
               unreadCount={unreadCount}
               setUnreadCount={setUnreadCount}
               notifications={notifications}
-              setNotifications={setNotifications} // Hier hinzufügen
+              setNotifications={setNotifications} 
               openChat = {openChat}
+              toggleSidebar={toggleSidebar}
               
             />
             <div className="App-content">
@@ -169,8 +153,6 @@ const App = () => {
                 onAddChannelClick={handleAddChannelClick} 
                 onSelectChat={handleSelectChat} 
               />
-  
-              {/* Dunkle Überlagerung */}
               <div className={`modal-overlay ${isSidebarVisible ? 'active' : ''}`} onClick={toggleSidebar}></div>
   
               <div className={`chat-window ${isSidebarVisible ? 'chat-narrow' : 'chat-full-width'}`}>
@@ -181,7 +163,7 @@ const App = () => {
                     setUnreadCount={setUnreadCount}
                     onProfileToggle={handleProfileToggle}
                     notifications={notifications}
-                    setNotifications={setNotifications} // Hier hinzufügen
+                    setNotifications={setNotifications} 
                   />
                 ) : (
                   <div className="no-chat-message">Bitte wähle einen Chat aus.</div>
@@ -189,20 +171,22 @@ const App = () => {
               </div>
   
               {showAddChannelForm && <AddChannelForm onClose={handleAddChannelClose} />}
-            </div>
+              </div>
   
-            {showProfile && (
-              <>
-                <div className="modal-overlay" onClick={handleProfileClose}></div>
-                <div className="modal-content">
-                  <Profile onClose={handleProfileClose} />
-                </div>
+              {showProfile && (
+                  <>
+                    <div className="modal-overlay" onClick={handleProfileClose}></div>
+                    <div className="modal-content">
+                      <Profile onClose={handleProfileClose} />
+                    </div>
+                  </>
+                )}
               </>
-            )}
-          </>
         )}
       </div>
+      <Footer></Footer>
     </Router>
+    
   );
 }
 

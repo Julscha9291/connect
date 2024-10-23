@@ -1,99 +1,93 @@
-/* src/Chat.css */
 .chat-window {
-  display: flex;
-  flex-grow: 1;
-  flex-direction: row;
-  width: 100%; /* Hier stellst du sicher, dass die Breite des Chat-Fensters immer die volle Breite einnimmt */
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    width: 100%;
 }
 
-
 .chat {
-  display:flex;
+    display:flex;
     height: 85vh;
     background-color: rgba(29, 37, 82, 0.3);
-  box-shadow: #444;
+    box-shadow: #444;
     display: flex;
     flex-direction: column;
-    border-radius: 8px; /* Runde Ecken der Sidebar */
-    overflow: hidden; /* Verhindert das Überlaufen von abgerundeten Ecken */
+    border-radius: 8px; 
+    overflow: hidden;
     margin-right:60px;
     width: 100%;
   }
 
-  .thread-class{
+.thread-class{
     margin-right: 30px;
     background-color: rgba(29, 37, 82, 0.3);
     border-radius: 8px;
     max-width: 350px;
-  }
+}
   
-  .chat-header {
+.chat-header {
     flex-direction: row;
     padding: 10px;
     background-color: rgba(29, 37, 82);
     color: #19dae5;
     align-items: center;
-  }
+}
   
-
-  .chat-wrapper{
+.chat-wrapper{
     display: flex;
     flex-direction: column;
-  }
+}
 
-  .chat-header-channel {
+.chat-header-channel {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-  }
+}
 
-  .chat-header-private {
+.chat-header-private {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
 }
-
-  
+ 
 .channel-members-header{
-  display: flex;
-  flex-direction: row;
-  align-content: flex-end;
-  justify-content: space-between;
-  align-items: center;
-  margin-right:10px;
-
+    display: flex;
+    flex-direction: row;
+    align-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    margin-right:10px;
 }
 
 .channel-member{
-  margin-left:-30px;
+    margin-left:-30px;
 }
 
 .channel-left {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
 }
 
 .channel-right{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .user-icon{
-  font-size:24px;
-  margin-right: 10px;
+    font-size:24px;
+    margin-right: 10px;
 }
 
-
-  .chat-header img {
+.chat-header img {
     width: 50px;
     height: 50px;
     border-radius: 50px;
-  }
+}
 
-  .chat-profile-placeholder{
+.chat-profile-placeholder{
     margin:10px;
     display: flex;
     width: 30px;
@@ -103,25 +97,25 @@
     margin-right: 10px;
     justify-content: center;
     align-items: center;
+}
+
+.channel-title{
+    color:#fff;
+    font-size: 30px;
+    margin-left: 10px;
+    font-weight: bold;
+    margin-top:5px;
+    margin-right: 10px;
   }
 
-  .channel-title{
-      color:#fff;
-      font-size: 30px;
-      margin-left: 10px;
-      font-weight: bold;
-      margin-top:5px;
-      margin-right: 10px;
-  }
-
-  .chat-partner-name{
+.chat-partner-name{
     color:#fff;
     font-size: 26px;
     margin-left: 10px;
     font-weight: bold;
     margin-top:5px;
     margin-right: 10px;
-  }
+}
   
 .channel-description{
   color:#fff;
@@ -129,11 +123,11 @@
   margin-bottom: 5px;;
 }
 
-  .chat-header h3 {
+.chat-header h3 {
     margin: 0;
     font-size: 18px;
     color: #4742eb;
-  }
+}
 
  .chat-body {
     flex: 1;
@@ -142,31 +136,28 @@
     overflow-x: hidden;
   }
   
-
-  .message {
+.message {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     color: white;
-    width: 100%; /* Macht die Nachricht breiter */
+    width: 100%; 
     position: relative;
-  }
+}
   
-  .message.current-user {
+.message.current-user {
     display: flex;
     align-self: flex-end;
     flex-direction: column;
     position: relative;
-  }
+ }
   
-
-
-  .Message-Text {
+.Message-Text {
     padding: 20px;
     border-radius: 20px;
     display: flex;
-    text-align: left; /* Text linksbündig */
+    text-align: left; 
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -175,19 +166,16 @@
     color: white;
     max-width: 60%;
     min-width: 20%;
-    word-wrap: break-word; /* Wortumbruch */
-    overflow-wrap: break-word; /* Für bessere Kompatibilität */
-    white-space: normal; /* Zeilenumbruch aktivieren */
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    white-space: normal;
   }
+   
+.message.current-user .message-icon {
+    margin-left: 10px; 
+}
   
-
-
-  
-  .message.current-user .message-icon {
-    margin-left: 10px; /* Abstand zwischen Nachricht und Icon */
-  }
-  
-  .message.other-user .chat-wrapper {
+.message.other-user .chat-wrapper {
     flex-direction: row;
     display: flex;
     align-items: flex-end;
@@ -195,51 +183,47 @@
     margin-right: 30px;
     margin-top: -10px;
     position: relative;
-  }
-
-
+}
 
 .message.current-user .Message-Text::after {
-  content: '';
-  position: absolute;
-  bottom: -15px; /* Verändere die Position entsprechend der Dreieckgröße */
-  right: -10px; /* Anpassung für die größere Dreieckbreite */
-  width: 0;
-  height: 0;
-  border: 25px solid transparent; /* Erhöht die Größe des Dreiecks */
-  border-top-color: #4742eb; /* Gleiche Farbe wie der Hintergrund */
-  transform: rotate(45deg);
+    content: '';
+    position: absolute;
+    bottom: -15px; 
+    right: -10px;
+    width: 0;
+    height: 0;
+    border: 25px solid transparent; 
+    border-top-color: #4742eb; 
+    transform: rotate(45deg);
 }
 
 .message.other-user .Message-Text{
-  padding: 20px;
-  border-radius: 20px;
-  display: flex;
-  text-align: right;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  background-color: #333; 
-  position: relative;
-  color: white;
-  max-width: 60%;
+    padding: 20px;
+    border-radius: 20px;
+    display: flex;
+    text-align: right;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: #333; 
+    position: relative;
+    color: white;
+    max-width: 60%;
 }
 
-
-/* Dreieck für andere Benutzer (links) */
 .message.other-user .Message-Text::after {
-  content: '';
-  position: absolute;
-  bottom: -15px; /* Verändere die Position entsprechend der Dreieckgröße */
-  left: -10px; /* Anpassung für die größere Dreieckbreite */
-  width: 0;
-  height: 0;
-  border: 25px solid transparent; /* Erhöht die Größe des Dreiecks */
-  border-top-color:  #333; /* Gleiche Farbe wie der Hintergrund */
-  transform: rotate(-45deg); /* Dreht das Dreieck nach links */
+    content: '';
+    position: absolute;
+    bottom: -15px; 
+    left: -10px; 
+    width: 0;
+    height: 0;
+    border: 25px solid transparent; 
+    border-top-color:  #333; 
+    transform: rotate(-45deg); 
 }
 
-  .messages-wrapper  {
+.messages-wrapper  {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -250,29 +234,27 @@
 }
 
 .chat-wrapper{
-  display: flex;
+    display: flex;
     flex-direction: row-reverse;
     min-height: 80px;
 }
 
-  .message-icon{
+.message-icon{
     display: flex;
-  }
+}
   
-  .message.other-user {
+.message.other-user {
     align-self: flex-start;
     display: flex;
     flex-direction: column;
-  }
+}
 
-
-  .chat-container {
+.chat-container {
     display: flex;
     flex-direction: column;
-  }
+}
 
-
-  .chat-footer {
+.chat-footer {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -280,15 +262,15 @@
     align-items: center;
     justify-content: space-between;
     background-color: #fff;
-  }
+}
   
-  .footer-left {
+.footer-left {
     display: flex;
     align-items: center;
     flex-grow: 1;
-  }
+ }
   
-  .message-input {
+.message-input {
     flex-grow: 1;
     padding: 10px;
     font-size: 16px;
@@ -296,66 +278,64 @@
     outline: none;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
-  }
-
+}
 
 .attachment-btn, .emoji-btn, .send-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-  color: #4742eb;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #4742eb;
 }
 
 .attachment-btn {
-  padding-right: 10px;
+    padding-right: 10px;
 }
 
 .emoji-btn {
-  padding-left: 10px;
-  padding-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .send-btn {
-  color: #4742eb;
-  font-size: 24px;
+    color: #4742eb;
+    font-size: 24px;
 }
 
 .send-btn:hover {
-  color: #2f2b96;
+    color: #2f2b96;
 }
 
 .message-input::placeholder {
-  color: #888;
-  font-size: 16px;
+    color: #888;
+    font-size: 16px;
 }
 
 .footer-right {
-  display: flex;
-  align-items: center;
-}
-/* Neue Klasse für die Dateivorschau */
-.file-preview {
-  display: flex;
-  margin-top: 10px;
-  width: 100%;
-  background-color: #fff;
-  align-content: center;
-  justify-content: flex-start;
-  align-items: flex-start;
+    display: flex;
+    align-items: center;
 }
 
+.file-preview {
+    display: flex;
+    margin-top: 10px;
+    width: 100%;
+    background-color: #fff;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
 
 .file-preview img {
-  max-width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 5px;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
 }
 
 .file-preview p {
-  font-size: 14px;
-  color: #555;
+    font-size: 14px;
+    color: #555;
 }
 
 .remove-file-btn {
@@ -367,411 +347,400 @@
 }
 
 .remove-file-btn:hover {
-  color: #d9534f;
+    color: #d9534f;
 }
 
 .emoji-picker-container {
-  position: absolute; /* Über dem Chat positionieren */
-  bottom: 60px; /* Abstand zum unteren Rand des Bildschirms oder des Chatfensters */
-  z-index: 1000; /* Sicherstellen, dass der Emoji-Picker über anderen Elementen liegt */
-  background-color: white; /* Hintergrundfarbe für den Emoji-Picker */
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: absolute; 
+    bottom: 60px; 
+    z-index: 1000; 
+    background-color: white; 
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .emoji-picker-container > div {
-  max-height: 300px; /* Maximalhöhe des Emoji-Pickers */
-  overflow-y: scroll; /* Scrollbar anzeigen, wenn die Höhe überschritten wird */
+    max-height: 300px; 
+    overflow-y: scroll; 
 }
 
-
-  .user-profile-placeholder2 {
+.user-profile-placeholder2 {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: black;
     font-weight: bold;
     margin-right: 10px;
     font-size: 18px;
 }
 
 .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* Dunkler Hintergrund */
-  z-index: 999; /* Z-index für die Überlagerung */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); 
+    z-index: 999; 
 }
 
 .add-user-modal {
-  z-index: 1000; /* Höherer Z-index für das Modal */
-  position: fixed;
-  top: 50%;
-  left: 50%;
+    z-index: 1000; 
+    position: fixed;
+    top: 50%;
+    left: 50%;
 }
 
 .date-separator {
-  text-align: center; /* Datum mittig ausrichten */
-  margin: 20px 0; /* Abstände zum Text */
-  position: relative; /* Position für die Pseudo-Elemente setzen */
-  margin-right: 20px;
+    text-align: center; 
+    margin: 20px 0; 
+    position: relative; 
+    margin-right: 20px;
 }
 
 .date-separator::before,
 .date-separator::after {
-  content: ''; /* Inhalt für das Pseudo-Element */
-  position: absolute; /* Absolut positionieren */
-  top: 50%; /* Vertikal mittig */
-  width: 45%; /* Breite der Linien */
-  height: 1px; /* Dicke der Linie */
-  background-color: #ccc; /* Farbe der Linie */
+    content: ''; 
+    position: absolute; 
+    top: 50%; 
+    width: 45%; 
+    height: 1px; 
+    background-color: #ccc; 
 }
 
 .date-separator::before {
-  left: 0; /* Linie ganz links ansetzen */
-  margin-right: 10px; /* Abstand zwischen Linie und Separator */
+    left: 0; 
+    margin-right: 10px;
 }
 
 .date-separator::after {
-  right: 0; /* Linie ganz rechts ansetzen */
-  margin-left: 30px; /* Abstand zwischen Linie und Separator */
+    right: 0; 
+    margin-left: 30px; 
 }
 
 .date-separator span {
-  background-color: #f0f0f0; /* Hintergrundfarbe des Datums */
-  padding: 5px 10px; /* Innenabstände */
-  border-radius: 10px; /* Abgerundete Ecken */
-  color: #666; /* Textfarbe */
-  font-size: 14px; /* Schriftgröße anpassen */
-  position: relative;
-  z-index: 1000;
+    background-color: #f0f0f0; 
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: #666; 
+    font-size: 14px; 
+    position: relative;
+    z-index: 800;
 }
 
 .message-container {
-  position: relative; /* Stellt sicher, dass absolute Positionierung innerhalb des Containers funktioniert */
-  margin-bottom: 10px; /* Abstand zwischen Nachrichten */
+    position: relative; 
+    margin-bottom: 10px; 
 }
 
 .message-hover-actions {
-  display: none; /* Standardmäßig ausgeblendet */
-  position: absolute; /* Absolute Positionierung, um über der Nachricht zu erscheinen */
-  background-color: rgba(94, 60, 189, 0.7);
-  padding: 5px;
-  border-radius: 5px;
-  z-index: 1001;
-  max-width: 90%;
-  min-width: 20%;
-
+    display: none; 
+    position: absolute;
+    background-color: rgba(94, 60, 189, 0.7);
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1001;
+    max-width: 90%;
+    min-width: 20%;
 }
 
 .message-hover-actions.visible {
-  display: flex; /* Sichtbar, wenn die Klasse 'visible' hinzugefügt wird */
-  flex-direction: row;
-  padding: 10px;
+    display: flex; 
+    flex-direction: row;
+    padding: 10px;
 }
 
-/* Positionierung der Hover-Aktionen */
 .message.current-user .message-hover-actions {
-  right: 0; /* Hover-Aktionen erscheinen rechts neben der Nachricht des aktuellen Benutzers */
-  top: -30px; /* Über der Nachricht positionieren */
+    right: 0; 
+    top: -30px;
 }
 
 .message.other-user .message-hover-actions {
-  right: 0;/* Hover-Aktionen erscheinen links neben der Nachricht des anderen Benutzers */
-  top: -30px; /* Über der Nachricht positionieren */
+    right: 0;
+    top: -30px; 
 }
 
-/* Optional: Style für die Hover-Icons */
 .message-icon {
-  margin-left: 5px; /* Abstand zwischen Icons */
+    margin-left: 5px; 
 }
 
 .message-icon button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color:#fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color:#fff;
 }
 
 .message-icon button:hover {
-  color: #6b1b83; /* Optional: Hover-Farbe für Buttons */
+   color: #6b1b83; 
 }
 
 .Message-Image{
-  width: 150px;
-  height: 200px;
-  height: auto;
-  border-radius: 10px;
+    width: 150px;
+    height: 200px;
+    height: auto;
+    border-radius: 10px;
 }
 
-
 .close-button-message {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-  color:#fff;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color:#fff;
 }
 
 .emoji-picker-dropdown{
-  display: flex;
-  margin-right: 20px;
-  flex-direction: row;
+    display: flex;
+    margin-right: 20px;
+    flex-direction: row;
+    overflow: scroll;
 }
 
 .emoji-button{
-  display: flex;
-  flex-direction: row;
-  margin-right: 5px;
-  background-color: transparent;
-  border: none;
+    display: flex;
+    flex-direction: row;
+    margin-right: 5px;
+    background-color: transparent;
+    border: none;
 }
 
 .button-edit-delete {
-  border-radius: 10px; /* Runde Ecken */
-  background-color: transparent; /* Transparenter Hintergrund */
-  color: #fff; /* Weiße Schriftfarbe */
-  padding: 5px; /* Innenabstand */
-  margin-right: 15px; /* Abstand zwischen den Buttons */
-  border: 1px solid rgba(255, 255, 255, 0.5); /* Leicht weißer Rahmen */
-  transition: background-color 0.3s; /* Für einen sanften Übergang */
+    border-radius: 10px; 
+    background-color: transparent; 
+    color: #fff; 
+    padding: 5px;
+    margin-right: 15px; 
+    border: 1px solid rgba(255, 255, 255, 0.5); 
+    transition: background-color 0.3s; 
 }
 
 .message-edit {
-  background-color: #5e3bcd;
-  padding: 10px;
-  border-radius: 15px;
-  display: flex;
-  gap: 10px;
-  height: 40px;
+    background-color: #5e3bcd;
+    padding: 10px;
+    border-radius: 15px;
+    display: flex;
+    gap: 10px;
+    height: 40px;
 }
 
 .message-edit input {
-  width: 100%;
-  padding: 5px;
-  border-radius: 10px;
-  border: none;
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    border: none;
 }
 
 .message-edit button {
-  padding: 5px 10px;
-  background-color: white;
-  border: none;
-  color: #5e3bcd;
-  border-radius: 5px;
-  cursor: pointer;
+    padding: 5px 10px;
+    background-color: white;
+    border: none;
+    color: #5e3bcd;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-
 .attachment-link {
-  display: flex;
-  align-items: center;
-  cursor: pointer; /* Zeigt, dass es klickbar ist */
+    display: flex;
+    align-items: center;
+    cursor: pointer; 
 }
 
 .attachment-link:hover {
-  text-decoration: underline; /* Hover-Effekt */
+   text-decoration: underline; 
 }
 
 .message-bottom {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 5px;
 }
 
 .message-right {
-  justify-content: flex-end;
-  text-align: right;
-  margin-right: 100px;
-  font-size: 14px;
+    justify-content: flex-end;
+    text-align: right;
+    margin-right: 100px;
+    font-size: 14px;
 }
 
 .message-left {
-  justify-content: flex-start;
-  text-align: left;
-  margin-left: 100px;
-  font-size: 14px;
+    justify-content: flex-start;
+    text-align: left;
+    margin-left: 100px;
+    font-size: 14px;
 }
 
 .thread-count {
-  margin-top: 10px;
-  display: flex;
-  align-content: center;
-  justify-content: flex-start; /* Standardmäßig für andere Benutzer */ /* Abstand zwischen Nachricht und Thread-Zähler */
-  font-size: 0.9em; /* Kleinere Schriftgröße */
-  color: #19dae5; /* Farbe des Thread-Zählers */
+    margin-top: 10px;
+    display: flex;
+    align-content: center;
+    justify-content: flex-start; 
+    font-size: 0.9em; 
+    color: #19dae5;
 }
 
-/* Für den Thread-Zähler des aktuellen Benutzers */
 .message.current-user .thread-count {
-  justify-content: flex-end; /* Ausrichtung für den aktuellen Benutzer */
-
+    justify-content: flex-end; 
 }
-
 
 .message-reactions {
-  padding-right: 20px;
-  margin-top: 5px;
-  margin-bottom: 10px;
+    padding-right: 20px;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .no-reactions {
-  padding-right: 0; /* Entfernt das padding-right, wenn keine Reaktionen vorhanden sind */
-  margin-bottom: 0px;
+    padding-right: 0; 
+    margin-bottom: 0px;
 }
 
 .emoji-display {
-  margin-right: 10px;
-  border: 1px dashed; /* Das macht den Rahmen gestrichelt */
-  border-radius: 10px; /* Hier kannst du den Radius anpassen, um die Ecken abzurunden */
-  padding: 5px; /* Optional: fügt etwas Innenabstand hinzu */
+    margin-right: 10px;
+    border: 1px dashed;
+    border-radius: 10px;
+    padding: 5px; 
 }
 
 .emoji{
-  margin-right:5px;
+    margin-right:5px;
 }
 
 .Message-Sender{
-  display: flex;
-  margin-bottom: 5px;
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
+    display: flex;
+    margin-bottom: 5px;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .message-time {
-  font-size: 0.8em; /* Kleinere Schriftgröße für die Uhrzeit */
-  color: #fff; /* Graue Farbe für die Uhrzeit */
-  margin-left: 5px; /* Abstand zwischen Sender und Uhrzeit */
+    font-size: 0.8em; 
+    color: #fff;
+    margin-left: 5px; 
 }
 
-/* Tooltip-Styling */
 .reaction-tooltip {
-  position: absolute;
-  background-color: #9426B6;
-  color: white;
-  padding: 10px 15px; /* Mehr Padding für einen gut lesbaren Text */
-  border-radius: 20px; /* Abgerundete Ecken */
-  font-size: 14px; /* Größe des Textes */
-  text-align: center;
-  z-index: 1000;
-  width: auto; /* Breite an den Inhalt anpassen */
-  height: auto; /* Höhe an den Inhalt anpassen */
-  top: -50px; /* Tooltip über dem Emoji positionieren */
-  left: 50%; /* Zentriert das Tooltip horizontal über dem Emoji */
-  transform: translateX(-50%); /* Korrektur der horizontalen Zentrierung */
-  display: none; /* Standardmäßig ausgeblendet */
+    position: absolute;
+    background-color: #9426B6;
+    color: white;
+    padding: 10px 15px; 
+    border-radius: 20px; 
+    font-size: 14px;
+    text-align: center;
+    z-index: 1000;
+    width: auto;
+    height: auto; 
+    top: -50px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    display: none;
 }
 
-/* Emoji-Styling, damit der Tooltip genau über dem Emoji erscheint */
 .reaction-wrapper {
-  position: relative; /* Notwendig, um das Tooltip relativ zum Emoji zu positionieren */
-  display: inline-block;
+    position: relative; 
+    display: inline-block;
 }
 
-/* Zeigt den Tooltip beim Hover an */
 .reaction-wrapper:hover .reaction-tooltip {
-  display: block; /* Tooltip anzeigen, wenn das Emoji gehovt wird */
+    display: block; 
 }
 
-/* Textgröße und Layout für den Benutzertext */
 .reaction-tooltip .reaction-text {
-  font-size: 24px; /* Größere Schrift für den Reaktionstext */
-  margin-bottom: 5px; /* Platz zwischen Reaktion und Text */
+    font-size: 24px; 
+    margin-bottom: 5px;
 }
 
 .reaction-tooltip .user-text {
-  font-size: 14px; /* Größe für den Text, der "Du" anzeigt */
-  font-weight: bold; /* Fettdruck für "Du" */
+    font-size: 14px; 
+    font-weight: bold; 
 }
 
 .search-sidebar{
-  display: none;
+    display: none;
 }
 
 .sidebar.hidden {
-  display: none; /* Sidebar ausblenden */
+    display: none; 
 }
 
 .modal-overlay {
-  display: none; /* Immer ausblenden auf großen Bildschirmen */
+    display: none; 
 }
 
 .member-profile-image{
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
 }
 
-
 @media (min-width: 768px) and (max-width: 1304px) {
+
   .chat-window {
-    flex-direction: column; /* Die Threads werden unter dem Chat angezeigt */
+    flex-direction: column; 
   }
 
   .thread-class {
-    display: none; /* Chat wird versteckt, wenn Threads geöffnet sind */
+    display: none; 
   }
 
-
-  /* Wenn showThreads true ist, wird die thread-class sichtbar */
   .thread-class.show {
-    display: flex; /* Oder flex, je nach gewünschtem Layout */
+    display: flex; 
     max-width: 90%;
   }
 
   .chat{
-    display: flex; /* Threads werden angezeigt */
+    display: flex; 
     max-width: 90%;
   }
 
   .chat.hide{
-    display: none; /* Chat wird versteckt, wenn Threads geöffnet sind */
+    display: none; 
   }
 
   .sidebar.hidden {
-    display: none; /* Sidebar ausblenden */
+    display: none;
   }
   .modal-overlay {
-    display: none; /* Immer ausblenden auf großen Bildschirmen */
-  }
-  
+    display: none;
+  } 
 }
+
 @media (max-width: 768px) {
+
   .chat-window {
-    flex-direction: column; /* Die Threads werden unter dem Chat angezeigt */
+    flex-direction: column; 
     flex-grow: 0;
   }
 
-
   .thread-class {
-    display: none; /* Chat wird versteckt, wenn Threads geöffnet sind */
+    display: none; 
   }
 
-
-  /* Wenn showThreads true ist, wird die thread-class sichtbar */
   .thread-class.show {
-    display: flex; /* Oder flex, je nach gewünschtem Layout */
+    display: flex; 
     max-width: 90%;
   }
 
-
   .chat.hide{
-    display: none; /* Chat wird versteckt, wenn Threads geöffnet sind */
+    display: none; 
   }
 
+  .channel-member{
+    display: none;
+  }
 
+  .channel-title{
+  font-size: 24px;
+  }
 
   .search-container {
     display: none;
@@ -787,48 +756,74 @@
   }
 
   .chat-full-width {
-    width: 100%;
-    margin-left: 100px;
-    margin-right: 50px;
+    width: 90%;
+    margin-left: 20px !important;
+    margin-right: 10px;
   }
 
   .chat {
     display: flex;
     z-index: 1;
+    margin-right: 0px;
+    width: auto;
+  }
+
+  .channel-button {
+    font-size: 20px;
   }
 
   .sidebar {
-    position: absolute; /* Über dem Chat */
-    top: 0; /* Startposition oben */
-    left: 0; /* Startposition links */
-    width: 80%;
-    height: 100%; /* Vollständige Höhe */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Optional: Schatten für visuelle Trennung */
+    position: absolute;
+    top: 0%;
+    width: -webkit-fill-available;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
-    z-index: 2000; /* Höherer z-index, um über dem Chat zu liegen */
+    z-index: 2000;
+    margin-left: 0px;
+    padding: 0px;
+    margin-left: 5px;
+    margin-right: 5px;
   }
 
-
-
   .sidebar.hidden {
-    display: none; /* Sidebar ausblenden */
+    display: none; 
   }
   
   .modal-overlay {
-    position: fixed; /* Fixiert die Overlay-Position */
+    position: fixed; 
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Dunkel mit Transparenz */
-    z-index: 1000; /* Unter der Sidebar, über dem Chat */
-    display: none; /* Standardmäßig ausblenden */
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1000; 
+    display: none; 
   }
   
   .modal-overlay.active {
-    display: block; /* Bei Aktivierung anzeigen */
+    display: block; 
   }
 
+  .channel-info-container{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
 
+  .thread-class {
+    margin-right: 0px;
+}
+
+  .thread-class.show {
+    max-width: 100%;
+  }
+
+  .chat-partner-name {
+    font-size: 24px;
+  }
+
+  .thread-header {
+    padding: 10px !important;
+  }
 
 }

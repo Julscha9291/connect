@@ -1,4 +1,3 @@
-/* src/Navbar.css */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -8,87 +7,87 @@
     background-color: #151426;
   }
   
-  .navbar-left {
+.navbar-left {
     display: flex;
     align-items: center;
-  }
+}
   
-  .navbar-logo {
+.navbar-logo {
     color: white;
     font-size: 24px;
     font-weight: bold;
     text-decoration: none;
-  }
+}
   
-  .navbar-center {
+.navbar-center {
     flex: 1;
     display: flex;
     justify-content: center;
-  }
+}
   
-  .navbar-search-form {
+.navbar-search-form {
     margin-top:10px;
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 400px; /* Maximalbreite des Suchfeldes */
+    max-width: 400px; 
     background-color: #36445e;
-    border-radius: 20px; /* Runde Ecken */
+    border-radius: 20px; 
     overflow: hidden;
     margin-left: 50px;
     color:white;
-  }
+}
   
-  .navbar-search-input {
+.navbar-search-input {
     flex: 1;
     padding: 8px 16px;
     border: none;
-    border-radius: 20px; /* Runde Ecken */
+    border-radius: 20px; 
     font-size: 16px;
     background-color: #36445e;
-    color: white; /* Textfarbe weiß */
+    color: white; 
     width: auto;
-  }
+}
 
-  .navbar-search-button {
+.navbar-search-button {
     background-color: #36445e;
     border: none;
     color: white;
     padding: 8px 16px;
-    border-radius: 20px; /* Runde Ecken */
+    border-radius: 20px; 
     cursor: pointer;
-  }
+}
   
-  .navbar-search-button:hover {
+.navbar-search-button:hover {
     background-color: #1a252f;
-  }
+}
   
-  .navbar-right {
+.navbar-right {
     display: flex;
     align-items: center;
     margin-right: 20px;
     padding: 10px;
-  }
+}
   
-  .navbar-link {
+.navbar-link {
     margin-left: 20px;
     color: white;
     text-decoration: none;
     font-size: 16px;
-  }
+}
   
-  .navbar-link:hover {
+.navbar-link:hover {
     text-decoration: underline;
-  }
+}
   
-  .navbar-user {
+.navbar-user {
     margin-left: 10px;
     display: flex;
     margin-left: 20px;
     gap: 10px;
-  }
+}
   
-  .user-avatar {
+.user-avatar {
     display: flex;
     border-radius: 50%;
     width: 40px;
@@ -96,24 +95,24 @@
     align-items: center;
     justify-content: center;
     font-weight: bold;
-  }
+    color: black;
+}
 
-  .user-name{
+.user-name{
     display:flex;
     align-items: center;
     font-size: 18px;
-  }
+    color: black;
+}
   
-
-  .dropdown-icon{
+.dropdown-icon{
     display:flex;
     align-items: center;
     font-size: 20px;
     color:  #19dae5;
+}
 
-  }
-
-  .dropdown-menu{
+.dropdown-menu{
     position: absolute;
     padding: 20px;
     right: 30px;
@@ -126,30 +125,29 @@
     flex-direction: column;
     width: 100px;
     height: 100px;
-
   }
 
-  .dropdown-item{
+.dropdown-item{
     margin-bottom: 10px;
     padding:10px;
     color:#555;
-  }
+}
 
-  .search-result-item-nav {
+.search-result-item-nav {
     display: flex;
     align-items: center;
     padding: 10px;
-    cursor: pointer;  /* Zeigt den Zeiger beim Hover an */
+    cursor: pointer;  
     transition: background-color 0.3s;
-    width: 100%;  /* Sicherstellen, dass das gesamte Element klickbar ist */
-    box-sizing: border-box;  /* Stellt sicher, dass Padding und Border in die Breite des Elements einbezogen werden */
-  }
+    width: 100%;  
+    box-sizing: border-box;  
+}
   
-  .search-result-item-nav:hover {
-    background-color: #f0f0f0;  /* Ändert die Hintergrundfarbe beim Hover */
-  }
+.search-result-item-nav:hover {
+    background-color: #f0f0f0;  
+}
 
-  .search-results-nav {
+.search-results-nav {
     position: absolute;
     width: 95%;
     height: 150px;
@@ -160,24 +158,24 @@
     list-style-type: none;
     background-color: #fff;
     z-index: 1000;
-  }
+}
   
-  .search-container {
-    position: relative; /* Stellt sicher, dass die Positionierung von .search-results-nav relativ zu .search-container ist */
+.search-container {
+    position: relative; 
     width: 50%;
     border-radius: 10px;
     padding: 10px;
     display: flex;
     align-items: center;
-  }
+}
 
-  .navbar-notification {
+.navbar-notification {
     position: relative;
     margin-right: 20px;
     cursor: pointer;
-  }
+}
   
-  .navbar-notification .notification-badge {
+.navbar-notification .notification-badge {
     position: absolute;
     top: 0;
     right: 0;
@@ -190,43 +188,42 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+}
 
-  .connect-logo{
+.connect-logo{
     width: 50px;
     margin-right: 10px;
-  }
+}
 
-  .connect-title{
+.connect-title{
     font-size: 20px;
     color:#fff;
-  }
+}
 
-  .modal-overlay {
+.modal-overlay{
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7); /* Verdunkelter Hintergrund */
+    background-color: rgba(0, 0, 0, 0.7); 
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Damit es über allem anderen liegt */
-  }
+    z-index: 1000; 
+}
   
-  .modal-content {
+.modal-content {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 90%;
     max-height: 90%;
     overflow-y: auto;
-    z-index: 1001; /* Sicherstellen, dass der Inhalt über dem Overlay ist */
-  }
+    z-index: 1001; 
+}
   
-
-  .notification-count{
+.notification-count{
     position: relative;
     display: inline-block;
     width: 10px;
@@ -240,31 +237,24 @@
     border-radius: 50%;
     top: -15px;
     padding:5px;
-  }
+}
 
-
-
-
-/* Sichtbar machen, wenn Benachrichtigungen vorhanden sind */
 .notification-dropdown.show {
-  display: block; /* Sichtbar machen */
+  display: block; 
 }
 
-/* Einzelne Benachrichtigung */
 .notification-item {
-  padding: 10px; /* Innenabstand */
-  border-bottom: 1px solid #f1f1f1; /* Untere Grenze für Trennung */
-  color: #333; /* Textfarbe */
+  padding: 10px; 
+  border-bottom: 1px solid #f1f1f1; 
+  color: #333; 
 }
 
-/* Hover-Effekt für Benachrichtigungen */
 .notification-item:hover {
-  background-color: #f9f9f9; /* Hintergrundfarbe beim Hover */
+  background-color: #f9f9f9; 
 }
 
-/* Letztes Element ohne untere Grenze */
 .notification-item:last-child {
-  border-bottom: none; /* Entferne die untere Grenze vom letzten Element */
+  border-bottom: none; 
 }
 
 .notification-dropdown {
@@ -273,7 +263,7 @@
   right: 232px;
   width: 300px;
   background-color: #fff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
   border-radius: 8px;
   z-index: 1000;
   padding: 10px;
@@ -333,11 +323,43 @@ button{
 }
 
 .modal-overlay-nav {
-  position: fixed; /* Fixiert die Overlay-Position */
+  position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Dunkel mit Transparenz */
-  z-index: 1000; /* Unter der Sidebar, über dem Chat */
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  justify-content: center;
+  align-items: center;
+  z-index: 1001; 
+}
+
+.toggle-sidebar-navbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  
+    .user-name{
+      display: none;
+    }
+
+    .navbar-right {
+      margin-right: -10px;
+    }
+
+    .toggle-sidebar-button {
+      display: none;
+    }
+
+    .toggle-sidebar-navbar {
+      display: block;
+      right: 5px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #19dae5;
+    }
+
 }

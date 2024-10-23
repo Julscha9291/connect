@@ -1,0 +1,75 @@
+.impressum-container {
+   width: 700px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding:20px;
+    height:60%;
+    overflow: scroll;
+  }
+
+  .back-button {
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    color: #000; /* Farbwahl für das Icon */
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    color: #007bff; /* Farbe beim Hover */
+}
+
+
+  .h1-impressum{
+    font-size: 40px;
+    color: #19dae5;
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 0px;
+    margin-top: -10px;
+  }
+
+  .h2-impressum{
+    color:#555;
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 0px;
+  }
+
+  .impressum-container h2 {
+    font-size: 1.5em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    align-self: auto;
+  }
+  
+  .impressum-container p {
+    margin-bottom: 10px;
+  }
+  
+  .impressum-container a {
+    color: #19dae5;
+    text-decoration: none;
+  }
+  
+  .impressum-container a:hover {
+    text-decoration: underline;
+  }
+  
+
+@media screen and (max-width: 1024px) {
+  .impressum-container{
+    width: 80% !important;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .impressum-container{
+    width: 80% !important;
+  }
+}

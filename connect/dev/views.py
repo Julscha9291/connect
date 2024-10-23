@@ -9,7 +9,7 @@ from rest_framework import status
 import logging
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -26,7 +26,6 @@ User = get_user_model()
 def custom_404_view(request, exception):
     return redirect('https://connect.julianschaepermeier.com/')
 
-
 class LoginView(APIView):
     def post(self, request):
         email = request.data.get('email')
@@ -34,7 +33,6 @@ class LoginView(APIView):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             refresh = RefreshToken.for_user(user)
-                        # Setze den Benutzer auf 'online'
             user.is_online = True
             user.save()
             
@@ -63,12 +61,9 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-            # Setze den Benutzer offline
             user = request.user
             user.is_online = False
             user.save()
-
-            # Token-Invalidierung (Optional, wenn du JWT verwendest)
             refresh_token = request.data.get("refresh")
             token = RefreshToken(refresh_token)
             token.blacklist()
@@ -76,7 +71,6 @@ class LogoutView(APIView):
             return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 class ContactViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -91,12 +85,10 @@ class UserContactView(APIView):
         serializer = ContactSerializer(contact)
         return Response(serializer.data)    
 
-
 class UserRegistrationView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserRegistrationSerializer
-    
-    
+      
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -113,14 +105,11 @@ class UserProfileView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-    
-    
+     
 class UserListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserListSerializer  
-      
     
-
 class ChannelViewSet(viewsets.ModelViewSet):
     queryset = Channel.objects.all()
     serializer_class = ChannelSerializer
@@ -131,15 +120,12 @@ class ChannelViewSet(viewsets.ModelViewSet):
         return Channel.objects.filter(members__user=user)
 
     def perform_create(self, serializer):
-        # Save the channel with the creator
         channel = serializer.save(creator=self.request.user)
 
-        # Add members to the channel
         members = self.request.data.get('members', [])
         for member_id in members:
             ChannelMembership.objects.create(channel=channel, user_id=member_id)
 
-        # Ensure the creator is added as a member
         ChannelMembership.objects.get_or_create(channel=channel, user=self.request.user)
         
             
@@ -157,12 +143,10 @@ class ChannelViewSet(viewsets.ModelViewSet):
             return Response({'error': 'User ID required'}, status=status.HTTP_400_BAD_REQUEST)    
         
         
-         # Überschreibe die Update-Methode, um nur bestimmte Felder zu erlauben
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         
-        # Erlauben, dass nur der Name und die Beschreibung geändert werden
         data = request.data.copy()
         allowed_fields = ['name', 'description']
         for field in data:
@@ -194,7 +178,6 @@ class ChannelMembershipViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # Abrufen der Kanal-ID aus der URL
         channel_id = self.kwargs.get('channel_id')
         if channel_id:
             return ChannelMembership.objects.filter(channel_id=channel_id)
@@ -203,7 +186,7 @@ class ChannelMembershipViewSet(viewsets.ReadOnlyModelViewSet):
     
 def get_messages(request, channel_id):
     messages = Message.objects.filter(channel_id=channel_id).annotate(
-        thread_count=Count('threads')  # Stelle sicher, dass 'threads' korrekt ist
+        thread_count=Count('threads')  
     ).values(
         'id', 
         'sender__username', 
@@ -213,32 +196,23 @@ def get_messages(request, channel_id):
         'file_url',
         'thread_count'
     )
-    print(messages)  # Füge dies zur Fehlerdiagnose hinzu
     return JsonResponse(list(messages), safe=False)
 
-# Datei-Upload-Funktion
 @csrf_exempt
 def upload_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
         
-        # Datei speichern
         file_name = default_storage.save(f"uploads/{file.name}", ContentFile(file.read()))
         file_url = default_storage.url(file_name)
-        
-        # Debug-Ausgabe
-        print(f"Dateiname: {file_name}, URL: {file_url}")
-
-        # Erfolgreiche Antwort mit Datei-URL
+    
         return JsonResponse({'file_url': file_url})
     
-    # Fehlerantwort, falls keine Datei hochgeladen wurde
     return JsonResponse({'error': 'No file uploaded'}, status=400)
 
 
 @api_view(['PUT'])
 def edit_message(request, message_id):
-    print(f'Edit request received for message ID: {message_id}')  # Debugging-Ausgabe
 
     try:
         message = Message.objects.get(id=message_id)
@@ -257,7 +231,6 @@ def edit_message(request, message_id):
         return Response({"error": "Message not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-
 @api_view(['DELETE'])
 def delete_message(request, message_id):
     try:
@@ -273,9 +246,6 @@ def delete_message(request, message_id):
         return Response({"error": "Message not found"}, status=status.HTTP_404_NOT_FOUND)
     
     
-    
-    
-from django.db.models import Q
 @api_view(['POST'])
 def create_private_channel(request):
     user1 = request.user
@@ -291,14 +261,12 @@ def create_private_channel(request):
     print(f"Selected User ID: {user2_id}")
     print(f"Found User2: {user2} (ID: {user2.id})")
 
-       # Schritt 1: Finde die Channels, die beide Benutzer enthalten
     common_channel_ids = ChannelMembership.objects.filter(
         channel__in=ChannelMembership.objects.filter(user=user1_id).values_list('channel_id', flat=True)
     ).filter(user=user2_id).values_list('channel_id', flat=True).distinct()
 
     print(f"Common Channel IDs: {list(common_channel_ids)}")
 
-    # Schritt 2: Überprüfe, ob es einen existierenden privaten Kanal mit diesen IDs gibt
     existing_channel = Channel.objects.filter(
         id__in=common_channel_ids,
         is_private=True
@@ -311,7 +279,6 @@ def create_private_channel(request):
             "channel": ChannelSerializer(existing_channel).data
         }, status=status.HTTP_200_OK)
 
-    # Schritt 3: Erstelle einen neuen privaten Kanal
     channel_name = f"#priv_{user1.username}_{user2.username}"
     print(f"Creating New Channel with name: {channel_name}")
 
@@ -323,7 +290,6 @@ def create_private_channel(request):
             is_private=True
         )
 
-        # Füge beide User als Mitglieder hinzu
         ChannelMembership.objects.create(channel=channel, user=user1)
         ChannelMembership.objects.create(channel=channel, user=user2)
 
@@ -334,24 +300,20 @@ def create_private_channel(request):
         "channel": ChannelSerializer(channel).data
     }, status=status.HTTP_201_CREATED)
 
-
 class ReactionViewSet(viewsets.ModelViewSet):
     queryset = Reaction.objects.all()
     serializer_class = ReactionSerializer
 
     @action(detail=False, methods=['delete'], url_path='delete-reaction')
     def delete_reaction(self, request):
-        # Daten aus der Anfrage extrahieren
         message_id = request.data.get('message')
         reaction_type = request.data.get('reaction_type')
         user = request.data.get('user')
 
-        # Überprüfen, ob alle notwendigen Daten vorhanden sind
         if not all([message_id, reaction_type, user]):
             return Response({'detail': 'Fehlende Parameter.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Die Reaktion finden und löschen
             reaction = Reaction.objects.get(message_id=message_id, reaction_type=reaction_type, user=user)
             reaction.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -364,7 +326,7 @@ class ThreadReactionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['delete'], url_path='delete-reaction')
     def delete_reaction(self, request):
-        thread_message_id = request.data.get('thread_message')  # Thread-Nachricht ID
+        thread_message_id = request.data.get('thread_message')  
         reaction_type = request.data.get('reaction_type')
         user = request.data.get('user')
 
@@ -379,7 +341,6 @@ class ThreadReactionViewSet(viewsets.ModelViewSet):
             return Response({'detail': 'Reaktion nicht gefunden.'}, status=status.HTTP_404_NOT_FOUND)
        
        
-       
 class ThreadViewSet(viewsets.ModelViewSet):
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
@@ -387,23 +348,20 @@ class ThreadViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         file_url = request.data.get('file_url')
 
-        # Prüfe, ob die Datei-URL mit /media/uploads/ beginnt, um gültige URLs zuzulassen
         if file_url and not file_url.startswith('/media/uploads/'):
             return Response({"error": "Ungültige Datei-URL"}, status=400)
         
-        # Nutze die Standard-Erstellungslogik
         return super().create(request, *args, **kwargs)
     
     
 def get_threads(request, message_id):
-    # Hole alle Threads für die gegebene Nachricht, inkl. Datei-URLs
     threads = Thread.objects.filter(message_id=message_id).values(
         'id',
         'sender__username',
         'sender__id',
         'content',
         'timestamp',
-        'file_url'  # Datei-URL, falls vorhanden
+        'file_url'  
     )
     return JsonResponse(list(threads), safe=False)    
 
@@ -412,15 +370,11 @@ def get_threads(request, message_id):
 @api_view(['DELETE'])
 def delete_thread(request, message_id):
     try:
-        # Hole das Thread-Objekt anhand der ID
         thread = Thread.objects.get(id=message_id)
-        print(f"Deleting thread with ID: {message_id} by user: {request.user}")
 
-        # Überprüfe, ob der Benutzer der Sender des Threads ist
         if thread.sender != request.user:
             return Response({"error": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
 
-        # Thread löschen
         thread.delete()
         return Response({"message": "Thread deleted"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -429,26 +383,21 @@ def delete_thread(request, message_id):
     
 @api_view(['PUT'])
 def edit_thread(request, message_id):
-    print(f'Edit request received for thread ID: {message_id}')  # Debugging-Ausgabe
 
     try:
-        # Suche nach dem Thread mit der übergebenen thread_id, nicht message_id
         thread = Thread.objects.get(id=message_id)
         
-        # Überprüfen, ob der aktuelle Benutzer der Absender des Threads ist
         if thread.sender != request.user:
             return Response({"error": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
         
-        # Neue Inhalte aus dem Request abrufen
         new_content = request.data.get('content')
         if new_content:
             thread.content = new_content
-            thread.save()  # Speichern der Änderungen
-            return Response(ThreadSerializer(thread).data)  # Verwende den korrekten Serializer für Threads
+            thread.save()  
+            return Response(ThreadSerializer(thread).data)  
         else:
             return Response({"error": "No content provided"}, status=status.HTTP_400_BAD_REQUEST)
     
-    # Behandle den Fall, in dem der Thread nicht gefunden wird
     except Thread.DoesNotExist:
         return Response({"error": "Thread not found"}, status=status.HTTP_404_NOT_FOUND)
 
