@@ -166,7 +166,6 @@ const App = () => {
                     setNotifications={setNotifications} 
                   />
                 ) : (
-                  <div className="no-chat-message">Bitte wähle einen Chat aus.</div>
                 )}
               </div>
   
