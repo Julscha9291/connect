@@ -16,27 +16,35 @@ const ChatHeader = ({
   const [isChannelDropdownOpen, setIsChannelDropdownOpen] = useState(false);
   const [isMembersDropdownOpen, setIsMembersDropdownOpen] = useState(false);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null); 
   const [dropdownPosition, setDropdownPosition] = useState(0);
 
   const membersHeaderRef = useRef(null);
   const dropdownRef = useRef(null);
+  const selectedUserProfileRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Überprüfen, ob außerhalb der selectedUserProfile geklickt wurde
+      if (selectedUserProfileRef.current && !selectedUserProfileRef.current.contains(event.target)) {
+        setSelectedUser(null); // Schließt die selectedUserProfile, wenn außerhalb geklickt wird
+      }
+
+      // Überprüfen, ob außerhalb des Dropdowns und des Members-Headers geklickt wurde
       if (
         dropdownRef.current && !dropdownRef.current.contains(event.target) &&
         membersHeaderRef.current && !membersHeaderRef.current.contains(event.target)
       ) {
-        setIsMembersDropdownOpen(false);
+        setIsMembersDropdownOpen(false); // Schließt das Mitglieder-Dropdown
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, []); // Abhängigkeiten entfernt
+
 
   useEffect(() => {
     const updateDropdownPosition = () => {
@@ -60,12 +68,12 @@ const ChatHeader = ({
       setIsMembersDropdownOpen(prev => !prev);
     }
   };
-  
+
   const openAddUserModal = () => {
     setIsMembersDropdownOpen(false); 
     setIsAddUserModalOpen(true);
   };
-  
+
   const closeAddUserModal = () => {
     setIsAddUserModalOpen(false);
     setIsMembersDropdownOpen(false); 
@@ -77,6 +85,12 @@ const ChatHeader = ({
 
   const handleCloseProfile = () => {
     setIsProfileOpen(false);
+    setSelectedUser(null);
+    
+  };
+
+  const handleMessageClick = (user) => {
+    console.log('Message click for user:', user);
   };
 
   const handleAddUserToChannel = (user, refreshMessages) => {
@@ -98,6 +112,11 @@ const ChatHeader = ({
     .catch(error => {
         console.error('Error adding user:', error);
     });
+};
+
+const handleSelectUser = (user) => {
+  setSelectedUser(user); 
+  setIsMembersDropdownOpen(false); 
 };
 
 return (
@@ -124,7 +143,11 @@ return (
               <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" />
             </div>
               {isProfileOpen && (
-                <SelectedUserProfile user={partner} onClose={handleCloseProfile} />
+                <SelectedUserProfile 
+                user={partner} 
+                onClose={handleCloseProfile} 
+                onMessageClick={handleMessageClick} 
+                />
               )}
           </div>
         ) : (
@@ -161,7 +184,7 @@ return (
                 {isMembersDropdownOpen && (
                   <div className="members-dropdown">
                     {members.map((member) => (
-                      <div key={member.id} className="dropdown-member">
+                      <div key={member.id} className="dropdown-member" onClick={() => handleSelectUser(member)}>
                         {member.profile_picture ? (
                           <img src={member.profile_picture} alt={`${member.first_name} ${member.last_name}`} className="user-profile-placeholder2" />
                         ) : (
@@ -198,6 +221,14 @@ return (
           </div>
         </div>
       )}
+
+      {selectedUser && (
+                                   <SelectedUserProfile
+                                   user={selectedUser}
+                                   onClose={handleCloseProfile}
+                                   onMessageClick={handleMessageClick} 
+                                 />
+                 )}
     </div>
   );
 };

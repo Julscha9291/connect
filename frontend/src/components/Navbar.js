@@ -300,7 +300,12 @@ const handleNotificationClick = () => {
             )}
 
           {selectedUser && (
-            <SelectedUserProfile user={selectedUser} /> 
+                        <SelectedUserProfile 
+                        user={selectedUser} 
+                        onClose={handleCloseProfile} 
+                        onMessageClick={handleMessageClick} 
+                        ref={selectedUserProfileRef} 
+                      />
           )}
 
           </div>
