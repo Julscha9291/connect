@@ -11,6 +11,17 @@
     height: 85vh;
   }
 
+.link {
+    color: #add8e6; 
+    text-decoration: underline;
+    cursor: pointer;
+    word-break: break-all;
+}
+
+.link:hover {
+    color: #87ceeb; 
+}
+
 .container-scroll{
     height: 100%;
     overflow-y: overlay;
@@ -110,7 +121,6 @@
     padding: 20px;
     border-radius: 20px;
     display: flex;
-    text-align: right;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;

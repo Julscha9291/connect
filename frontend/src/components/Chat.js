@@ -14,7 +14,8 @@ const Chat = ({
       selectedChat, 
       setUnreadCount, 
       notifications, 
-      setNotifications  }) => {
+      setNotifications,
+      formatMessage  }) => {
         
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -558,6 +559,10 @@ const handleDeleteMessage = (messageId) => {
         socket.current.send(JSON.stringify(message));
 
         setNewMessage('');
+        const textarea = document.querySelector('.message-input');
+        if (textarea) {
+          textarea.style.height = 'auto';
+        }
         setAttachedFile(null);
         setTimeout(() => {
           scrollToBottom();
@@ -879,8 +884,7 @@ if (!selectedChat) {
                             {isProfileOpen && selectedPartner && (
                                 <SelectedUserProfile user={selectedPartner} onClose={handleCloseProfile} />
                               )}
-                            
-                            {message.message}
+                              {formatMessage(message.message)}
                             {message.file_url && (
                               <div className="Message-File">
                                 {message.file_url.endsWith('.png') ||
@@ -1007,6 +1011,7 @@ if (!selectedChat) {
                 handleRemoveFile={handleRemoveFile}
                 selectedThread={message}
                 setUnreadCount={setUnreadCount}
+                formatMessage= {formatMessage}
               />
             ) : null
           );

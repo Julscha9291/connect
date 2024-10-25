@@ -121,6 +121,27 @@ const App = () => {
     } catch (error) {
     }
   };
+
+  const formatMessage = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+  
+    return text.split(urlRegex).map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link"
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
   
   return (
     <Router>
@@ -164,6 +185,7 @@ const App = () => {
                     onProfileToggle={handleProfileToggle}
                     notifications={notifications}
                     setNotifications={setNotifications} 
+                    formatMessage= {formatMessage}
                   />
                 ) : (
                   <div className="no-chat-message">Please select a channel or chat</div>

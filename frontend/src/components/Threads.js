@@ -15,7 +15,8 @@ const Threads = ({
     messageId, 
     currentUserId,
     handleRemoveFile,
-    setUnreadCount
+    setUnreadCount,
+    formatMessage
 }) => {
 
   const threadSocket = useRef(null);
@@ -389,6 +390,10 @@ useEffect(() => {
             }
             ]);
               setThreadMessage('');
+              const textarea = document.querySelector('.message-input');
+              if (textarea) {
+                textarea.style.height = 'auto';
+              }                  
               setAttachedFile(null);
               setTimeout(() => {
                 scrollToBottom();
@@ -649,7 +654,7 @@ const closeAllThreads = () => {
 const handleInputChange = (e) => {
   setThreadMessage(e.target.value);
   e.target.style.height = 'auto'; 
-  e.target.style.height = `${e.target.scrollHeight}px`;
+  e.target.style.height = `${e.target.scrollHeight}px`;  
 };
 
 
@@ -692,8 +697,8 @@ return (
                 </div>
 
             <div className="Message-Text">
-                <div className="Message-Sender">
-                  <strong>{initialMessage.sender}:</strong>
+                <div className="Message-Sender">     
+                  <strong>  {formatMessage(initialMessage.sender)}: </strong>
                   <span className="message-time">{formatTimestamp(initialMessage.timestamp)}</span>
                 </div>
                   <p className="p-class">{initialMessage.message}</p>
@@ -748,7 +753,7 @@ return (
               ) : null}
 
               <div className="chat-wrapper" onMouseEnter={() => handleMouseEnter(thread.id)} onMouseLeave={handleMouseLeave}
-                onClick={() => handleClickThread(thread.id)}>
+                onClick={() => handleClickThread(thread.id)} >
                 <div className="messages-wrapper">             
                  {userDetail ? (
                     <div className="sender-details">
@@ -797,7 +802,7 @@ return (
                     <strong>{userDetail ? userDetail.first_name: 'Loading...'}</strong>
                     <span className="message-time">{formatTimestamp(thread.timestamp)}</span>
                   </div>
-                  <p className="p-class">{thread.content}</p>
+                  <p className="p-class"> {formatMessage(thread.content)}</p>
                           {thread.file_url && (
                             <div className="Message-File">
                               {thread.file_url.endsWith('.png') ||
