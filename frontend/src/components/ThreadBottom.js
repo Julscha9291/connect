@@ -13,6 +13,8 @@ const ThreadBottom = ({
     reactionThreadUserNames
 }) => {
   
+
+    
 return (
     <div className={`thread-bottom ${thread.sender === currentUserId ? 'thread-right' : 'thread-left'}`}>
         <div className={`message-reactions ${getTotalThreadReactions(thread.id) === 0 ? 'no-reactions' : ''}`}>
@@ -32,7 +34,7 @@ return (
                         <div className="reaction-tooltip">
                             <span className="reaction-text" role="img" aria-label="like">👍</span>
                             <div class="user-text">
-                                {reactionThreadUserNames[`${message}_like`] || 'Laden...'} {/* Benutzer für "like" */}
+                                {reactionThreadUserNames[`${message}_like`] || 'Laden...'} 
                             </div> 
                             </div>
                             )}
@@ -55,7 +57,7 @@ return (
                                 <div className="reaction-tooltip">
                                     <span className="reaction-text" role="img" aria-label="like">❤️</span>
                                         <div class="user-text">
-                                            {reactionThreadUserNames[`${message}_love`] || 'Laden...'} {/* Benutzer für "love" */}
+                                            {reactionThreadUserNames[`${message}_love`] || 'Laden...'} 
                                         </div>
                                 </div>
                                 )}
@@ -78,7 +80,7 @@ return (
                                     <div className="reaction-tooltip">
                                         <span className="reaction-text" role="img" aria-label="like">😂</span>
                                         <div class="user-text">
-                                                {reactionThreadUserNames[`${message}_haha`] || 'Laden...'} {/* Benutzer für "love" */}
+                                                {reactionThreadUserNames[`${message}_haha`] || 'Laden...'} 
                                         </div>
                                         </div>
                                     )}
@@ -101,7 +103,7 @@ return (
                                 <div className="reaction-tooltip">
                                 <span className="reaction-text" role="img" aria-label="like">😮</span>
                                 <div class="user-text">
-                                    {reactionThreadUserNames[`${message}_wow`] || 'Laden...'} {/* Benutzer für "love" */}
+                                    {reactionThreadUserNames[`${message}_wow`] || 'Laden...'} 
                                 </div>
                                 </div>
                                 )}
@@ -124,7 +126,7 @@ return (
                                 <div className="reaction-tooltip">
                                     <span className="reaction-text" role="img" aria-label="like">😢</span>
                                     <div class="user-text">
-                                {reactionThreadUserNames[`${message}_sad`] || 'Laden...'} {/* Benutzer für "love" */}
+                                {reactionThreadUserNames[`${message}_sad`] || 'Laden...'} 
                                     </div>
                                 </div>
                             )}
@@ -147,7 +149,7 @@ return (
                                 <div className="reaction-tooltip">
                                             <span className="reaction-text" role="img" aria-label="like">😡</span>
                                             <div class="user-text">
-                                                {reactionThreadUserNames[`${message}_angry`] || 'Laden...'} {/* Benutzer für "love" */}
+                                                {reactionThreadUserNames[`${message}_angry`] || 'Laden...'} 
                                             </div>
                                 </div>
                             )}

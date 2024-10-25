@@ -298,6 +298,11 @@ const handleNotificationClick = () => {
                 ))}
               </div>
             )}
+
+          {selectedUser && (
+            <SelectedUserProfile user={selectedUser} /> 
+          )}
+
           </div>
         </div>
 
@@ -368,7 +373,7 @@ const handleNotificationClick = () => {
                 {initials}
               </div>
             )}
-              <span className="user-name" style={{ color: 'white' }}>
+              <span className="user-name-big" style={{ color: 'white' }}>
                 {`${firstName} ${lastName}`}
               </span>
 

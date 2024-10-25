@@ -646,6 +646,12 @@ const closeAllThreads = () => {
     return threadTooltipVisible[threadId] === reactionType;
   };
 
+const handleInputChange = (e) => {
+  setThreadMessage(e.target.value);
+  e.target.style.height = 'auto'; 
+  e.target.style.height = `${e.target.scrollHeight}px`;
+};
+
 
 return (
   <div className="threads-container">
@@ -872,13 +878,14 @@ return (
                 onChange={handleFileChange} 
               />
               <div className="footer-left">
-                <input
-                  type="text"
-                  className="message-input"
-                  value={threadMessage}
-                  onChange={(e) => setThreadMessage(e.target.value)}
-                  placeholder="Neue Nachricht..."
-                />
+                <textarea
+                className="message-input"
+                value={threadMessage}
+                onChange={handleInputChange}
+                placeholder="Write a message..."
+                rows="1" 
+                style={{ resize: 'none', overflow: 'hidden' }} 
+              />
                 <button 
                   className="send-btn" 
                   onClick={() => setShowEmojiPicker((prev) => !prev)}

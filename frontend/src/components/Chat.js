@@ -6,6 +6,7 @@ import ChatHeader from './ChatHeader';
 import ChatFooter from './ChatFooter';
 import MessageBottom from './MessageBottom';
 import MessageHoverActions from './MessageHoverActions';
+import SelectedUserProfile from './SelectedUserProfile';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
 
@@ -42,6 +43,8 @@ const Chat = ({
   const [tooltipVisible, setTooltipVisible] = useState({});
   const [reactionUserNames, setReactionUserNames] = useState({});
   const currentUserId = parseInt(localStorage.getItem('user_id'), 10);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [selectedPartner, setSelectedPartner] = useState(null);
   const [setSelectedThread] = useState(null);
 
 
@@ -754,6 +757,16 @@ if (!selectedChat) {
     }
   };
 
+  const handleOpenProfile = (user) => {
+    setSelectedPartner(user);
+    setIsProfileOpen(true);
+  };
+  
+  const handleCloseProfile = () => {
+    setIsProfileOpen(false);
+    setSelectedPartner(null);
+  };
+
 
   return (
     <div className={`chat-window${isBackgroundDark ? 'dark-background' : ''}`}>
@@ -824,11 +837,14 @@ if (!selectedChat) {
                                   src={senderDetails.profile_picture}
                                   alt={`${senderDetails.first_name} ${senderDetails.last_name}`}
                                   className="member-profile-image"
+                                  onClick={() => handleOpenProfile(senderDetails)} 
+                                  style={{ cursor: 'pointer' }}
                                 />
                               ) : (
                                 <div
                                   className="user-profile-placeholder"
-                                  style={{ backgroundColor: senderDetails.color || '#ccc' }}
+                                  style={{ backgroundColor: senderDetails.color || '#ccc', cursor: 'pointer' }}
+                                  onClick={() => handleOpenProfile(senderDetails)} 
                                 >
                                   {senderDetails.first_name[0]}
                                   {senderDetails.last_name[0]}
@@ -836,10 +852,12 @@ if (!selectedChat) {
                               )}
                             </div>
                           ) : (
-                            <div className="user-profile-placeholder">NN</div>
+                            <div className="user-profile-placeholder" style={{ cursor: 'pointer' }} onClick={() => handleOpenProfile(null)}>
+                              NN
+                            </div>
                           )}
                         </div>
-  
+
                         {editingMessageId === message.id ? (
                           <div className="message-edit">
                             <input
@@ -853,10 +871,15 @@ if (!selectedChat) {
                         ) : (
                           <div className="Message-Text">
                             <div className="Message-Sender">
-                              <strong>{message.sender}:</strong>
+                            <strong onClick={() => handleOpenProfile(senderDetails)} style={{ cursor: 'pointer' }}>
+                            {message.sender}
+                            </strong>
                               <span className="message-time">{formatTimestamp(message.timestamp)}</span>
                             </div>
-  
+                            {isProfileOpen && selectedPartner && (
+                                <SelectedUserProfile user={selectedPartner} onClose={handleCloseProfile} />
+                              )}
+                            
                             {message.message}
                             {message.file_url && (
                               <div className="Message-File">

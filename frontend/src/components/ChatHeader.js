@@ -1,5 +1,4 @@
-// ChatHeader.js
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import SelectedUserProfile from './SelectedUserProfile';
@@ -13,16 +12,67 @@ const ChatHeader = ({
   members,
   channelId
 }) => {
-
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isDropdownProfileOpen, setIsDropdownProfileOpen] = useState(false);
+  const [isChannelDropdownOpen, setIsChannelDropdownOpen] = useState(false);
+  const [isMembersDropdownOpen, setIsMembersDropdownOpen] = useState(false);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
-  const toggleDropdownProfile = () => setIsDropdownProfileOpen(prev => !prev);
-  const openAddUserModal = () => setIsAddUserModalOpen(true);
-  const closeAddUserModal = () => setIsAddUserModalOpen(false);
+  const [dropdownPosition, setDropdownPosition] = useState(0);
+
+  const membersHeaderRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+        membersHeaderRef.current && !membersHeaderRef.current.contains(event.target)
+      ) {
+        setIsMembersDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateDropdownPosition = () => {
+      if (membersHeaderRef.current) {
+        const headerHeight = membersHeaderRef.current.offsetHeight;
+        setDropdownPosition(headerHeight);
+      }
+    };
+
+    updateDropdownPosition();
+    window.addEventListener('resize', updateDropdownPosition);
+
+    return () => {
+      window.removeEventListener('resize', updateDropdownPosition);
+    };
+  }, [membersHeaderRef]);
+
+  const toggleChannelDropdown = () => setIsChannelDropdownOpen(prev => !prev);
+  const toggleMembersDropdown = () => {
+    if (!isAddUserModalOpen) {
+      setIsMembersDropdownOpen(prev => !prev);
+    }
+  };
+  
+  const openAddUserModal = () => {
+    setIsMembersDropdownOpen(false); 
+    setIsAddUserModalOpen(true);
+  };
+  
+  const closeAddUserModal = () => {
+    setIsAddUserModalOpen(false);
+    setIsMembersDropdownOpen(false); 
+  };
 
   const handleToggleProfile = () => {
-    setIsProfileOpen((prevState) => !prevState);
+    setIsProfileOpen(prevState => !prevState);
   };
 
   const handleCloseProfile = () => {
@@ -46,6 +96,7 @@ const ChatHeader = ({
         refreshMessages();
     })
     .catch(error => {
+        console.error('Error adding user:', error);
     });
 };
 
@@ -80,23 +131,22 @@ return (
           <div>Partnerdaten werden geladen...</div>
         )
       ) : (
-
         <div className="chat-header-channel">
           <div className="channel-left">
             <div className="channel-title">{selectedChat.data.name}</div>
-                <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={toggleDropdownProfile} />
-                {isDropdownProfileOpen && (
-                  <ChannelInfo 
-                    channelName={selectedChat.data.name}
-                    description={selectedChat.data.description}
-                    creator={selectedChat.data.creator}
-                    onClose={toggleDropdownProfile} 
-                    channelId={channelId}
-                  />
-                )}
+            <FontAwesomeIcon icon={faCaretDown} className="navbar-icon" onClick={toggleChannelDropdown} />
+            {isChannelDropdownOpen && (
+              <ChannelInfo 
+                channelName={selectedChat.data.name}
+                description={selectedChat.data.description}
+                creator={selectedChat.data.creator}
+                onClose={toggleChannelDropdown} 
+                channelId={channelId}
+              />
+            )}
           </div>
-          <div className="channel-right">
-            <div className="channel-members-header">
+          <div className="channel-right" ref={dropdownRef} onClick={toggleMembersDropdown}>
+            <div ref={membersHeaderRef} className="channel-members-header">
               {members.map((member) => (
                 <div key={member.id} className="channel-member">
                   {member.profile_picture ? (
@@ -108,8 +158,31 @@ return (
                   )}
                 </div>
               ))}
+                {isMembersDropdownOpen && (
+                  <div className="members-dropdown">
+                    {members.map((member) => (
+                      <div key={member.id} className="dropdown-member">
+                        {member.profile_picture ? (
+                          <img src={member.profile_picture} alt={`${member.first_name} ${member.last_name}`} className="user-profile-placeholder2" />
+                        ) : (
+                          <div className="user-profile-placeholder2" style={{ backgroundColor: member.color || '#ccc' }}>
+                            {member.first_name[0]}{member.last_name[0]}
+                          </div>
+                        )}
+                        <span className="member-name">{member.first_name} {member.last_name}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
-            <FontAwesomeIcon icon={faUserPlus} className="user-icon" onClick={openAddUserModal} />
+            <FontAwesomeIcon
+              icon={faUserPlus}
+              className="user-icon"
+              onClick={(event) => {
+                event.stopPropagation();
+                openAddUserModal();
+              }}
+            />
             {isAddUserModalOpen && (
               <>
                 <div className="overlay" onClick={closeAddUserModal}></div>

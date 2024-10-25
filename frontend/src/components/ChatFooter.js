@@ -16,6 +16,12 @@ const ChatFooter = ({
     handleRemoveFile,
     handleFileChange
   }) => {
+
+    const handleInputChange = (e) => {
+      setNewMessage(e.target.value);
+      e.target.style.height = 'auto'; 
+      e.target.style.height = `${e.target.scrollHeight}px`;
+    };
   
     return (
     <div> 
@@ -35,13 +41,14 @@ const ChatFooter = ({
               />
         
           <div className="footer-left">
-              <input
-                type="text"
-                className="message-input"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Write a message..."
-              />
+          <textarea
+              className="message-input"
+              value={newMessage}
+              onChange={handleInputChange}
+              placeholder="Write a message..."
+              rows="1" 
+              style={{ resize: 'none', overflow: 'hidden' }} 
+            />
               <button className="send-btn" onClick={() => setShowEmojiPicker((prev) => !prev)}>
                <FontAwesomeIcon icon={faSmile} /> 
               </button>

@@ -104,6 +104,13 @@
     font-size: 18px;
     color: black;
 }
+
+.user-name-big{
+  display:flex;
+  align-items: center;
+  font-size: 18px;
+  color: black;
+}
   
 .dropdown-icon{
     display:flex;
@@ -340,7 +347,7 @@ button{
 
 @media (max-width: 768px) {
   
-    .user-name{
+    .user-name-big{
       display: none;
     }
 

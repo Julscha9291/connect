@@ -58,6 +58,7 @@
     justify-content: space-between;
     align-items: center;
     margin-right:10px;
+    position: relative; 
 }
 
 .channel-member{
@@ -201,7 +202,6 @@
     padding: 20px;
     border-radius: 20px;
     display: flex;
-    text-align: right;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -759,7 +759,6 @@
   .chat-full-width {
     width: -webkit-fill-available !important;
     margin-left: 20px !important;
-    margin-right: 10px;
   }
 
   .chat {

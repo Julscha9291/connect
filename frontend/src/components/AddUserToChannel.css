@@ -44,7 +44,7 @@
 }
   
 .user-list li:hover {
-    background-color: #f0f0f0;
+    color:#555;
 }
   
 .add-button {
@@ -61,7 +61,7 @@
 }
    
 .add-button:hover {
-    background-color: #8f0fb6;
+    background-color: #312ca9;
 }
   
 .input-add-user{
@@ -73,4 +73,12 @@
   background-color: #edeaea;
   border-radius: 10px;
   width: 95%;
+}
+
+h5{
+    color:#555;
+}
+
+li{
+    color:#555;
 }
