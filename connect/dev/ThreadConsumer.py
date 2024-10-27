@@ -172,16 +172,18 @@ class ThreadConsumer(AsyncWebsocketConsumer):
 
         else:  # Aktion 'new'
                 message_content = text_data_json.get('content')
-                if not message_content:
+                file_url = text_data_json.get('fileUrl')
+                
+                if not message_content and not file_url:
                     await self.send(text_data=json.dumps({
                         'error': 'No message content found'
                     }))
                     return
-
+                
                 new_thread = await sync_to_async(Thread.objects.create)(
                     sender=self.user,
                     message=message,  
-                    content=message_content, 
+                    content=message_content or '', 
                     file_url=file_url
                 )
 
@@ -193,6 +195,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
                         'content': new_thread.content,  
                         'sender': new_thread.sender.username,  
                         'sender_id': new_thread.sender.id,  
+                        'fileUrl': file_url,
                         'action': 'new',
                     }
                 )
@@ -205,6 +208,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
         reaction_type = event.get('reaction_type')
         content = event.get('content')
         file_url = event.get('fileUrl')  
+        
 
         await self.send(text_data=json.dumps({
             'sender': sender,

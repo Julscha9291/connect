@@ -318,11 +318,12 @@ const handleNotificationClick = () => {
               style={{ fontSize: '24px' }} 
             />
             {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+            
             {notificationDropdownOpen && (
             <div ref={notificationDropdownRef} className="notification-dropdown">
               <div 
               className="dropdown-arrow" 
-              style={{ right: unreadCount > 0 ? '40px' : '20px' }} 
+              style={{ right: unreadCount > 0 ? '40px' : '10px' }} 
             ></div>
               {notificationList.length > 0 ? (
                       notificationList.map((notification, index) => (

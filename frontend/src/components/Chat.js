@@ -552,10 +552,9 @@ const handleDeleteMessage = (messageId) => {
 
         const message = {
             type: 'new',
-            message: newMessage.trim() || null,
+            message: newMessage.trim() || ' ',
             fileUrl: fileUrl || null,
         };
-
         socket.current.send(JSON.stringify(message));
 
         setNewMessage('');
@@ -564,6 +563,7 @@ const handleDeleteMessage = (messageId) => {
           textarea.style.height = 'auto';
         }
         setAttachedFile(null);
+        
         setTimeout(() => {
           scrollToBottom();
       }, 100); 
@@ -572,7 +572,7 @@ const handleDeleteMessage = (messageId) => {
 };
 
 if (!selectedChat) {
-    return <div>Bitte wähle einen Chat</div>;
+    return <div>Please select a chat!</div>;
 }
 
   const getEmojiCount = (messageId, emoji) => {
@@ -607,7 +607,7 @@ if (!selectedChat) {
         setSelectedMessageId(message.id); 
         setSenderId(message.sender_id); 
         setShowThreads(true);
-        setSelectedThread(message); 
+        setSelectedThread(message);
       }
     } else {
     }
@@ -1012,6 +1012,7 @@ if (!selectedChat) {
                 selectedThread={message}
                 setUnreadCount={setUnreadCount}
                 formatMessage= {formatMessage}
+                handleAttachmentClick={handleAttachmentClick}
               />
             ) : null
           );

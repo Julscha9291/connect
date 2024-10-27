@@ -227,3 +227,42 @@
     margin-left: 10px;
     font-size: 14px;
 }
+
+.thread-file{
+    margin-right:19px;
+}
+
+.file-preview-thread{
+    background-color: #fff;
+}
+
+.file-preview {
+    display: flex;
+    width: 100%;
+    background-color: #fff;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.file-preview img {
+    max-width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.file-preview p {
+    font-size: 14px;
+    color: #555;
+}
+
+.thread-footer {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+}

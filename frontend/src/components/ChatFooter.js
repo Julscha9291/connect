@@ -64,15 +64,17 @@ const ChatFooter = ({
     <div className="chat-attach">
       {filePreview && (
         <div className="file-preview">
-          {attachedFile && attachedFile.type.startsWith('image/') ? (
-            <img
-              src={filePreview}
-              alt="Preview"
-              style={{ width: '200px', height: 'auto' }} 
-            />
-          ) : (
-            <p>{attachedFile?.name}</p> 
-          )}
+              {attachedFile ? (
+                attachedFile.type.startsWith('image/') ? (
+                    <img
+                        src={filePreview}
+                        alt="Preview"
+                        style={{ width: '200px', height: 'auto' }} 
+                    />
+                ) : (
+                    <p>{attachedFile.name}</p>
+                )
+            ) : null} 
           <button className="remove-file-btn" onClick={handleRemoveFile}>
             &times;
           </button>

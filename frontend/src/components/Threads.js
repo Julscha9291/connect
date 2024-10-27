@@ -16,7 +16,8 @@ const Threads = ({
     currentUserId,
     handleRemoveFile,
     setUnreadCount,
-    formatMessage
+    formatMessage,
+    handleAttachmentClick
 }) => {
 
   const threadSocket = useRef(null);
@@ -25,11 +26,11 @@ const Threads = ({
   const [threadMessage, setThreadMessage] = useState('');
   const [senderDetails, setSenderDetails] = useState(null);
   const [threadReactions, setThreadReactions] = useState({});
-  const [attachedFile, setAttachedFile] = useState(null); 
-  const [filePreview, setFilePreview] = useState(null);
+  const [attachedThreadFile, setAttachedThreadFile] = useState(null); 
+  const [threadfilePreview, setThreadFilePreview] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [hoveredThreadId, setHoveredThreadId] = useState(null);
-  const [selectedThreadId, setSelectedThreadId] = useState(null); // Speichert den ausgewählten Thread
+  const [selectedThreadId, setSelectedThreadId] = useState(null); 
   const [localThreadMessages, setLocalThreadMessages] = useState([]);
   const [activeThreadIcon, setActiveThreadIcon] = useState(null);
   const [hideThreadHoverIcons, setHideThreadHoverIcons] = useState(false);
@@ -72,29 +73,31 @@ const Threads = ({
                   switch (data.action) {
                     case 'new':
                       if (data.content && data.message_id) {                     
-                        fetch(`${process.env.REACT_APP_API_URL}api/thread-reactions/?message=${data.message_id}`)
-                        .then(response => response.json())
-                        .then(reactionsData => {
-                          setThreads((prevMessages) => [
-                            ...prevMessages,
-                            { 
-                              id: data.message_id, 
-                              content: data.content, 
-                              sender: data.sender, 
-                              reactions: reactionsData 
-                            }
-                          ]);
 
-                          if (data.sender && typeof data.sender_id === 'number' && data.sender_id !== currentUserId) {
-                            setUnreadCount(prevCount => prevCount + 1);
-                          } else {
-                          }
-                          refreshThreads(data.message_id); 
-                          scrollToBottom(); 
-                            })
-                    } else {
-                    }
-                    break;
+                        fetch(`${process.env.REACT_APP_API_URL}api/thread-reactions/?message=${data.message_id}`)
+                          .then(response => response.json())
+                          .then(reactionsData => {
+
+                            setThreads((prevMessages) => [
+                              ...prevMessages,
+                              { 
+                                id: data.message_id, 
+                                content: data.content, 
+                                sender: data.sender, 
+                                reactions: reactionsData 
+                              }
+                            ]);
+
+                            if (data.sender && typeof data.sender_id === 'number' && data.sender_id !== currentUserId) {
+                              setUnreadCount(prevCount => prevCount + 1);
+                            }
+                            
+                            refreshThreads(data.message_id); 
+                            scrollToBottom(); 
+                          });
+                      } else {
+                      }
+                      break;
 
                     case 'delete':
                         if (data.message_id) {
@@ -167,7 +170,6 @@ const Threads = ({
                           }
             
                           const filteredThreads = threadData.filter(thread => thread.message === selectedThread.id);
-              
                           if (filteredThreads.length === 0) {
                               setThreads([]); 
                               setLocalThreadMessages([]); 
@@ -355,11 +357,11 @@ useEffect(() => {
 
 
   const handleSendThread = async () => {
-          if ((threadMessage.trim() || attachedFile)) {
-            let fileUrl = null;
-            if (attachedFile) {
+          if ((threadMessage.trim() || attachedThreadFile)) {
+            let fileUrl= null;
+            if (attachedThreadFile) {
               const formData = new FormData();
-              formData.append('file', attachedFile);
+              formData.append('file', attachedThreadFile);
         
               try {
                 const response = await fetch(`${process.env.REACT_APP_API_URL}api/upload/`, {
@@ -373,28 +375,32 @@ useEffect(() => {
                 return;
               }
             }
+
             const threadData = {
+              type: 'new',
               message: messageId,
-              content: threadMessage.trim() || null,
-              file_url: fileUrl || null, 
+              content: threadMessage.trim() || ' ',
+              fileUrl: fileUrl || null, 
               sender: senderDetails ? senderDetails.id : currentUserId,
             };
               threadSocket.current.send(JSON.stringify(threadData));
-          setThreads((prevThreads) => [
-            ...prevThreads,
-            {
-                id: messageId, 
-                content: threadMessage.trim() || null,
-                sender: senderDetails ? senderDetails.id : currentUserId,
-                reactions: [] 
-            }
-            ]);
+
+              setThreads((prevThreads) => {
+                const newThread = {
+                    id: messageId,
+                    fileUrl: fileUrl || null,  
+                    sender: senderDetails ? senderDetails.id : currentUserId,
+                    reactions: []
+                };           
+                return [...prevThreads, newThread];  
+            });
+
               setThreadMessage('');
               const textarea = document.querySelector('.message-input');
               if (textarea) {
                 textarea.style.height = 'auto';
               }                  
-              setAttachedFile(null);
+              setAttachedThreadFile(null);
               setTimeout(() => {
                 scrollToBottom();
             }, 100);
@@ -579,15 +585,15 @@ const baseUrl = `${process.env.REACT_APP_API_URL}`;
 
 const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setAttachedFile(file);
+    setAttachedThreadFile(file);
     if (file && file.type.startsWith('image/')) {
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
-        setFilePreview(e.target.result); 
+        setThreadFilePreview(e.target.result); 
       };
       fileReader.readAsDataURL(file);
     } else {
-      setFilePreview(file.name);
+      setThreadFilePreview(file.name);
     }
   };
 
@@ -803,20 +809,27 @@ return (
                     <span className="message-time">{formatTimestamp(thread.timestamp)}</span>
                   </div>
                   <p className="p-class"> {formatMessage(thread.content)}</p>
-                          {thread.file_url && (
+                          {thread.fileUrl && (
                             <div className="Message-File">
-                              {thread.file_url.endsWith('.png') ||
-                              thread.file_url.endsWith('.jpg') ||
-                              thread.file_url.endsWith('.jpeg') ? (
+                                {thread.fileUrl.endsWith('.png') ||
+                                thread.fileUrl.endsWith('.jpg') ||
+                                thread.fileUrl.endsWith('.jpeg') ||
+                                thread.fileUrl.endsWith('.JPG') ||
+                                thread.fileUrl.endsWith('.PNG') ||
+                                thread.fileUrl.endsWith('.JPEG') ? (
                                 <img
-                                  src={`${baseUrl}${thread.file_url}`}
+                                  src={`${baseUrl}${thread.fileUrl}`}
                                   alt="Uploaded file"
                                   className="Message-Image"
                                 />
                               ) : (
-                                <a href={`${baseUrl}${thread.file_url}`} download>
-                                  {thread.file_url.split('/').pop()}
-                                </a>
+                                <div
+                                className="attachment-link"
+                                onClick={() => handleAttachmentClick(`${baseUrl}${thread.fileUrl}`)}
+                              >
+                                <FontAwesomeIcon icon={faPaperclip} style={{ color: 'white' }} />
+                                <span style={{ color: 'white', marginLeft: '5px' }}>Attachment</span>
+                              </div>
                               )}
                             </div>
                           )}
@@ -869,15 +882,15 @@ return (
           )}
           
           <div className="chat-text">
-            <div className="chat-footer">
+            <div className="thread-footer">
               <button 
                 className="attachment-btn" 
-                onClick={() => document.getElementById('file-upload').click()}
+                onClick={() => document.getElementById('thread-file-upload').click()}
               >
                 <FontAwesomeIcon icon={faPaperclip} />
               </button>
               <input
-                id="file-upload"
+                id="thread-file-upload"
                 type="file"
                 style={{ display: 'none' }} 
                 onChange={handleFileChange} 
@@ -906,17 +919,17 @@ return (
               </div>
             </div>
 
-            <div className="chat-attach">
-              {filePreview && (
-                <div className="file-preview">
-                  {attachedFile && attachedFile.type.startsWith('image/') ? (
+            <div className="thread-attach">
+              {threadfilePreview && (
+                <div className="file-preview-thread">
+                  {attachedThreadFile && attachedThreadFile.type.startsWith('image/') ? (
                     <img
-                      src={filePreview}
-                      alt="Preview"
+                      src={threadfilePreview}
+                      alt="Preview-Thread"
                       style={{ width: '200px', height: 'auto' }} 
                     />
                   ) : (
-                    <p>{attachedFile?.name}</p> 
+                    <p>{attachedThreadFile?.name}</p> 
                   )}
                   <button className="remove-file-btn" onClick={handleRemoveFile}>
                     &times;
