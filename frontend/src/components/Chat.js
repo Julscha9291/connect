@@ -880,6 +880,7 @@ if (!selectedChat) {
                             <button onClick={handleCancelEdit}>Cancel</button>
                           </div>
                         ) : (
+                          
                           <div className="Message-Text">
                             <div className="Message-Sender">
                             <strong onClick={() => handleOpenProfile(senderDetails)} style={{ cursor: 'pointer' }}>
@@ -892,73 +893,71 @@ if (!selectedChat) {
                               )}
                               {formatMessage(message.message)}
                               {message.file_url && (
-  <div className="Message-File">
-    {message.file_url.endsWith('.png') ||
-    message.file_url.endsWith('.jpg') ||
-    message.file_url.endsWith('.jpeg') ||
-    message.file_url.endsWith('.JPG') ||
-    message.file_url.endsWith('.PNG') ||
-    message.file_url.endsWith('.JPEG') ? (
-      <div className="file-container">
-        <img
-          src={`${baseUrl}${message.file_url}`}
-          alt="Uploaded file"
-          className="Message-Image"
-        />
-        <a
-          href={`${baseUrl}${message.file_url}`}
-          download
-          className="download-link"
-          title="Download Image"
-          style={{ marginLeft: '10px' }}
-        >
-          <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
-        </a>
-      </div>
-    ) : message.file_url.endsWith('.pdf') ? (
-      <div className="file-container">
-        <div
-          className="attachment-link"
-          onClick={() => handleAttachmentClick(`${baseUrl}${message.file_url}`)}
-        >
-          <FontAwesomeIcon icon={faFilePdf} style={{ color: 'white' }} />
-          <span style={{ color: 'white', marginLeft: '5px' }}>PDF-Dokument</span>
-        </div>
-        <a
-          href={`${baseUrl}${message.file_url}`}
-          download
-          className="download-link"
-          title="Download PDF"
-          style={{ marginLeft: '10px' }}
-        >
-          <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
-        </a>
-      </div>
-    ) : (
-      <div className="file-container">
-        <div
-          className="attachment-link"
-          onClick={() => handleAttachmentClick(`${baseUrl}${message.file_url}`)}
-        >
-          <FontAwesomeIcon icon={faPaperclip} style={{ color: 'white' }} />
-          <span style={{ color: 'white', marginLeft: '5px' }}>Attachment</span>
-        </div>
-        <a
-          href={`${baseUrl}${message.file_url}`}
-          download
-          className="download-link"
-          title="Download Attachment"
-          style={{ marginLeft: '10px' }}
-        >
-          <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
-        </a>
-      </div>
-    )}
-  </div>
-)}
+                              <div className="Message-File">
+                                {message.file_url.endsWith('.png') ||
+                                message.file_url.endsWith('.jpg') ||
+                                message.file_url.endsWith('.jpeg') ||
+                                message.file_url.endsWith('.JPG') ||
+                                message.file_url.endsWith('.PNG') ||
+                                message.file_url.endsWith('.JPEG') ? (
+                                  <div className="file-container">
+                                    <img
+                                      src={`${baseUrl}${message.file_url}`}
+                                      alt="Uploaded file"
+                                      className="Message-Image"
+                                    />
+                                    <a
+                                      href={`${baseUrl}${message.file_url}`}
+                                      download
+                                      className="download-link"
+                                      title="Download Image"
+                                      style={{ marginLeft: '10px' }}
+                                    >
+                                      <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
+                                    </a>
+                                  </div>
+                                ) : message.file_url.endsWith('.pdf') ? (
+                                  <div className="file-container">
+                                    <div
+                                      className="attachment-link"
+                                      onClick={() => handleAttachmentClick(`${baseUrl}${message.file_url}`)}
+                                    >
+                                      <FontAwesomeIcon icon={faFilePdf} style={{ color: 'white' }} />
+                                      <span style={{ color: 'white', marginLeft: '5px' }}>PDF-Dokument</span>
+                                    </div>
+                                    <a
+                                      href={`${baseUrl}${message.file_url}`}
+                                      download
+                                      className="download-link"
+                                      title="Download PDF"
+                                      style={{ marginLeft: '10px' }}
+                                    >
+                                      <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
+                                    </a>
+                                  </div>
+                                ) : (
+                                  <div className="file-container">
+                                    <div
+                                      className="attachment-link"
+                                      onClick={() => handleAttachmentClick(`${baseUrl}${message.file_url}`)}
+                                    >
+                                      <FontAwesomeIcon icon={faPaperclip} style={{ color: 'white' }} />
+                                      <span style={{ color: 'white', marginLeft: '5px' }}>Attachment</span>
+                                    </div>
+                                    <a
+                                      href={`${baseUrl}${message.file_url}`}
+                                      download
+                                      className="download-link"
+                                      title="Download Attachment"
+                                      style={{ marginLeft: '10px' }}
+                                    >
+                                      <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            )}
 
-
-  
                             <div>
                               <MessageHoverActions
                                 hoveredMessageId={hoveredMessageId}
