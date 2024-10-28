@@ -729,6 +729,31 @@
 
 @media (max-width: 768px) {
 
+    .chat-footer {
+        align-items: stretch;
+    }
+
+    .footer-left {
+        flex-direction: row;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .footer-right {
+        width: auto;
+        justify-content: space-between;
+    }
+
+    .message-input {
+        width: 100%;
+        margin-right: 10px;
+    }
+
+    .attachment-btn, .send-btn {
+        flex: 1;
+        text-align: center;
+    }
+
   .chat-window {
     flex-direction: column; 
     flex-grow: 0;
