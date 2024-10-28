@@ -750,8 +750,11 @@
     }
 
     .attachment-btn, .send-btn {
-        flex: 1;
         text-align: center;
+    }
+
+    .send-btn {
+        font-size: 18px;
     }
 
   .chat-window {
