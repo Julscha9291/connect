@@ -48,7 +48,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
         action = text_data_json.get('type')
         message_id = self.message_id 
         reaction_type = text_data_json.get('reaction_type')
-        file_url = text_data_json.get('fileUrl')
+
         thread_id = text_data_json.get('message_id')
 
         if self.user.is_anonymous:
@@ -172,7 +172,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
 
         else:  # Aktion 'new'
                 message_content = text_data_json.get('content')
-                file_url = text_data_json.get('fileUrl')
+                file_url = text_data_json.get('file_url')
                 
                 if not message_content and not file_url:
                     await self.send(text_data=json.dumps({
@@ -195,7 +195,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
                         'content': new_thread.content,  
                         'sender': new_thread.sender.username,  
                         'sender_id': new_thread.sender.id,  
-                        'fileUrl': file_url,
+                        'file_url': file_url,
                         'action': 'new',
                     }
                 )
@@ -207,7 +207,7 @@ class ThreadConsumer(AsyncWebsocketConsumer):
         message_id = event.get('message_id')
         reaction_type = event.get('reaction_type')
         content = event.get('content')
-        file_url = event.get('fileUrl')  
+        file_url = event.get('file_url')  
         
 
         await self.send(text_data=json.dumps({
@@ -217,5 +217,5 @@ class ThreadConsumer(AsyncWebsocketConsumer):
             'message_id': message_id,
             'reaction_type': reaction_type,
             'content': content,
-            'fileUrl': file_url
+            'file_url': file_url
         }))

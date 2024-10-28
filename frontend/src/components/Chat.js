@@ -8,7 +8,7 @@ import MessageBottom from './MessageBottom';
 import MessageHoverActions from './MessageHoverActions';
 import SelectedUserProfile from './SelectedUserProfile';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { faPaperclip, faFilePdf, faDownload } from '@fortawesome/free-solid-svg-icons';
 
 const Chat = ({ 
       selectedChat, 
@@ -538,14 +538,22 @@ const handleDeleteMessage = (messageId) => {
             formData.append('file', attachedFile);
 
             try {
+                console.log("Uploading file to:", `${process.env.REACT_APP_API_URL}api/upload/`);
                 const response = await fetch(`${process.env.REACT_APP_API_URL}api/upload/`, {
                     method: 'POST',
                     body: formData,
                 });
 
                 const data = await response.json();
-                fileUrl = data.file_url;
+                console.log("Upload response:", data);
+                if (data && data.file_url) {
+                    fileUrl = data.file_url;
+                } else {
+                    console.error("File URL not found in response");
+                    return;
+                }
             } catch (error) {
+                console.error("File upload error:", error);
                 return;
             }
         }
@@ -555,6 +563,7 @@ const handleDeleteMessage = (messageId) => {
             message: newMessage.trim() || ' ',
             fileUrl: fileUrl || null,
         };
+        console.log("Sending message:", message);
         socket.current.send(JSON.stringify(message));
 
         setNewMessage('');
@@ -566,10 +575,13 @@ const handleDeleteMessage = (messageId) => {
         
         setTimeout(() => {
           scrollToBottom();
-      }, 100); 
+      }, 100);
+      handleRemoveFile();
     } else {
+        console.log("Message not sent - conditions not met.");
     }
 };
+
 
 if (!selectedChat) {
     return <div>Please select a chat!</div>;
@@ -607,7 +619,7 @@ if (!selectedChat) {
         setSelectedMessageId(message.id); 
         setSenderId(message.sender_id); 
         setShowThreads(true);
-        setSelectedThread(message);
+     /*   setSelectedThread(message);**/
       }
     } else {
     }
@@ -885,30 +897,73 @@ if (!selectedChat) {
                                 <SelectedUserProfile user={selectedPartner} onClose={handleCloseProfile} />
                               )}
                               {formatMessage(message.message)}
-                            {message.file_url && (
-                              <div className="Message-File">
-                                {message.file_url.endsWith('.png') ||
-                                message.file_url.endsWith('.jpg') ||
-                                message.file_url.endsWith('.jpeg') ||
-                                message.file_url.endsWith('.JPG') ||
-                                message.file_url.endsWith('.PNG') ||
-                                message.file_url.endsWith('.JPEG') ? (
-                                  <img
-                                    src={`${baseUrl}${message.file_url}`}
-                                    alt="Uploaded file"
-                                    className="Message-Image"
-                                  />
-                                ) : (
-                                  <div
-                                    className="attachment-link"
-                                    onClick={() => handleAttachmentClick(`${baseUrl}${message.file_url}`)}
-                                  >
-                                    <FontAwesomeIcon icon={faPaperclip} style={{ color: 'white' }} />
-                                    <span style={{ color: 'white', marginLeft: '5px' }}>Attachment</span>
-                                  </div>
-                                )}
-                              </div>
-                            )}
+                              {message.file_url && (
+  <div className="Message-File">
+    {message.file_url.endsWith('.png') ||
+    message.file_url.endsWith('.jpg') ||
+    message.file_url.endsWith('.jpeg') ||
+    message.file_url.endsWith('.JPG') ||
+    message.file_url.endsWith('.PNG') ||
+    message.file_url.endsWith('.JPEG') ? (
+      <div className="file-container">
+        <img
+          src={`${baseUrl}${message.file_url}`}
+          alt="Uploaded file"
+          className="Message-Image"
+        />
+        <a
+          href={`${baseUrl}${message.file_url}`}
+          download
+          className="download-link"
+          title="Download Image"
+          style={{ marginLeft: '10px' }}
+        >
+          <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
+        </a>
+      </div>
+    ) : message.file_url.endsWith('.pdf') ? (
+      <div className="file-container">
+        <div
+          className="attachment-link"
+          onClick={() => handleAttachmentClick(`${baseUrl}${message.file_url}`)}
+        >
+          <FontAwesomeIcon icon={faFilePdf} style={{ color: 'white' }} />
+          <span style={{ color: 'white', marginLeft: '5px' }}>PDF-Dokument</span>
+        </div>
+        <a
+          href={`${baseUrl}${message.file_url}`}
+          download
+          className="download-link"
+          title="Download PDF"
+          style={{ marginLeft: '10px' }}
+        >
+          <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
+        </a>
+      </div>
+    ) : (
+      <div className="file-container">
+        <div
+          className="attachment-link"
+          onClick={() => handleAttachmentClick(`${baseUrl}${message.file_url}`)}
+        >
+          <FontAwesomeIcon icon={faPaperclip} style={{ color: 'white' }} />
+          <span style={{ color: 'white', marginLeft: '5px' }}>Attachment</span>
+        </div>
+        <a
+          href={`${baseUrl}${message.file_url}`}
+          download
+          className="download-link"
+          title="Download Attachment"
+          style={{ marginLeft: '10px' }}
+        >
+          <FontAwesomeIcon icon={faDownload} style={{ color: 'white' }} />
+        </a>
+      </div>
+    )}
+  </div>
+)}
+
+
   
                             <div>
                               <MessageHoverActions
@@ -1012,7 +1067,6 @@ if (!selectedChat) {
                 selectedThread={message}
                 setUnreadCount={setUnreadCount}
                 formatMessage= {formatMessage}
-                handleAttachmentClick={handleAttachmentClick}
               />
             ) : null
           );

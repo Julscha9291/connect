@@ -20,6 +20,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.db.models import Count
 from django.shortcuts import redirect
+from rest_framework.parsers import MultiPartParser, FormParser
 
 User = get_user_model()
 
@@ -344,14 +345,16 @@ class ThreadReactionViewSet(viewsets.ModelViewSet):
 class ThreadViewSet(viewsets.ModelViewSet):
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
+    parser_classes = (MultiPartParser, FormParser) 
 
-    def create(self, request, *args, **kwargs):
-        file_url = request.data.get('file_url')
+def create(self, request, *args, **kwargs):
+    file_url = request.FILES.get('file_url')  
 
-        if file_url and not file_url.startswith('/media/uploads/'):
+    if file_url:
+        if not file_url.name.endswith(('.jpg', '.jpeg', '.png', '.gif')):  
             return Response({"error": "Ungültige Datei-URL"}, status=400)
-        
-        return super().create(request, *args, **kwargs)
+
+    return super().create(request, *args, **kwargs)
     
     
 def get_threads(request, message_id):
@@ -361,7 +364,6 @@ def get_threads(request, message_id):
         'sender__id',
         'content',
         'timestamp',
-        'file_url'  
     )
     return JsonResponse(list(threads), safe=False)    
 

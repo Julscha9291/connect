@@ -14,11 +14,8 @@ const Threads = ({
     onClose,
     messageId, 
     currentUserId,
-    handleRemoveFile,
     setUnreadCount,
-    formatMessage,
-    handleAttachmentClick
-}) => {
+    formatMessage}) => {
 
   const threadSocket = useRef(null);
   const [editingThreadId, setEditingThreadId] = useState(null);
@@ -48,6 +45,11 @@ const Threads = ({
     }
   }, []);
 
+  const handleRemoveFileThread = () => {
+    setAttachedThreadFile(null); 
+    setThreadFilePreview(null);  
+  };
+
   const scrollToBottom = () => {
       if (chatEndRef.current) {
           chatEndRef.current.scrollIntoView({ behavior: 'auto' });
@@ -71,7 +73,9 @@ const Threads = ({
                   const data = JSON.parse(event.data);
             
                   switch (data.action) {
+                    
                     case 'new':
+                      console.log(data);
                       if (data.content && data.message_id) {                     
 
                         fetch(`${process.env.REACT_APP_API_URL}api/thread-reactions/?message=${data.message_id}`)
@@ -380,15 +384,16 @@ useEffect(() => {
               type: 'new',
               message: messageId,
               content: threadMessage.trim() || ' ',
-              fileUrl: fileUrl || null, 
+              file_url: fileUrl || null, 
               sender: senderDetails ? senderDetails.id : currentUserId,
             };
+              console.log(threadData)
               threadSocket.current.send(JSON.stringify(threadData));
 
               setThreads((prevThreads) => {
                 const newThread = {
                     id: messageId,
-                    fileUrl: fileUrl || null,  
+                    file_url: fileUrl || null,  
                     sender: senderDetails ? senderDetails.id : currentUserId,
                     reactions: []
                 };           
@@ -404,12 +409,18 @@ useEffect(() => {
               setTimeout(() => {
                 scrollToBottom();
             }, 100);
+            handleRemoveFileThread();
 
             } else {
             }
     } 
   ;
   
+  const handleAttachmentClickThread = (fileUrl) => {
+    window.open(fileUrl, '_blank'); 
+  };
+  
+
   const handleEditThread = (threadId, content) => {
     setEditContent(content);
     setEditingThreadId(threadId);
@@ -735,7 +746,7 @@ return (
               const today = new Date();
               const yesterday = new Date();
               yesterday.setDate(today.getDate() - 1);
-
+              console.log(thread);
               const formatDate = (date) => {
                 if (date.getDate() === today.getDate() &&
                     date.getMonth() === today.getMonth() &&
@@ -809,23 +820,24 @@ return (
                     <span className="message-time">{formatTimestamp(thread.timestamp)}</span>
                   </div>
                   <p className="p-class"> {formatMessage(thread.content)}</p>
-                          {thread.fileUrl && (
+
+                          {thread.file_url && (
                             <div className="Message-File">
-                                {thread.fileUrl.endsWith('.png') ||
-                                thread.fileUrl.endsWith('.jpg') ||
-                                thread.fileUrl.endsWith('.jpeg') ||
-                                thread.fileUrl.endsWith('.JPG') ||
-                                thread.fileUrl.endsWith('.PNG') ||
-                                thread.fileUrl.endsWith('.JPEG') ? (
+                                {thread.file_url.endsWith('.png') ||
+                                thread.file_url.endsWith('.jpg') ||
+                                thread.file_url.endsWith('.jpeg') ||
+                                thread.file_url.endsWith('.JPG') ||
+                                thread.file_url.endsWith('.PNG') ||
+                                thread.file_url.endsWith('.JPEG') ? (
                                 <img
-                                  src={`${baseUrl}${thread.fileUrl}`}
+                                  src={`${baseUrl}${thread.file_url}`}
                                   alt="Uploaded file"
                                   className="Message-Image"
                                 />
                               ) : (
                                 <div
                                 className="attachment-link"
-                                onClick={() => handleAttachmentClick(`${baseUrl}${thread.fileUrl}`)}
+                                onClick={() => handleAttachmentClickThread(`${baseUrl}${thread.file_url}`)}
                               >
                                 <FontAwesomeIcon icon={faPaperclip} style={{ color: 'white' }} />
                                 <span style={{ color: 'white', marginLeft: '5px' }}>Attachment</span>
@@ -883,18 +895,18 @@ return (
           
           <div className="chat-text">
             <div className="thread-footer">
-              <button 
-                className="attachment-btn" 
-                onClick={() => document.getElementById('thread-file-upload').click()}
-              >
-                <FontAwesomeIcon icon={faPaperclip} />
-              </button>
-              <input
-                id="thread-file-upload"
-                type="file"
-                style={{ display: 'none' }} 
-                onChange={handleFileChange} 
-              />
+                {/* <button 
+                  className="attachment-btn-thread" 
+                  onClick={() => document.getElementById('thread-file-upload').click()}
+                >
+                  <FontAwesomeIcon icon={faPaperclip} />
+                </button>
+                <input
+                  id="thread-file-upload"
+                  type="file"
+                  style={{ display: 'none' }} 
+                  onChange={handleFileChange} 
+                /> */}
               <div className="footer-left">
                 <textarea
                 className="message-input"
@@ -921,7 +933,7 @@ return (
 
             <div className="thread-attach">
               {threadfilePreview && (
-                <div className="file-preview-thread">
+                <div className="file-preview">
                   {attachedThreadFile && attachedThreadFile.type.startsWith('image/') ? (
                     <img
                       src={threadfilePreview}
@@ -931,7 +943,7 @@ return (
                   ) : (
                     <p>{attachedThreadFile?.name}</p> 
                   )}
-                  <button className="remove-file-btn" onClick={handleRemoveFile}>
+                  <button className="remove-file-btn" onClick={handleRemoveFileThread}>
                     &times;
                   </button>
                 </div>

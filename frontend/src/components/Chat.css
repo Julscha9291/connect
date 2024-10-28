@@ -260,8 +260,13 @@
     border-radius: 10px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     background-color: #fff;
+}
+
+.file-container{
+    display:flex;
+    align-items: flex-end;
 }
   
 .footer-left {

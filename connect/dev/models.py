@@ -61,7 +61,7 @@ class Channel(models.Model):
     description = models.TextField(blank=True, null=True)  
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_channels')
     created_at = models.DateTimeField(auto_now_add=True)
-    is_private = models.BooleanField(default=False)  
+    is_private = models.BooleanField(default=False)  # Neues Feld
 
     def __str__(self):
         return self.name
@@ -80,7 +80,7 @@ class Message(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
     channel = models.ForeignKey('Channel', on_delete=models.CASCADE, related_name='messages', default=1)
     content = models.TextField()
-    file_url = models.FileField(upload_to='uploads/', null=True, blank=True)  
+    file_url = models.FileField(upload_to='uploads/', null=True, blank=True) 
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -98,10 +98,10 @@ class Reaction(models.Model):
 class Thread(models.Model):
     message = models.ForeignKey('Message', on_delete=models.CASCADE, related_name='threads')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    channel = models.ForeignKey('Channel', on_delete=models.CASCADE, related_name='threads', null=True, blank=True)  
-    content = models.TextField(blank=True, null=True)  
+    channel = models.ForeignKey('Channel', on_delete=models.CASCADE, related_name='threads', null=True, blank=True) 
+    content = models.TextField(blank=True, null=True)  # Erlaube leeres Feld
     timestamp = models.DateTimeField(auto_now_add=True)
-    file_url = models.FileField(upload_to='uploads/', null=True, blank=True) 
+    file_url = models.CharField(max_length=255, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.channel:
