@@ -30,7 +30,9 @@ const ChatFooter = ({
           )}
       <div className="chat-text">
         <div className="chat-footer">
-           <button className="attachment-btn" onClick={() => document.getElementById('file-upload').click()}>
+        
+          <div className="footer-left">
+          <button className="attachment-btn" onClick={() => document.getElementById('file-upload').click()}>
             <FontAwesomeIcon icon={faPaperclip} />
           </button>
               <input
@@ -39,8 +41,6 @@ const ChatFooter = ({
                 style={{ display: 'none' }}  
                 onChange={handleFileChange}  
               />
-        
-          <div className="footer-left">
           <textarea
               className="message-input"
               value={newMessage}

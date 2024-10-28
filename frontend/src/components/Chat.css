@@ -319,6 +319,7 @@
 .footer-right {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .file-preview {
