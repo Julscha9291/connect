@@ -538,22 +538,18 @@ const handleDeleteMessage = (messageId) => {
             formData.append('file', attachedFile);
 
             try {
-                console.log("Uploading file to:", `${process.env.REACT_APP_API_URL}api/upload/`);
                 const response = await fetch(`${process.env.REACT_APP_API_URL}api/upload/`, {
                     method: 'POST',
                     body: formData,
                 });
 
                 const data = await response.json();
-                console.log("Upload response:", data);
                 if (data && data.file_url) {
                     fileUrl = data.file_url;
                 } else {
-                    console.error("File URL not found in response");
                     return;
                 }
             } catch (error) {
-                console.error("File upload error:", error);
                 return;
             }
         }
@@ -563,7 +559,6 @@ const handleDeleteMessage = (messageId) => {
             message: newMessage.trim() || ' ',
             fileUrl: fileUrl || null,
         };
-        console.log("Sending message:", message);
         socket.current.send(JSON.stringify(message));
 
         setNewMessage('');
@@ -578,7 +573,6 @@ const handleDeleteMessage = (messageId) => {
       }, 100);
       handleRemoveFile();
     } else {
-        console.log("Message not sent - conditions not met.");
     }
 };
 

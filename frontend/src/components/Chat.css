@@ -686,6 +686,14 @@
     display: flex;
 }
 
+.Message-Image{
+    width: 150px;
+    height: 200px;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
 @media (min-width: 768px) and (max-width: 1304px) {
 
   .chat-window {

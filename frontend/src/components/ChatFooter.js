@@ -49,12 +49,13 @@ const ChatFooter = ({
               rows="1" 
               style={{ resize: 'none', overflow: 'hidden' }} 
             />
-              <button className="send-btn" onClick={() => setShowEmojiPicker((prev) => !prev)}>
-               <FontAwesomeIcon icon={faSmile} /> 
-              </button>
         </div>
     
         <div className="footer-right">
+        <button className="send-btn" onClick={() => setShowEmojiPicker((prev) => !prev)}>
+               <FontAwesomeIcon icon={faSmile} /> 
+              </button>
+
           <button className="send-btn" onClick={handleSendMessage}>
           <FontAwesomeIcon icon={faPaperPlane} /> 
           </button>
