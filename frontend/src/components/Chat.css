@@ -741,7 +741,7 @@
 
     .footer-right {
         width: 20%;
-        justify-content: space-between;
+        justify-content: flex-start;
     }
 
     .message-input {
