@@ -619,7 +619,7 @@ if (!selectedChat) {
         setSelectedMessageId(message.id); 
         setSenderId(message.sender_id); 
         setShowThreads(true);
-     /*   setSelectedThread(message);**/
+       setSelectedThread(message);
       }
     } else {
     }
